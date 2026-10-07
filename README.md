@@ -14,6 +14,7 @@ Requires Node 20.9+.
 npm install
 cp .env.example .env.local   # every variable is optional for local development
 npm run dev                  # http://localhost:3000 (Next.js dev server)
+npm run build                # Cloudflare build (OpenNext); `npm run build:next` is the plain Next.js build
 npm run preview              # build for Cloudflare and run it in the real Workers runtime (http://localhost:8787)
 npm run deploy               # build and deploy to Cloudflare from your machine (needs `npx wrangler login`)
 npm run lint && npm run typecheck
@@ -146,9 +147,9 @@ Cloudflare dashboard → **Workers & Pages** → **Create** → **Import a repos
 | --- | --- |
 | Project / Worker name | `madvert-labs` (must match `name` in `wrangler.jsonc`) |
 | Root directory | `/` (or the folder name if the app is not at the repo root) |
-| Build command | `npx opennextjs-cloudflare build` |
-| Deploy command | `npx opennextjs-cloudflare deploy` |
-| Non-production branch deploy command | `npx opennextjs-cloudflare upload` (preview URLs per branch) |
+| Build command | `npm run build` (Cloudflare's default; runs the OpenNext Cloudflare build) |
+| Deploy command | `npx wrangler deploy` (Cloudflare's default) |
+| Non-production branch deploy command | `npx wrangler versions upload` (preview URLs per branch) |
 
 Under **Build variables** add `NEXT_PUBLIC_SITE_URL` (for example `https://madvertlabs.com`) and any other `NEXT_PUBLIC_*` values you use. These are baked into the build.
 

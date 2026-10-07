@@ -5,7 +5,13 @@
 import { defineCloudflareConfig } from "@opennextjs/cloudflare";
 import staticAssetsIncrementalCache from "@opennextjs/cloudflare/overrides/incremental-cache/static-assets-incremental-cache";
 
-export default defineCloudflareConfig({
+const config = defineCloudflareConfig({
   incrementalCache: staticAssetsIncrementalCache,
   enableCacheInterception: true,
 });
+
+// `npm run build` runs the OpenNext build (so Cloudflare's default build command works),
+// and OpenNext runs the plain Next.js build through `build:next` to avoid a loop.
+config.buildCommand = "npm run build:next";
+
+export default config;
