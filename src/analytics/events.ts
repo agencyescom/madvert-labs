@@ -1,0 +1,17 @@
+export type AnalyticsEvent =
+  | "hero_strategy_call_click"
+  | "service_cta_click"
+  | "free_value_click"
+  | "case_study_open"
+  | "resource_download"
+  | "contact_form_start"
+  | "contact_form_complete"
+  | "calendar_open"
+  | "calendar_booking_complete"
+  | "showreel_play"
+  | "portfolio_open"
+  | "theme_switch"
+  | "challenge_madvert_click"
+  | "challenge_form_complete"
+  | "strategy_call_click"
+  | "scroll_depth";

@@ -1,0 +1,32 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "madvert-labs",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      // Self reference, must match "name" above. See https://opennext.js.org/cloudflare/caching
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "madvert-labs"
+    }
+  ],
+  "observability": { "enabled": true },
+  // Public, non secret settings. Secrets (API keys, tokens) go in the Cloudflare dashboard:
+  // Worker → Settings → Variables and Secrets, or `npx wrangler secret put NAME`.
+  "vars": {
+    "GOOGLE_CALENDAR_ID": "usamaabbasdahri@gmail.com",
+    "CALENDAR_OWNER_NAME": "Usama Abbas Dahri",
+    "CALENDAR_MEETING_MINUTES": "30",
+    "CALENDAR_BUFFER_BEFORE_MINUTES": "15",
+    "CALENDAR_BUFFER_AFTER_MINUTES": "15",
+    "CALENDAR_MIN_NOTICE_HOURS": "12",
+    "CALENDAR_BOOKING_WINDOW_DAYS": "21"
+  }
+  // Optional R2 cache for CMS revalidation (create the bucket first, then uncomment and update open-next.config.ts):
+  // "r2_buckets": [{ "binding": "NEXT_INC_CACHE_R2_BUCKET", "bucket_name": "madvert-labs-opennext-cache" }]
+}
