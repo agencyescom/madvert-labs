@@ -59,7 +59,7 @@ export const DiagonalReveal: React.FC<{p: number; children: React.ReactNode; sti
             stroke="#F4B942"
             strokeWidth={stitch ? 4 : 5}
             strokeDasharray={stitch ? '16 9' : undefined}
-            strokeLinecap="round"
+            strokeLinecap={stitch ? 'round' : undefined}
             style={{filter: 'drop-shadow(0 0 12px rgba(244,185,66,0.9))'}}
           />
         </svg>
