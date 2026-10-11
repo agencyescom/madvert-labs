@@ -1,0 +1,17 @@
+{
+  "fps": 30,
+  "durationInFrames": 600,
+  "voOffsetFrames": 12,
+  "bpm": 100,
+  "cuts": [108, 162, 198, 252, 360, 414],
+  "shots": [
+    { "id": "a1", "source": "clip-a-designer-sketch-to-patch.mp4", "from": 0,   "frames": 108, "srcIn": 0.0,  "srcOut": 2.4,  "interp": true,  "note": "Sketch + digital artwork on the desk (hook)" },
+    { "id": "a2", "source": "clip-a-designer-sketch-to-patch.mp4", "from": 78,  "frames": 30,  "srcIn": 5.6,  "srcOut": 6.8,  "interp": true,  "note": "Finished patch, revealed in the right half on 'premium' (design-01 split)" },
+    { "id": "b1", "source": "clip-b-machine-then-inspection.mp4",  "from": 108, "frames": 59,  "srcIn": 0.0,  "srcOut": 0.46, "interp": false, "pingpong": 4, "note": "Needle stitching the eagle. Only 0.46 s exists in the source; ping-ponged" },
+    { "id": "b2", "source": "clip-a-designer-sketch-to-patch.mp4", "from": 157, "frames": 46,  "srcIn": 2.5,  "srcOut": 4.5,  "interp": true,  "note": "Digital artwork on laptop -> physical patch" },
+    { "id": "b3", "source": "clip-b-machine-then-inspection.mp4",  "from": 193, "frames": 59,  "srcIn": 0.55, "srcOut": 3.1,  "interp": false, "note": "Gloved hands lift the finished patch (artwork drifts after 3.3 s - not used)" },
+    { "id": "c",  "source": "clip-c-gloved-inspection.mp4",        "from": 252, "frames": 113, "srcIn": 3.0,  "srcOut": 6.6,  "interp": true,  "note": "Macro inspection push-in" },
+    { "id": "d",  "source": "clip-d-jacket-and-cap.mp4",           "from": 355, "frames": 63,  "srcIn": 4.5,  "srcOut": 7.4,  "interp": true,  "note": "Cap -> jacket + cap wide reveal" },
+    { "id": "e",  "source": "clip-b-machine-then-inspection.mp4",  "from": 410, "frames": 190, "srcIn": 0.0,  "srcOut": 0.46, "interp": false, "pingpong": 9, "note": "Outro background: machine, blurred under navy" }
+  ]
+}

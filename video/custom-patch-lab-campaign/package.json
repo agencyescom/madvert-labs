@@ -1,0 +1,27 @@
+{
+  "name": "custom-patch-lab-ad-01",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Custom Patch Lab — Video Ad 01 (19s, 9:16 vertical master). Remotion + FFmpeg.",
+  "scripts": {
+    "prepare-assets": "./scripts/prepare-assets.sh",
+    "sound": "./scripts/build-audio.sh",
+    "studio": "remotion studio",
+    "typecheck": "tsc --noEmit",
+    "render:preview": "remotion render CustomPatchLabAd01 out/ad01-preview-540x960.mp4 --scale=0.5 --crf=23",
+    "render:ad02:preview": "remotion render CustomPatchLabAd02 out/ad02-preview-540x960.mp4 --scale=0.5 --crf=23",
+    "render:ad02:final": "remotion render CustomPatchLabAd02 out/ad02-master-1080x1920.mp4 --codec=h264 --crf=16 --color-space=bt709 --audio-codec=aac --audio-bitrate=320k",
+    "render:final": "remotion render CustomPatchLabAd01 out/ad01-master-1080x1920.mp4 --codec=h264 --crf=16 --color-space=bt709 --audio-codec=aac --audio-bitrate=320k",
+    "contact-sheet": "./scripts/contact-sheet.sh"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.534",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "remotion": "4.0.534"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "typescript": "^5"
+  }
+}

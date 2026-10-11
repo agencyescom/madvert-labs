@@ -1,0 +1,277 @@
+{
+ "source": "assets/source/ad02/audio/voiceover-elevenlabs.mp3",
+ "duration": 16.196,
+ "phrases": [
+  {
+   "text": "Got a logo?",
+   "start": 0.04,
+   "end": 0.71,
+   "words": [
+    {
+     "w": "Got",
+     "start": 0.04,
+     "end": 0.22
+    },
+    {
+     "w": "a",
+     "start": 0.22,
+     "end": 0.3
+    },
+    {
+     "w": "logo?",
+     "start": 0.3,
+     "end": 0.71
+    }
+   ]
+  },
+  {
+   "text": "Let's turn it into something premium.",
+   "start": 1.13,
+   "end": 2.9,
+   "words": [
+    {
+     "w": "Let's",
+     "start": 1.13,
+     "end": 1.37
+    },
+    {
+     "w": "turn",
+     "start": 1.37,
+     "end": 1.39
+    },
+    {
+     "w": "it",
+     "start": 1.39,
+     "end": 1.64
+    },
+    {
+     "w": "into",
+     "start": 1.64,
+     "end": 1.95
+    },
+    {
+     "w": "something",
+     "start": 1.95,
+     "end": 2.47
+    },
+    {
+     "w": "premium.",
+     "start": 2.47,
+     "end": 2.9
+    }
+   ]
+  },
+  {
+   "text": "From detailed embroidery to bold custom patches,",
+   "start": 3.37,
+   "end": 6.0,
+   "words": [
+    {
+     "w": "From",
+     "start": 3.37,
+     "end": 3.58
+    },
+    {
+     "w": "detailed",
+     "start": 3.58,
+     "end": 4.13
+    },
+    {
+     "w": "embroidery",
+     "start": 4.13,
+     "end": 4.84
+    },
+    {
+     "w": "to",
+     "start": 4.84,
+     "end": 5.13
+    },
+    {
+     "w": "bold",
+     "start": 5.13,
+     "end": 5.15
+    },
+    {
+     "w": "custom",
+     "start": 5.15,
+     "end": 5.53
+    },
+    {
+     "w": "patches,",
+     "start": 5.53,
+     "end": 6.0
+    }
+   ]
+  },
+  {
+   "text": "we help bring your artwork to life.",
+   "start": 6.31,
+   "end": 7.96,
+   "words": [
+    {
+     "w": "we",
+     "start": 6.31,
+     "end": 6.52
+    },
+    {
+     "w": "help",
+     "start": 6.52,
+     "end": 6.69
+    },
+    {
+     "w": "bring",
+     "start": 6.69,
+     "end": 7.0
+    },
+    {
+     "w": "your",
+     "start": 7.0,
+     "end": 7.04
+    },
+    {
+     "w": "artwork",
+     "start": 7.04,
+     "end": 7.46
+    },
+    {
+     "w": "to",
+     "start": 7.46,
+     "end": 7.82
+    },
+    {
+     "w": "life.",
+     "start": 7.82,
+     "end": 7.96
+    }
+   ]
+  },
+  {
+   "text": "Free artwork support.",
+   "start": 8.58,
+   "end": 9.7,
+   "words": [
+    {
+     "w": "Free",
+     "start": 8.58,
+     "end": 8.84
+    },
+    {
+     "w": "artwork",
+     "start": 8.84,
+     "end": 9.24
+    },
+    {
+     "w": "support.",
+     "start": 9.24,
+     "end": 9.7
+    }
+   ]
+  },
+  {
+   "text": "Zero setup fees.",
+   "start": 10.09,
+   "end": 11.31,
+   "words": [
+    {
+     "w": "Zero",
+     "start": 10.09,
+     "end": 10.64
+    },
+    {
+     "w": "setup",
+     "start": 10.64,
+     "end": 10.98
+    },
+    {
+     "w": "fees.",
+     "start": 10.98,
+     "end": 11.31
+    }
+   ]
+  },
+  {
+   "text": "Ready to make your brand stand out?",
+   "start": 11.81,
+   "end": 13.24,
+   "words": [
+    {
+     "w": "Ready",
+     "start": 11.81,
+     "end": 12.24
+    },
+    {
+     "w": "to",
+     "start": 12.24,
+     "end": 12.27
+    },
+    {
+     "w": "make",
+     "start": 12.27,
+     "end": 12.45
+    },
+    {
+     "w": "your",
+     "start": 12.45,
+     "end": 12.78
+    },
+    {
+     "w": "brand",
+     "start": 12.78,
+     "end": 12.79
+    },
+    {
+     "w": "stand",
+     "start": 12.79,
+     "end": 13.11
+    },
+    {
+     "w": "out?",
+     "start": 13.11,
+     "end": 13.24
+    }
+   ]
+  },
+  {
+   "text": "Get your free mockup within 24 hours.",
+   "start": 13.68,
+   "end": 16.04,
+   "words": [
+    {
+     "w": "Get",
+     "start": 13.68,
+     "end": 13.84
+    },
+    {
+     "w": "your",
+     "start": 13.84,
+     "end": 14.12
+    },
+    {
+     "w": "free",
+     "start": 14.12,
+     "end": 14.22
+    },
+    {
+     "w": "mockup",
+     "start": 14.22,
+     "end": 14.7
+    },
+    {
+     "w": "within",
+     "start": 14.7,
+     "end": 15.13
+    },
+    {
+     "w": "24",
+     "start": 15.13,
+     "end": 15.88
+    },
+    {
+     "w": "hours.",
+     "start": 15.88,
+     "end": 16.04
+    }
+   ]
+  }
+ ]
+}
