@@ -14,7 +14,9 @@
     "render:final": "remotion render CustomPatchLabAd01 out/ad01-master-1080x1920.mp4 --codec=h264 --crf=16 --color-space=bt709 --audio-codec=aac --audio-bitrate=320k",
     "contact-sheet": "./scripts/contact-sheet.sh",
     "render:ad03:preview": "remotion render CustomPatchLabAd03 out/CustomPatchLab_Ad03_Preview.mp4 --scale=0.5 --crf=23",
-    "render:ad03:final": "remotion render CustomPatchLabAd03 out/CustomPatchLab_Ad03_Final_1080x1920.mp4 --codec=h264 --crf=16 --color-space=bt709 --audio-codec=aac --audio-bitrate=320k"
+    "render:ad03:final": "remotion render CustomPatchLabAd03 out/CustomPatchLab_Ad03_Final_1080x1920.mp4 --codec=h264 --crf=16 --color-space=bt709 --audio-codec=aac --audio-bitrate=320k",
+    "render:ad04:preview": "remotion render CustomPatchLabAd04 out/custom-patch-lab-ad04-preview.mp4 --scale=0.5 --crf=23",
+    "render:ad04:final": "remotion render CustomPatchLabAd04 out/custom-patch-lab-ad04-final.mp4 --codec=h264 --crf=17 --color-space=bt709 --audio-codec=aac --audio-bitrate=256k"
   },
   "dependencies": {
     "@remotion/cli": "4.0.534",

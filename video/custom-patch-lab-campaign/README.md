@@ -8,17 +8,19 @@ with its `edl.json` (shot list + cut points) and composition.
 |---|---|---|---|
 | 01 | `CustomPatchLabAd01` | 19.0 s | Cinematic + kinetic, no VO (temp score) |
 | 02 | `CustomPatchLabAd02` | 20.0 s | Narrated artwork-to-product (ElevenLabs VO) |
+| 04 | `CustomPatchLabAd04` | 25.0 s | Hyper-motion 3D puff / VYBE denim, music-driven — see `docs/AD04-production-notes.md` |
 | 03 | `CustomPatchLabAd03` | 37.5 s | Narrated direct-response, "Your brand deserves to stand out" — see `docs/AD03-production-notes.md` |
 
 All masters: 1080×1920 (9:16), 30 fps, H.264 + AAC, −14 LUFS.
 
 ```bash
 npm install
-./scripts/prepare-assets.sh [ad01|ad02|ad03]   # conform shots, logo mask, grain, audio mix
+./scripts/prepare-assets.sh [ad01|ad02|ad03|ad04]   # conform shots, logo mask, grain, audio mix
 npm run studio
 npm run render:preview  / render:final            # Ad 01
 npm run render:ad02:preview / render:ad02:final   # Ad 02
 npm run render:ad03:preview / render:ad03:final   # Ad 03
+npm run render:ad04:preview / render:ad04:final   # Ad 04
 npm run contact-sheet -- out/<file>.mp4
 ```
 

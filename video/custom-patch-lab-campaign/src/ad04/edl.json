@@ -1,0 +1,26 @@
+{
+  "fps": 30,
+  "durationInFrames": 750,
+  "bpm": 120,
+  "cuts": [60, 84, 120, 150, 270, 345, 420, 510, 600],
+  "missing": [
+    "Shot 01 video (hand holding the VYBE transfer): not supplied. The VYBE master still is animated instead.",
+    "Shot 07 video (male streetwear model): not supplied. The 17-20 s slot is a fast montage of the real finished-jacket footage."
+  ],
+  "shots": [
+    { "id": "p1", "source": "shot02-heat-press.mp4",    "from": 60,  "frames": 24,  "srcIn": 0.2,  "srcOut": 1.0,  "interp": false, "note": "Hands place + smooth the transfer (real time)" },
+    { "id": "p2", "source": "shot02-heat-press.mp4",    "from": 84,  "frames": 36,  "srcIn": 2.0,  "srcOut": 3.2,  "interp": false, "note": "Press platen comes down; closes on the beat at f105" },
+    { "id": "p3", "source": "shot02-heat-press.mp4",    "from": 120, "frames": 34,  "srcIn": 5.0,  "srcOut": 6.13, "interp": false, "note": "Press lifts, transfer bonded (4f whip handle)" },
+    { "id": "pe", "source": "shot03-carrier-peel.mp4",  "from": 146, "frames": 124, "srcIn": 2.27, "srcOut": 6.4,  "interp": false, "note": "Uninterrupted carrier peel, real time" },
+    { "id": "m",  "source": "shot04-stitch-macro.mp4",  "from": 270, "frames": 79,  "srcIn": 0.3,  "srcOut": 2.93, "interp": true,  "note": "Macro pan across the raised V / y stitching (4f push handle)" },
+    { "id": "j",  "source": "shot05-jacket-reveal.mp4", "from": 341, "frames": 79,  "srcIn": 1.87, "srcOut": 4.5,  "interp": true,  "note": "Finished jacket pull-back, VYBE fully readable" },
+    { "id": "t",  "source": "shot06-finger-press.mp4",  "from": 420, "frames": 90,  "srcIn": 0.4,  "srcOut": 3.4,  "interp": false, "note": "Red-nailed fingers press the raised embroidery" },
+    { "id": "x1", "source": "shot06-finger-press.mp4",  "from": 510, "frames": 15,  "srcIn": 6.2,  "srcOut": 6.7,  "interp": false, "note": "Montage: clean back, workshop light" },
+    { "id": "x2", "source": "shot04-stitch-macro.mp4",  "from": 525, "frames": 15,  "srcIn": 5.5,  "srcOut": 6.0,  "interp": false, "note": "Montage: macro 'be'" },
+    { "id": "x3", "source": "shot03-carrier-peel.mp4",  "from": 540, "frames": 15,  "srcIn": 7.0,  "srcOut": 7.5,  "interp": false, "note": "Montage: shoulder angle" },
+    { "id": "x4", "source": "shot05-jacket-reveal.mp4", "from": 555, "frames": 15,  "srcIn": 0.2,  "srcOut": 0.7,  "interp": false, "note": "Montage: close back" },
+    { "id": "x5", "source": "shot05-jacket-reveal.mp4", "from": 570, "frames": 15,  "srcIn": 6.4,  "srcOut": 6.9,  "interp": false, "note": "Montage: full jacket" },
+    { "id": "x6", "source": "shot06-finger-press.mp4",  "from": 585, "frames": 15,  "srcIn": 7.2,  "srcOut": 7.7,  "interp": false, "note": "Montage: final back" },
+    { "id": "cta","source": "shot05-jacket-reveal.mp4", "from": 596, "frames": 154, "srcIn": 4.5,  "srcOut": 8.0,  "interp": true,  "note": "End-card product hero (slow pull-back behind the CTA)" }
+  ]
+}
