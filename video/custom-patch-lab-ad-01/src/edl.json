@@ -1,0 +1,11 @@
+{
+  "fps": 30,
+  "durationInFrames": 570,
+  "shots": [
+    { "id": "s1", "source": "clip-a-lion-macro-reveal.mp4", "from": 0,   "frames": 90,  "srcIn": 1.50, "srcOut": 4.00, "interp": true,  "note": "Extreme macro on the eye, slowed" },
+    { "id": "s2", "source": "clip-a-lion-macro-reveal.mp4", "from": 90,  "frames": 95,  "srcIn": 4.00, "srcOut": 7.50, "interp": true,  "note": "Pull back to the full patch (speed-ramp out of s1)" },
+    { "id": "s3", "source": "clip-b-gloved-hand.mp4",       "from": 175, "frames": 100, "srcIn": 2.78, "srcOut": 7.22, "interp": false, "note": "Gloved hands lift the patch (5f whip handles)" },
+    { "id": "s4", "source": "clip-c-varsity-jacket.mp4",    "from": 265, "frames": 95,  "srcIn": 0.247, "srcOut": 3.15, "interp": true, "note": "Patch on varsity jacket, pulling out" },
+    { "id": "s5", "source": "clip-c-varsity-jacket.mp4",    "from": 360, "frames": 95,  "srcIn": 3.15, "srcOut": 6.317, "interp": true, "note": "Lifestyle reveal, continuous with s4" }
+  ]
+}
