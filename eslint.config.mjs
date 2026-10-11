@@ -13,6 +13,7 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "studio/**",
+    "motion/**",
     ".open-next/**",
     ".wrangler/**",
     "cloudflare-env.d.ts",

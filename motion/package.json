@@ -1,0 +1,21 @@
+{
+  "name": "madvert-motion",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "preview": "vite",
+    "stills": "bun scripts/render.ts stills",
+    "render": "bun scripts/render.ts video --samples 3",
+    "render:draft": "bun scripts/render.ts video --samples 1 --preset veryfast",
+    "align": "uv run --no-project --with pocketsphinx python scripts/align.py",
+    "sound": "uv run --no-project --with numpy python scripts/sound.py"
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.11"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.4.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4"
+  }
+}

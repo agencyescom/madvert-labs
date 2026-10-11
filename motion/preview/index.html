@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Madvert Labs — Motion Preview</title>
+<style>
+  @font-face { font-family: "Sora"; font-weight: 400; src: url(/assets/fonts/Sora-400.ttf); }
+  @font-face { font-family: "Sora"; font-weight: 600; src: url(/assets/fonts/Sora-600.ttf); }
+  @font-face { font-family: "Sora"; font-weight: 700; src: url(/assets/fonts/Sora-700.ttf); }
+  @font-face { font-family: "Sora"; font-weight: 800; src: url(/assets/fonts/Sora-800.ttf); }
+  @font-face { font-family: "Inter"; font-weight: 400; src: url(/assets/fonts/Inter-400.ttf); }
+  @font-face { font-family: "Inter"; font-weight: 500; src: url(/assets/fonts/Inter-500.ttf); }
+  @font-face { font-family: "Inter"; font-weight: 600; src: url(/assets/fonts/Inter-600.ttf); }
+  @font-face { font-family: "Inter"; font-weight: 700; src: url(/assets/fonts/Inter-700.ttf); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 500; src: url(/assets/fonts/JetBrainsMono-500.ttf); }
+  @font-face { font-family: "JetBrains Mono"; font-weight: 700; src: url(/assets/fonts/JetBrainsMono-700.ttf); }
+  html, body { margin: 0; background: #0A0F1C; color: #cfe; font: 13px Inter, sans-serif; }
+  canvas { display: block; width: 100vw; max-height: calc(100vh - 36px); object-fit: contain; }
+  #bar { display: flex; gap: 12px; align-items: center; padding: 8px 12px; }
+  #scrub { flex: 1; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<div id="bar"><span id="tc">0.00</span><span id="sc"></span><input id="scrub" type="range" min="0" max="60.5" step="0.01" value="0" /><span>space play · ←/→ 1s · ,/. frame · [ ] plate · s subtitles</span></div>
+<script type="module" src="./main.ts"></script>
+</body>
+</html>
