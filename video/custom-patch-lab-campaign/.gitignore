@@ -4,3 +4,4 @@ out/
 public/segments/
 public/brand/
 public/audio/
+__pycache__/
