@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Builds public/ from assets/source/. Usage: ./scripts/prepare-assets.sh [ad01|ad02 ...]
+# Builds public/ from assets/source/. Usage: ./scripts/prepare-assets.sh [ad01|ad02|ad03 ...]
 # (no argument = shared brand assets + every ad). Flow's generated audio on the
 # clips is never used (not cleared for commercial use).
 set -euo pipefail
 cd "$(dirname "$0")/.."
-ads=("$@"); [ ${#ads[@]} -eq 0 ] && ads=(ad01 ad02)
+ads=("$@"); [ ${#ads[@]} -eq 0 ] && ads=(ad01 ad02 ad03)
 mkdir -p public/brand
 python3 -I scripts/mask-logo.py assets/source/shared/brand/cpl-logo-circular.jpg public/brand/cpl-logo.png
 python3 -I scripts/make-grain.py public/brand/grain.png

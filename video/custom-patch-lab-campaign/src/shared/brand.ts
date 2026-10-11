@@ -24,6 +24,9 @@ export const DISPLAY_AXES = '"opsz" 144, "SOFT" 0, "WONK" 0';
 export const FONT_SANS = 'Montserrat, Arial, sans-serif';
 // Ad 02 styleframes use a bold condensed grotesk; Oswald (OFL) matches.
 export const FONT_CONDENSED = 'Oswald, "Arial Narrow", sans-serif';
+// Ad 03 secondary / supporting copy.
+export const FONT_BODY = 'Inter, Arial, sans-serif';
+export const ORANGE_GRADIENT = 'linear-gradient(180deg, #FF8A55 0%, #F8673C 50%, #E0471C 100%)';
 
 // 9:16 mobile-safe area (Reels / TikTok / Shorts UI). Keep type and CTA inside.
 export const SAFE = {top: 220, bottom: 1500, left: 90, right: 950} as const;

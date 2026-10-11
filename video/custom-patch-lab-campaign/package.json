@@ -2,7 +2,7 @@
   "name": "custom-patch-lab-ad-01",
   "version": "1.0.0",
   "private": true,
-  "description": "Custom Patch Lab — Video Ad 01 (19s, 9:16 vertical master). Remotion + FFmpeg.",
+  "description": "Custom Patch Lab \u2014 Video Ad 01 (19s, 9:16 vertical master). Remotion + FFmpeg.",
   "scripts": {
     "prepare-assets": "./scripts/prepare-assets.sh",
     "sound": "./scripts/build-audio.sh",
@@ -12,7 +12,9 @@
     "render:ad02:preview": "remotion render CustomPatchLabAd02 out/ad02-preview-540x960.mp4 --scale=0.5 --crf=23",
     "render:ad02:final": "remotion render CustomPatchLabAd02 out/ad02-master-1080x1920.mp4 --codec=h264 --crf=16 --color-space=bt709 --audio-codec=aac --audio-bitrate=320k",
     "render:final": "remotion render CustomPatchLabAd01 out/ad01-master-1080x1920.mp4 --codec=h264 --crf=16 --color-space=bt709 --audio-codec=aac --audio-bitrate=320k",
-    "contact-sheet": "./scripts/contact-sheet.sh"
+    "contact-sheet": "./scripts/contact-sheet.sh",
+    "render:ad03:preview": "remotion render CustomPatchLabAd03 out/CustomPatchLab_Ad03_Preview.mp4 --scale=0.5 --crf=23",
+    "render:ad03:final": "remotion render CustomPatchLabAd03 out/CustomPatchLab_Ad03_Final_1080x1920.mp4 --codec=h264 --crf=16 --color-space=bt709 --audio-codec=aac --audio-bitrate=320k"
   },
   "dependencies": {
     "@remotion/cli": "4.0.534",

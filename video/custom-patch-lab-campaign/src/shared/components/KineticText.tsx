@@ -1,10 +1,10 @@
 import React from 'react';
-import {useCurrentFrame} from 'remotion';
-import {C, DISPLAY_AXES, FONT_CONDENSED, FONT_DISPLAY, FONT_SANS, GOLD_GRADIENT} from '../brand';
+import {spring, useCurrentFrame, useVideoConfig} from 'remotion';
+import {C, DISPLAY_AXES, FONT_BODY, FONT_CONDENSED, FONT_DISPLAY, FONT_SANS, GOLD_GRADIENT, ORANGE_GRADIENT} from '../brand';
 import {easeIn, mix, prog} from '../motion';
 import {MotionBlur} from './MotionBlur';
 
-export type Word = {text: string; gold?: boolean};
+export type Word = {text: string; gold?: boolean; orange?: boolean};
 
 export type LineSpec = {
   words: Word[];
@@ -12,13 +12,15 @@ export type LineSpec = {
   at: number;
   size: number;
   /** display = Fraunces serif (Ad 01), condensed = Oswald (Ad 02 styleframes), sans = Montserrat. */
-  font?: 'display' | 'sans' | 'condensed';
+  font?: 'display' | 'sans' | 'condensed' | 'body';
   weight?: number;
   /** Letter-spacing in em, animated from → to as the line settles. */
   tracking?: [number, number];
   /** Frames between word entrances (8th note = 7.5f at 120 BPM). */
   stagger?: number;
   lineHeight?: number;
+  /** Punchline: the whole line lands with a physically damped spring overshoot. */
+  impact?: boolean;
 };
 
 type Props = {
@@ -40,6 +42,7 @@ const EXIT = 9;
  */
 export const KineticText: React.FC<Props> = ({id, lines, exitAt, exit = 'up', style}) => {
   const frame = useCurrentFrame();
+  const {fps} = useVideoConfig();
   return (
     <div
       style={{
@@ -66,7 +69,7 @@ export const KineticText: React.FC<Props> = ({id, lines, exitAt, exit = 'up', st
               display: 'flex',
               gap: `0 ${line.size * 0.26}px`,
               justifyContent: 'center',
-              fontFamily: display ? FONT_DISPLAY : font === 'condensed' ? FONT_CONDENSED : FONT_SANS,
+              fontFamily: display ? FONT_DISPLAY : font === 'condensed' ? FONT_CONDENSED : font === 'body' ? FONT_BODY : FONT_SANS,
               fontVariationSettings: display ? DISPLAY_AXES : undefined,
               fontWeight: line.weight ?? (display ? 760 : 700),
               fontSize: line.size,
@@ -74,6 +77,9 @@ export const KineticText: React.FC<Props> = ({id, lines, exitAt, exit = 'up', st
               letterSpacing: `${mix(tr0, tr1, t)}em`,
               color: C.text,
               whiteSpace: 'nowrap',
+              transform: line.impact
+                ? `scale(${mix(1.38, 1, spring({frame: frame - line.at, fps, config: {damping: 11, stiffness: 170, mass: 0.8}}))})`
+                : undefined,
             }}
           >
             {line.words.map((w, wi) => {
@@ -100,9 +106,9 @@ export const KineticText: React.FC<Props> = ({id, lines, exitAt, exit = 'up', st
                       transform: `translateY(${y}%)`,
                       opacity: Math.min(1, p * 2.2) * (exit === 'blur' ? 1 - q : 1),
                       filter: blur > 0.3 ? `url(#${fid})` : undefined,
-                      ...(w.gold
+                      ...(w.gold || w.orange
                         ? {
-                            backgroundImage: GOLD_GRADIENT,
+                            backgroundImage: w.orange ? ORANGE_GRADIENT : GOLD_GRADIENT,
                             WebkitBackgroundClip: 'text',
                             backgroundClip: 'text',
                             color: 'transparent',
@@ -123,5 +129,5 @@ export const KineticText: React.FC<Props> = ({id, lines, exitAt, exit = 'up', st
 };
 
 /** Helper: "YOUR LOGO" → [{text:'YOUR'},{text:'LOGO'}], with optional gold words. */
-export const words = (s: string, gold: boolean | string[] = false): Word[] =>
-  s.split(' ').map((text) => ({text, gold: Array.isArray(gold) ? gold.includes(text) : gold}));
+export const words = (s: string, gold: boolean | string[] = false, orange: string[] = []): Word[] =>
+  s.split(' ').map((text) => ({text, gold: Array.isArray(gold) ? gold.includes(text) : gold, orange: orange.includes(text)}));

@@ -3,10 +3,13 @@
     python3 -I scripts/vo-timing.py <voiceover audio> <script.txt> <out.json>
 
 Phrase boundaries come from measured silences in the recording (energy gate).
-The script supplies the words of each phrase; word boundaries inside a phrase
-are first placed by syllable weight, then snapped to the nearest energy dip
-(±90 ms). The phrase count must match the script's phrase count or the script
-fails loudly, which is how a re-read / changed take gets caught.
+The script supplies the words of each phrase. Word boundaries inside a phrase
+come from pocketsphinx forced alignment (offline, bundled English model) when
+it is installed and the alignment succeeds; otherwise they are placed by
+syllable weight and snapped to the nearest energy dip (±90 ms). Each phrase
+records which method produced its word times. The phrase count must match
+the script's line count or the script fails loudly, which is how a re-read or
+changed take gets caught.
 """
 import json
 import re
@@ -62,6 +65,44 @@ def syllables(word):
     return max(1, n)
 
 
+SPOKEN = {'24': 'twenty four', 'usa-based': 'u s a based', 'us-to-us': 'u s to u s', "we'll": "we'll", "let's": "let's",
+          "we're": "we're", 'mockup': 'mock up', '$0': 'zero'}
+
+
+def spoken_tokens(word):
+    w = re.sub(r"[^a-z0-9'$-]", '', word.lower())
+    return SPOKEN.get(w, w.replace('-', ' ')).split()
+
+
+def force_align(x16, t0, t1, words):
+    """Word start/end via pocketsphinx alignment of the known phrase text, or None."""
+    try:
+        from pocketsphinx import Decoder
+    except ImportError:
+        return None
+    pad = 0.05
+    a = int(max(0, t0 - pad) * SR)
+    seg = (np.clip(x16[a:int((t1 + pad) * SR)], -1, 1) * 32767).astype(np.int16).tobytes()
+    groups = [spoken_tokens(w) for w in words]
+    d = Decoder(loglevel='FATAL')
+    try:
+        d.set_align_text(' '.join(t for g in groups for t in g))
+        d.start_utt()
+        d.process_raw(seg, full_utt=True)
+        d.end_utt()
+        toks = [(s.word, s.start_frame / 100 + a / SR, (s.end_frame + 1) / 100 + a / SR) for s in d.seg()
+                if s.word not in ('<s>', '</s>', '<sil>', '[NOISE]') and not s.word.startswith('+')]
+    except Exception:
+        return None
+    if len(toks) != sum(len(g) for g in groups):
+        return None
+    out, i = [], 0
+    for g in groups:
+        out.append((toks[i][1], toks[i + len(g) - 1][2]))
+        i += len(g)
+    return out
+
+
 def main():
     audio, script_path, out = sys.argv[1:4]
     lines = [l.strip() for l in open(script_path) if l.strip()]
@@ -73,6 +114,13 @@ def main():
     result = {'source': audio, 'duration': round(len(x) / SR, 3), 'phrases': []}
     for (t0, t1), line in zip(phrases, lines):
         words = line.split()
+        aligned = force_align(x, t0, t1, words)
+        if aligned:
+            result['phrases'].append({
+                'text': line, 'start': round(t0, 3), 'end': round(t1, 3), 'method': 'forced-alignment',
+                'words': [{'w': w, 'start': round(max(t0, a), 3), 'end': round(min(t1, b), 3)} for w, (a, b) in zip(words, aligned)],
+            })
+            continue
         wts = np.array([syllables(w) for w in words], float)
         edges = t0 + np.concatenate([[0], np.cumsum(wts)]) / wts.sum() * (t1 - t0)
         for k in range(1, len(edges) - 1):  # snap inner boundaries to local energy minima
@@ -85,11 +133,12 @@ def main():
             'text': line,
             'start': round(t0, 3),
             'end': round(t1, 3),
+            'method': 'syllable-estimate',
             'words': [{'w': w, 'start': round(a, 3), 'end': round(b, 3)} for w, a, b in zip(words, edges[:-1], edges[1:])],
         })
     json.dump(result, open(out, 'w'), indent=1)
     for p in result['phrases']:
-        print(f"{p['start']:6.2f}-{p['end']:5.2f}  " + ' '.join(f"{w['w']}@{w['start']:.2f}" for w in p['words']))
+        print(f"{p['start']:6.2f}-{p['end']:5.2f} {p['method'][:6]}  " + ' '.join(f"{w['w']}@{w['start']:.2f}" for w in p['words']))
 
 
 main()

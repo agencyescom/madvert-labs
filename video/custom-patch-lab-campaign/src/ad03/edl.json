@@ -1,0 +1,23 @@
+{
+  "fps": 30,
+  "durationInFrames": 1125,
+  "voOffsetFrames": 3,
+  "bpm": 100,
+  "cuts": [105, 152, 195, 258, 360, 435, 510, 630, 756, 852, 912],
+  "shots": [
+    { "id": "s01", "source": "clip-a-hands-tiger-patch.mp4",    "from": 0,   "frames": 110, "srcIn": 1.8, "srcOut": 4.0, "interp": true,  "note": "HOOK: gloved hands raise the tiger patch (0-1.6 s of the source has a baked-in app banner; never used)" },
+    { "id": "s02", "source": "clip-c-needle-macro-pullback.mp4", "from": 100, "frames": 52,  "srcIn": 0.3, "srcOut": 2.03, "interp": false, "note": "Match cut: tiger texture -> needle macro" },
+    { "id": "s03", "source": "clip-b-machine-stitching-hoop.mp4", "from": 152, "frames": 43, "srcIn": 1.0, "srcOut": 2.5, "interp": false, "note": "Needle stitching the tiger in the hoop" },
+    { "id": "s04", "source": "clip-a-hands-tiger-patch.mp4",    "from": 195, "frames": 68,  "srcIn": 5.3, "srcOut": 6.6, "interp": true,  "note": "Macro push-in on the patch: STAND OUT (design-01)" },
+    { "id": "s05", "source": "clip-a-hands-tiger-patch.mp4",    "from": 253, "frames": 107, "srcIn": 6.6, "srcOut": 8.0, "interp": true, "pingpong": 2, "note": "Finished patch (revealed from its sketch)" },
+    { "id": "s05k","source": "clip-a-hands-tiger-patch.mp4",    "from": 253, "frames": 107, "srcIn": 6.6, "srcOut": 8.0, "interp": true, "pingpong": 2, "look": "sketch", "note": "Same frames as s05 rendered as a pencil sketch (design-02)" },
+    { "id": "s06", "source": "clip-a-hands-tiger-patch.mp4",    "from": 360, "frames": 75,  "srcIn": 4.0, "srcOut": 5.3, "interp": true,  "note": "Hands present the patch: free artwork support / unlimited revisions" },
+    { "id": "s07", "source": "clip-c-needle-macro-pullback.mp4", "from": 435, "frames": 80,  "srcIn": 2.0, "srcOut": 4.6, "interp": true,  "note": "Stitched tiger front-on: $0 setup fees (design-03)" },
+    { "id": "s08", "source": "clip-b-machine-stitching-hoop.mp4", "from": 505, "frames": 133, "srcIn": 4.4, "srcOut": 8.0, "interp": true, "note": "Pull back to the full machine: USA-based / US-to-US shipping" },
+    { "id": "s09", "source": "clip-c-needle-macro-pullback.mp4", "from": 630, "frames": 131, "srcIn": 4.6, "srcOut": 8.0, "interp": true, "note": "Machine wide: free backing + shipping / prices" },
+    { "id": "s10", "source": "clip-b-machine-stitching-hoop.mp4", "from": 756, "frames": 101, "srcIn": 0.0, "srcOut": 1.0, "interp": false, "pingpong": 3, "note": "Needle close-up under the hats/jackets/uniforms typographic montage" },
+    { "id": "s11", "source": "clip-a-hands-tiger-patch.mp4",    "from": 852, "frames": 65,  "srcIn": 6.6, "srcOut": 8.0, "interp": true,  "note": "Ideas to life: sketch -> patch callback" },
+    { "id": "s11k","source": "clip-a-hands-tiger-patch.mp4",    "from": 852, "frames": 65,  "srcIn": 6.6, "srcOut": 8.0, "interp": true, "look": "sketch", "note": "Sketch twin of s11" },
+    { "id": "s12", "source": "clip-a-hands-tiger-patch.mp4",    "from": 912, "frames": 213, "srcIn": 1.8, "srcOut": 5.3, "interp": true, "pingpong": 2, "note": "Outro product band (design-05)" }
+  ]
+}

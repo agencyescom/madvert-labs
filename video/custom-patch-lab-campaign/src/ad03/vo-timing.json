@@ -1,0 +1,613 @@
+{
+ "source": "assets/source/ad03/audio/voiceover-elevenlabs.mp3",
+ "duration": 35.553,
+ "phrases": [
+  {
+   "text": "Got a logo?",
+   "start": 0.06,
+   "end": 0.71,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "Got",
+     "start": 0.06,
+     "end": 0.22
+    },
+    {
+     "w": "a",
+     "start": 0.22,
+     "end": 0.25
+    },
+    {
+     "w": "logo?",
+     "start": 0.25,
+     "end": 0.71
+    }
+   ]
+  },
+  {
+   "text": "Let's turn it into something amazing.",
+   "start": 1.08,
+   "end": 2.98,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "Let's",
+     "start": 1.08,
+     "end": 1.33
+    },
+    {
+     "w": "turn",
+     "start": 1.33,
+     "end": 1.53
+    },
+    {
+     "w": "it",
+     "start": 1.53,
+     "end": 1.63
+    },
+    {
+     "w": "into",
+     "start": 1.63,
+     "end": 1.8
+    },
+    {
+     "w": "something",
+     "start": 1.8,
+     "end": 2.22
+    },
+    {
+     "w": "amazing.",
+     "start": 2.22,
+     "end": 2.98
+    }
+   ]
+  },
+  {
+   "text": "At Custom Patch Lab,",
+   "start": 3.47,
+   "end": 4.58,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "At",
+     "start": 3.47,
+     "end": 3.57
+    },
+    {
+     "w": "Custom",
+     "start": 3.57,
+     "end": 3.96
+    },
+    {
+     "w": "Patch",
+     "start": 3.96,
+     "end": 4.26
+    },
+    {
+     "w": "Lab,",
+     "start": 4.26,
+     "end": 4.58
+    }
+   ]
+  },
+  {
+   "text": "we create premium custom patches that make your brand stand out.",
+   "start": 4.72,
+   "end": 8.27,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "we",
+     "start": 4.72,
+     "end": 4.86
+    },
+    {
+     "w": "create",
+     "start": 4.86,
+     "end": 5.25
+    },
+    {
+     "w": "premium",
+     "start": 5.25,
+     "end": 5.76
+    },
+    {
+     "w": "custom",
+     "start": 5.76,
+     "end": 6.17
+    },
+    {
+     "w": "patches",
+     "start": 6.17,
+     "end": 6.61
+    },
+    {
+     "w": "that",
+     "start": 6.61,
+     "end": 6.75
+    },
+    {
+     "w": "make",
+     "start": 6.75,
+     "end": 7.01
+    },
+    {
+     "w": "your",
+     "start": 7.01,
+     "end": 7.14
+    },
+    {
+     "w": "brand",
+     "start": 7.14,
+     "end": 7.52
+    },
+    {
+     "w": "stand",
+     "start": 7.52,
+     "end": 8.0
+    },
+    {
+     "w": "out.",
+     "start": 8.0,
+     "end": 8.27
+    }
+   ]
+  },
+  {
+   "text": "No design?",
+   "start": 8.75,
+   "end": 9.34,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "No",
+     "start": 8.75,
+     "end": 8.9
+    },
+    {
+     "w": "design?",
+     "start": 8.9,
+     "end": 9.34
+    }
+   ]
+  },
+  {
+   "text": "No problem!",
+   "start": 9.67,
+   "end": 10.25,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "No",
+     "start": 9.67,
+     "end": 9.81
+    },
+    {
+     "w": "problem!",
+     "start": 9.81,
+     "end": 10.25
+    }
+   ]
+  },
+  {
+   "text": "We'll create one for you.",
+   "start": 10.54,
+   "end": 11.58,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "We'll",
+     "start": 10.54,
+     "end": 10.68
+    },
+    {
+     "w": "create",
+     "start": 10.68,
+     "end": 11.02
+    },
+    {
+     "w": "one",
+     "start": 11.02,
+     "end": 11.21
+    },
+    {
+     "w": "for",
+     "start": 11.21,
+     "end": 11.42
+    },
+    {
+     "w": "you.",
+     "start": 11.42,
+     "end": 11.58
+    }
+   ]
+  },
+  {
+   "text": "Get free artwork support,",
+   "start": 12.09,
+   "end": 13.37,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "Get",
+     "start": 12.09,
+     "end": 12.22
+    },
+    {
+     "w": "free",
+     "start": 12.22,
+     "end": 12.57
+    },
+    {
+     "w": "artwork",
+     "start": 12.57,
+     "end": 12.95
+    },
+    {
+     "w": "support,",
+     "start": 12.95,
+     "end": 13.37
+    }
+   ]
+  },
+  {
+   "text": "unlimited artwork revisions,",
+   "start": 13.66,
+   "end": 15.18,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "unlimited",
+     "start": 13.66,
+     "end": 14.24
+    },
+    {
+     "w": "artwork",
+     "start": 14.24,
+     "end": 14.62
+    },
+    {
+     "w": "revisions,",
+     "start": 14.62,
+     "end": 15.18
+    }
+   ]
+  },
+  {
+   "text": "and zero setup fees.",
+   "start": 15.32,
+   "end": 16.68,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "and",
+     "start": 15.32,
+     "end": 15.64
+    },
+    {
+     "w": "zero",
+     "start": 15.64,
+     "end": 15.97
+    },
+    {
+     "w": "setup",
+     "start": 15.97,
+     "end": 16.3
+    },
+    {
+     "w": "fees.",
+     "start": 16.3,
+     "end": 16.68
+    }
+   ]
+  },
+  {
+   "text": "We're a USA-based business",
+   "start": 17.19,
+   "end": 18.79,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "We're",
+     "start": 17.19,
+     "end": 17.39
+    },
+    {
+     "w": "a",
+     "start": 17.39,
+     "end": 17.42
+    },
+    {
+     "w": "USA-based",
+     "start": 17.42,
+     "end": 18.32
+    },
+    {
+     "w": "business",
+     "start": 18.32,
+     "end": 18.79
+    }
+   ]
+  },
+  {
+   "text": "offering US-to-US shipping,",
+   "start": 18.95,
+   "end": 20.53,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "offering",
+     "start": 18.95,
+     "end": 19.34
+    },
+    {
+     "w": "US-to-US",
+     "start": 19.34,
+     "end": 20.17
+    },
+    {
+     "w": "shipping,",
+     "start": 20.17,
+     "end": 20.53
+    }
+   ]
+  },
+  {
+   "text": "free backing and shipping,",
+   "start": 20.83,
+   "end": 22.14,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "free",
+     "start": 20.83,
+     "end": 21.04
+    },
+    {
+     "w": "backing",
+     "start": 21.04,
+     "end": 21.46
+    },
+    {
+     "w": "and",
+     "start": 21.46,
+     "end": 21.71
+    },
+    {
+     "w": "shipping,",
+     "start": 21.71,
+     "end": 22.14
+    }
+   ]
+  },
+  {
+   "text": "and some of the best prices on custom patches.",
+   "start": 22.39,
+   "end": 24.77,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "and",
+     "start": 22.39,
+     "end": 22.49
+    },
+    {
+     "w": "some",
+     "start": 22.49,
+     "end": 22.67
+    },
+    {
+     "w": "of",
+     "start": 22.67,
+     "end": 22.74
+    },
+    {
+     "w": "the",
+     "start": 22.74,
+     "end": 22.85
+    },
+    {
+     "w": "best",
+     "start": 22.85,
+     "end": 23.3
+    },
+    {
+     "w": "prices",
+     "start": 23.3,
+     "end": 23.76
+    },
+    {
+     "w": "on",
+     "start": 23.76,
+     "end": 23.89
+    },
+    {
+     "w": "custom",
+     "start": 23.89,
+     "end": 24.24
+    },
+    {
+     "w": "patches.",
+     "start": 24.24,
+     "end": 24.77
+    }
+   ]
+  },
+  {
+   "text": "From hats to jackets,",
+   "start": 25.26,
+   "end": 26.38,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "From",
+     "start": 25.26,
+     "end": 25.4
+    },
+    {
+     "w": "hats",
+     "start": 25.4,
+     "end": 25.72
+    },
+    {
+     "w": "to",
+     "start": 25.72,
+     "end": 25.82
+    },
+    {
+     "w": "jackets,",
+     "start": 25.82,
+     "end": 26.38
+    }
+   ]
+  },
+  {
+   "text": "uniforms to clothing brands,",
+   "start": 26.54,
+   "end": 27.99,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "uniforms",
+     "start": 26.54,
+     "end": 27.1
+    },
+    {
+     "w": "to",
+     "start": 27.1,
+     "end": 27.2
+    },
+    {
+     "w": "clothing",
+     "start": 27.2,
+     "end": 27.59
+    },
+    {
+     "w": "brands,",
+     "start": 27.59,
+     "end": 27.99
+    }
+   ]
+  },
+  {
+   "text": "we bring your ideas to life.",
+   "start": 28.31,
+   "end": 30.02,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "we",
+     "start": 28.31,
+     "end": 28.49
+    },
+    {
+     "w": "bring",
+     "start": 28.49,
+     "end": 28.77
+    },
+    {
+     "w": "your",
+     "start": 28.77,
+     "end": 29.06
+    },
+    {
+     "w": "ideas",
+     "start": 29.06,
+     "end": 29.5
+    },
+    {
+     "w": "to",
+     "start": 29.5,
+     "end": 29.6
+    },
+    {
+     "w": "life.",
+     "start": 29.6,
+     "end": 30.02
+    }
+   ]
+  },
+  {
+   "text": "Stop settling for ordinary.",
+   "start": 30.55,
+   "end": 31.97,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "Stop",
+     "start": 30.55,
+     "end": 30.83
+    },
+    {
+     "w": "settling",
+     "start": 30.83,
+     "end": 31.27
+    },
+    {
+     "w": "for",
+     "start": 31.27,
+     "end": 31.41
+    },
+    {
+     "w": "ordinary.",
+     "start": 31.41,
+     "end": 31.97
+    }
+   ]
+  },
+  {
+   "text": "Get your free custom patch mockup within 24 hours.",
+   "start": 32.36,
+   "end": 35.33,
+   "method": "forced-alignment",
+   "words": [
+    {
+     "w": "Get",
+     "start": 32.36,
+     "end": 32.46
+    },
+    {
+     "w": "your",
+     "start": 32.46,
+     "end": 32.63
+    },
+    {
+     "w": "free",
+     "start": 32.63,
+     "end": 32.97
+    },
+    {
+     "w": "custom",
+     "start": 32.97,
+     "end": 33.36
+    },
+    {
+     "w": "patch",
+     "start": 33.36,
+     "end": 33.63
+    },
+    {
+     "w": "mockup",
+     "start": 33.63,
+     "end": 34.07
+    },
+    {
+     "w": "within",
+     "start": 34.07,
+     "end": 34.31
+    },
+    {
+     "w": "24",
+     "start": 34.31,
+     "end": 34.87
+    },
+    {
+     "w": "hours.",
+     "start": 34.87,
+     "end": 35.33
+    }
+   ]
+  }
+ ]
+}

@@ -37,7 +37,7 @@ export const WipeStreaks: React.FC<{edge: number; strength: number}> = ({edge, s
 );
 
 /** Reveals children behind a diagonal edge sweeping up from the bottom-right, traced in gold. */
-export const DiagonalReveal: React.FC<{p: number; children: React.ReactNode}> = ({p, children}) => {
+export const DiagonalReveal: React.FC<{p: number; children: React.ReactNode; stitch?: boolean}> = ({p, children, stitch}) => {
   const d = mix(-0.05, 1.15, p);
   const x0 = 1080 - d * 2600;
   const y0 = 1920 - d * 3400;
@@ -57,7 +57,9 @@ export const DiagonalReveal: React.FC<{p: number; children: React.ReactNode}> = 
             x2={b.x}
             y2={b.y}
             stroke="#F4B942"
-            strokeWidth={5}
+            strokeWidth={stitch ? 4 : 5}
+            strokeDasharray={stitch ? '16 9' : undefined}
+            strokeLinecap="round"
             style={{filter: 'drop-shadow(0 0 12px rgba(244,185,66,0.9))'}}
           />
         </svg>
