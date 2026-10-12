@@ -4,7 +4,7 @@
 
 Production website for Madvert Labs (Digital Marketing and Growth Systems), built with Next.js 16.3 (App Router, Cache Components), TypeScript strict, Tailwind CSS 4, GSAP ScrollTrigger and Framer Motion, with Sanity as the CMS.
 
-**Hosting: Cloudflare Workers** through the official OpenNext adapter (`@opennextjs/cloudflare`). No Vercel APIs or services are used.
+**Hosting: Vercel** (standard Next.js deployment, no extra adapter or config).
 
 ## Quick start
 
@@ -13,10 +13,8 @@ Requires Node 20.9+.
 ```bash
 npm install
 cp .env.example .env.local   # every variable is optional for local development
-npm run dev                  # http://localhost:3000 (Next.js dev server)
-npm run build                # Cloudflare build (OpenNext); `npm run build:next` is the plain Next.js build
-npm run preview              # build for Cloudflare and run it in the real Workers runtime (http://localhost:8787)
-npm run deploy               # build and deploy to Cloudflare from your machine (needs `npx wrangler login`)
+npm run dev                  # http://localhost:3000
+npm run build && npm start   # production build
 npm run lint && npm run typecheck
 ```
 
@@ -124,55 +122,24 @@ GTM, GA4, Google Ads, Meta Pixel and Microsoft Clarity each load only when their
 
 Unique titles, descriptions, canonicals, Open Graph and Twitter cards on every page; a generated OG image; sitemap and robots; JSON-LD for Organization and ProfessionalService, WebSite, WebPage, Person, BreadcrumbList, Service, FAQPage, Article and CreativeWork. Each service page ends with a direct answer block (who it is for, problem solved, process, measures) and real FAQs.
 
-## Deploying to Cloudflare (GitHub → Cloudflare Workers)
+## Deploying to Vercel
 
-The site runs on **Cloudflare Workers** with static assets, using `@opennextjs/cloudflare`. This is Cloudflare's supported way to host a full Next.js app, including the API routes (forms, booking). Cloudflare Pages alone only hosts static files, so it cannot run the form and booking APIs; Workers Builds gives the same "connect a GitHub repo and it deploys on every push" experience.
+1. vercel.com → **Add New → Project** → import `agencyescom/madvert-labs` (give the Vercel GitHub app access to the repo if asked).
+2. Framework preset **Next.js** is detected automatically. Leave the build command, output directory and root directory on their defaults.
+3. **Environment Variables**: add `NEXT_PUBLIC_SITE_URL` (your live URL, e.g. `https://madvertlabs.com`) plus any values from `.env.example` you use. `NEXT_PUBLIC_*` values are baked in at build time, so redeploy after changing them.
+4. **Deploy.** Every push to `main` redeploys; every other branch gets a preview URL.
+5. **Domains**: Project → Settings → Domains → add your domain and follow the DNS instructions. Use the same URL for `NEXT_PUBLIC_SITE_URL` and in the Google OAuth redirect URI.
 
-### 1. Put the code on GitHub
+Notes:
 
-Create a new repository and upload the **contents of this folder** (so `package.json` is at the repository root). `node_modules`, `.next`, `.open-next` and `.env*` files are already ignored.
-
-```bash
-git init && git add . && git commit -m "Madvert Labs website"
-git branch -M main
-git remote add origin https://github.com/<you>/madvert-labs.git
-git push -u origin main
-```
-
-### 2. Connect Cloudflare
-
-Cloudflare dashboard → **Workers & Pages** → **Create** → **Import a repository** → choose the repo, then:
-
-| Setting | Value |
-| --- | --- |
-| Project / Worker name | `madvert-labs` (must match `name` in `wrangler.jsonc`) |
-| Root directory | `/` (or the folder name if the app is not at the repo root) |
-| Build command | `npm run build` (Cloudflare's default; runs the OpenNext Cloudflare build) |
-| Deploy command | `npx wrangler deploy` (Cloudflare's default) |
-| Non-production branch deploy command | `npx wrangler versions upload` (preview URLs per branch) |
-
-Under **Build variables** add `NEXT_PUBLIC_SITE_URL` (for example `https://madvertlabs.com`) and any other `NEXT_PUBLIC_*` values you use. These are baked into the build.
-
-### 3. Runtime settings and secrets
-
-Worker → **Settings → Variables and Secrets**. Add the server side values from `.env.example` here as **Secrets** (Google OAuth, Sanity tokens, webhook URLs, Resend, Meta CAPI, GA4 secret, Turnstile secret, Upstash). Non secret calendar defaults are already in `wrangler.jsonc` → `vars`; dashboard values override them. You can also use `npx wrangler secret put NAME`.
-
-### 4. Custom domain
-
-Worker → **Settings → Domains & Routes → Add custom domain** (the domain must be on Cloudflare DNS). Use the same URL as `NEXT_PUBLIC_SITE_URL`, and use it in the Google OAuth redirect URI.
-
-### Cloudflare specific notes
-
-* Next.js is pinned to **16.3.8**, the newest version the OpenNext Cloudflare adapter fully supports. Upgrade Next only after the adapter's supported range includes the new version (`npm view @opennextjs/cloudflare peerDependencies`), then run `npm run preview` before deploying.
-* Images: Vercel's image optimizer is not used. `src/lib/image-loader.ts` resizes Sanity images on Sanity's CDN; local images in `public/` are pre-sized WebP.
-* Caching: prerendered pages are served from Workers static assets (`open-next.config.ts`). **Enable the R2 cache** when Sanity is connected so publish-time revalidation persists: create an R2 bucket named `madvert-labs-opennext-cache`, uncomment `r2_buckets` in `wrangler.jsonc`, and in `open-next.config.ts` switch to `r2IncrementalCache` from `@opennextjs/cloudflare/overrides/incremental-cache/r2-incremental-cache`.
-* Rate limiting uses Upstash Redis when configured; otherwise it is per Worker isolate.
-* Server only Node APIs used (`node:crypto`) are covered by the `nodejs_compat` flag. There is no filesystem access at runtime.
-* Logs: Worker → **Observability** (enabled in `wrangler.jsonc`).
+* Next.js is pinned to 16.3.8 (tested). Upgrade deliberately and run `npm run build` before pushing.
+* Images use Vercel's image optimization (AVIF/WebP, responsive sizes), including Sanity images.
+* `after()` runs lead webhooks, CRM and conversion calls after the response, so visitors never wait on third parties.
+* Rate limiting uses Upstash Redis when configured; otherwise it is per serverless instance.
 
 ## QA snapshot
 
-Checked in this build: Cloudflare build (OpenNext) and every page and API exercised in the local Workers runtime (`wrangler dev`), production build of all routes, ESLint and TypeScript clean, no console errors or horizontal overflow on any page at 1440px and 390px in both themes, end to end runs of the growth brief, booking (unconfigured state), challenge and resource gate, theme persistence, menus and reduced motion, and unit checks of slot generation across time zones and daylight saving. Lighthouse (mobile, simulated throttling, local server): inner pages about 95 performance; home about 90 including the first visit intro; accessibility 96 to 100; best practices and SEO 100.
+Checked in this build: production build of all routes, ESLint and TypeScript clean, no console errors or horizontal overflow on any page at 1440px and 390px in both themes, end to end runs of the growth brief, booking (unconfigured state), challenge and resource gate, theme persistence, menus and reduced motion, and unit checks of slot generation across time zones and daylight saving. Lighthouse (mobile, simulated throttling, local server): inner pages about 95 performance; home about 90 including the first visit intro; accessibility 96 to 100; best practices and SEO 100.
 
 ## Not included yet
 
