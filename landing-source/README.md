@@ -34,16 +34,35 @@ Never hand-edit files under `public/custom-patches/_next/`: always rebuild.
 
 ## Form submissions
 
-In the static export, both booking forms post to the main site's `/api/custom-patches/leads`
-(`src/app/api/custom-patches/leads/route.ts` at the repo root). That route reports success only after
-a CRM/webhook accepts the lead, so set `GOHIGHLEVEL_WEBHOOK_URL` (or another webhook) in Vercel.
+In the static export, both booking forms post to the main site's `POST /api/apply`
+(`src/app/api/apply/route.ts` at the repo root, GoHighLevel client in `src/integrations/ghl.ts`).
+It upserts the GHL contact, saves the mapped custom fields, adds the `patches-partnership-application`
+tag, creates (or reuses) the open opportunity in New Application and saves every answer as a contact
+note. The page shows the calendar only after that succeeds. Vercel variables used (server-side only):
+`GHL_ACCESS_TOKEN`, `GHL_LOCATION_ID`, `GHL_PIPELINE_ID`, `GHL_STAGE_NEW_APPLICATION_ID`.
+Everything after booking is handled by the GHL workflow "Patches Partnership Call Workflow".
+
+Custom fields ("Patches Partnership Application" folder). The route reads each field's type and options
+from GHL and sends values in that shape (multi-select → list of exact option labels, dropdown/radio →
+one exact option, text → plain text). Then it reads the contact back and logs any field left blank.
+
+| Question | GHL custom field |
+| --- | --- |
+| Which markets do you serve? | Markets Served (`esMyG8WQK1zXHBebaABo`) |
+| How many RFQs do you want per month? | Desired RFQ Volume (`RkC8qWzlkZNsFfmMTM5i`) |
+| Current monthly revenue | first field in the folder whose name contains "revenue" |
+| How are customers currently coming to you? | first field in the folder whose name contains "channel", "lead source" or "acquisition" |
+| Manufacture in-house or outsource? | first field in the folder whose name contains "manufactur", "in-house" or "outsourc" |
+
+Search the Vercel logs for `[apply] custom field` to see, per submission, which field each answer
+went to and anything GHL could not store (for example a dropdown whose options don't include the answer).
 
 ## Optional build-time settings
 
 | Variable | Default |
 | --- | --- |
 | `NEXT_PUBLIC_GHL_CALENDAR_URL` | `https://api.madvertlabs.com/widget/booking/m2v95rY845IT0tQwdbEL` |
-| `NEXT_PUBLIC_GHL_EMBED_SCRIPT` | `https://link.msgsndr.com/js/form_embed.js` |
+| `NEXT_PUBLIC_GHL_EMBED_SCRIPT` | `https://api.madvertlabs.com/js/form_embed.js` |
 | `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_GA4_ID`, `NEXT_PUBLIC_GTM_ID` | none: tags load only when set |
 
 No testimonials, results, guarantees or certifications are shown. Sample figures on the page are labelled as demo or illustrative.

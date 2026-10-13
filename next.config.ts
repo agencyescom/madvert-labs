@@ -17,6 +17,10 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
+  // The /custom-patches landing page is a static export in public/custom-patches (source: landing-source/).
+  async rewrites() {
+    return [{ source: "/custom-patches", destination: "/custom-patches/index.html" }];
+  },
   async redirects() {
     return [
       { source: "/resources/seo-and-ai-search-guide", destination: "/resources/seo-ai-search-playbook", permanent: true },

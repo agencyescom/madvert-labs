@@ -6,8 +6,8 @@ import { deliverApplication, type ApplicationRecord } from "@/lib/server/destina
 export const runtime = "nodejs";
 
 /**
- * Local/server-mode endpoint. Production (www.madvertlabs.com/custom-patches) posts to the main
- * site's /api/custom-patches/leads instead — keep both in step.
+ * Local development only (npm run dev). In production the static page posts to the main site's
+ * /api/apply (src/app/api/apply/route.ts at the repo root), which saves the application to GoHighLevel.
  */
 export async function POST(req: Request) {
   let body: Record<string, unknown>;
