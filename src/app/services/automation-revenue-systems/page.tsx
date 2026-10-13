@@ -10,6 +10,7 @@ import { LeadJourney } from "@/sections/services/LeadJourney";
 import { PipelineStages, SpreadsheetVsCrm, WhatsAppChat } from "@/sections/services/Visuals";
 import { PillarWorld } from "@/components/visuals/PillarWorld";
 import { FinalCta } from "@/sections/shared/FinalCta";
+import { BookingSection } from "@/components/booking/BookingSection";
 
 const path = "/services/automation-revenue-systems";
 const description =
@@ -26,7 +27,7 @@ export default async function AutomationPage() {
         title="The Lead Replied. Your Team Replied Tomorrow."
         accent="You Can Guess How That Story Ends."
         sub="We connect CRM, AI, qualification, follow up, booking and revenue tracking so opportunities keep moving even when your team is busy."
-        primary={{ label: "Automate the Revenue Journey", href: "/contact?service=automation-revenue-systems" }}
+        primary={{ label: "Automate the Revenue Journey", href: "#book" }}
         secondary={{ label: "Run the Revenue Leakage Audit", href: "/resources/revenue-leakage-audit" }}
         crumbs={[
           { name: "What We Do", path: "/services" },
@@ -113,6 +114,7 @@ export default async function AutomationPage() {
         accent="Do Not Let the Follow Up Waste It."
         primary={{ label: "Book a Revenue Systems Call", href: site.primaryCta.href }}
       />
+      <BookingSection eyebrow="Need This Built for Your Business?" context="services:automation" />
 
       <JsonLd data={schema.service({ name: "Automation and Revenue Systems", serviceType: "CRM, marketing automation and AI agents", description, path, audience: "Established businesses" })} />
     </>

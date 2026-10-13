@@ -10,6 +10,7 @@ import { site } from "@/lib/site";
 import { Statement } from "@/sections/services/Blocks";
 import { FounderBlock } from "@/sections/shared/FounderBlock";
 import { FinalCta } from "@/sections/shared/FinalCta";
+import { BookingSection } from "@/components/booking/BookingSection";
 
 const description =
   "Madvert Labs is a digital marketing and growth systems company. We did not set out to do everything. We kept finding problems nobody else owned.";
@@ -161,6 +162,7 @@ export default async function AboutPage() {
       </section>
 
       <FinalCta title="Bring Us the Business Problem." accent="We Will Start There." primary={site.founderCta} />
+      <BookingSection eyebrow="Ready When You Are" context="about" />
       <JsonLd data={schema.webPage("About Madvert Labs", description, "/about")} />
     </>
   );

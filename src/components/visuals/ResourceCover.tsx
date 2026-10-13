@@ -8,6 +8,7 @@ const tints: Record<Resource["category"], string> = {
   brand: "#a78bfa",
   automate: "#00e5ff",
   build: "#34d399",
+  content: "#f59e0b",
 };
 
 /** A premium digital report cover rendered in CSS, used until real cover art is uploaded to the CMS. */

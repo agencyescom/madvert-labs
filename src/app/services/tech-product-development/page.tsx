@@ -8,6 +8,7 @@ import { AnswerBlock, FreeValue, Statement } from "@/sections/services/Blocks";
 import { TechModules } from "@/sections/services/TechModules";
 import { LeadValueCalculator } from "@/sections/services/LeadValueCalculator";
 import { FinalCta } from "@/sections/shared/FinalCta";
+import { BookingSection } from "@/components/booking/BookingSection";
 
 const path = "/services/tech-product-development";
 const description =
@@ -24,8 +25,8 @@ export default async function TechPage() {
         title="Sometimes Marketing Is Not the Answer."
         accent="Software Is."
         sub="When growth needs technology, Madvert designs and builds the tool."
-        primary={{ label: "Build What Growth Needs", href: "/contact?service=tech-product-development" }}
-        secondary={{ label: "Request a Tech Opportunity Audit", href: "/contact?intent=tech-opportunity-audit" }}
+        primary={{ label: "Build What Growth Needs", href: "#book" }}
+        secondary={{ label: "Request a Tech Opportunity Audit", href: "/resources/tech-opportunity-audit" }}
         crumbs={[
           { name: "What We Do", path: "/services" },
           { name: "Tech and Product Development", path },
@@ -55,7 +56,7 @@ export default async function TechPage() {
       <FreeValue
         title="What Could Technology Remove From Your Business This Month?"
         label="Request a Tech Opportunity Audit"
-        href="/contact?intent=tech-opportunity-audit"
+        href="/resources/tech-opportunity-audit"
         resource={{ title: "Tech Opportunity Audit", kind: "Audit", category: "build" }}
       />
 
@@ -73,8 +74,9 @@ export default async function TechPage() {
       <FinalCta
         title="Show Us the Bottleneck."
         accent="We Will Tell You Whether It Needs Marketing, Automation or Code."
-        primary={{ label: "Discuss a Tech Project", href: "/contact?service=tech-product-development" }}
+        primary={{ label: "Discuss a Tech Project", href: "#book" }}
       />
+      <BookingSection eyebrow="Need This Built for Your Business?" context="services:tech" />
 
       <JsonLd data={schema.service({ name: "Tech and Product Development", serviceType: "Custom software and app development", description, path, audience: "Established businesses" })} />
     </>

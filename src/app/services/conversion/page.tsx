@@ -8,6 +8,7 @@ import { ServiceHero } from "@/sections/services/ServiceHero";
 import { AnswerBlock, Capability, FreeValue, Statement } from "@/sections/services/Blocks";
 import { VisitorJourney } from "@/sections/services/VisitorJourney";
 import { FinalCta } from "@/sections/shared/FinalCta";
+import { BookingSection } from "@/components/booking/BookingSection";
 
 const path = "/services/conversion";
 const description =
@@ -24,7 +25,7 @@ export default async function ConversionPage() {
         title="Getting the Click Was Expensive."
         accent="Let Us Not Waste It Now."
         sub="We build websites, landing pages and conversion experiences that turn attention into action."
-        primary={{ label: "Fix My Conversion Journey", href: "/contact?service=conversion" }}
+        primary={{ label: "Fix My Conversion Journey", href: "#book" }}
         secondary={{ label: "Get the Conversion Leak Checklist", href: "/resources/conversion-leak-checklist" }}
         crumbs={[
           { name: "What We Do", path: "/services" },
@@ -82,6 +83,7 @@ export default async function ConversionPage() {
       />
 
       <FinalCta title="Same Traffic. Better Journey." accent="Different Economics." primary={{ label: "Book a Conversion Review", href: site.primaryCta.href }} />
+      <BookingSection eyebrow="Need This Built for Your Business?" context="services:conversion" />
 
       <JsonLd data={schema.service({ name: "Conversion", serviceType: "Website design and conversion rate optimisation", description, path, audience: "Established businesses" })} />
     </>

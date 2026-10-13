@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { getResources } from "@/cms";
+import { BookingSection } from "@/components/booking/BookingSection";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Eyebrow } from "@/components/ui/Section";
 import { pageMetadata } from "@/lib/seo";
-import { site } from "@/lib/site";
 import { ResourceList } from "@/sections/cases/ResourceList";
-import { FinalCta } from "@/sections/shared/FinalCta";
 
-const description = "The Madvert Vault: guides, audits, playbooks, tools and ideas built to help you think more clearly about growth.";
+const description = "The Madvert Vault: free playbooks, checklists and audits on landing pages, SEO and AI search, Meta ads, content automation, lead engines and offers.";
 
 export const metadata: Metadata = pageMetadata({ title: "Madvert Vault", description, path: "/resources" });
 
@@ -40,7 +39,12 @@ export default async function ResourcesPage() {
           <ResourceList resources={resources} />
         </div>
       </section>
-      <FinalCta title="Take the Value. Use It." accent="Call Us When You Need the System Built." primary={{ label: "Book a Business Strategy Call", href: site.primaryCta.href }} />
+      <BookingSection
+        title="Take the Value. Use It."
+        accent="Call Us When You Need the System Built."
+        body="Book a Business Strategy Call and we will look at where the ideas in the Vault apply to your business."
+        context="resources"
+      />
     </>
   );
 }

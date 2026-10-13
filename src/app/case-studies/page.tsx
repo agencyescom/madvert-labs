@@ -6,6 +6,7 @@ import { pageMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { CaseFilters } from "@/sections/cases/CaseFilters";
 import { FinalCta } from "@/sections/shared/FinalCta";
+import { BookingSection } from "@/components/booking/BookingSection";
 
 const description = "Real problems. Real decisions. Real work. Real outcomes. Madvert Labs case studies across acquisition, SEO, branding, studios, automation and technology.";
 
@@ -38,6 +39,7 @@ export default async function CaseStudiesPage() {
         </div>
       </section>
       <FinalCta title="Want Us to Look at" accent="Your Growth System?" primary={{ label: "Book a Business Strategy Call", href: site.primaryCta.href }} />
+      <BookingSection eyebrow="Ready When You Are" context="case-studies" />
     </>
   );
 }

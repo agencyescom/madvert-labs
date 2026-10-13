@@ -13,17 +13,16 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
-    async rewrites() {
-    return [
-      {
-        source: "/custom-patches",
-        destination: "/custom-patches/index.html",
-      },
-    ];
-  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
+  },
+  async redirects() {
+    return [
+      { source: "/resources/seo-and-ai-search-guide", destination: "/resources/seo-ai-search-playbook", permanent: true },
+      { source: "/resources/seo-ai-search-guide", destination: "/resources/seo-ai-search-playbook", permanent: true },
+      { source: "/resources/madvert-studios-portfolio", destination: "/resources/madvert-studios-showreel", permanent: true },
+    ];
   },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];

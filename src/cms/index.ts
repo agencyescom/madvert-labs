@@ -51,7 +51,11 @@ export async function getResources(): Promise<Resource[]> {
   "use cache";
   cacheLife("hours");
   cacheTag("cms", "resource");
-  return fetchOr(queries.resources, {}, fallbackResources);
+  // Local lead magnets are the base; Sanity entries override by slug or are appended (new resources need no code).
+  const cms = await fetchOr<Resource[]>(queries.resources, {}, [], true);
+  const bySlug = new Map(fallbackResources.map((r) => [r.slug, r]));
+  for (const r of cms) bySlug.set(r.slug, { ...(bySlug.get(r.slug) ?? {}), ...Object.fromEntries(Object.entries(r).filter(([, v]) => v != null)) } as Resource);
+  return [...bySlug.values()];
 }
 
 export async function getResource(slug: string): Promise<Resource | null> {

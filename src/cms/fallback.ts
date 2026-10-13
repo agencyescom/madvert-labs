@@ -5,7 +5,7 @@
  * certification or award. Every proof slot is a clearly bracketed placeholder and every
  * placeholder entry carries `placeholder: true` so it can be styled and noindexed.
  */
-import type { CaseStudy, Faq, PortfolioProject, ProofItem, Resource, SiteSettings, TeamMember, Testimonial } from "@/types/content";
+import type { CaseStudy, Faq, PortfolioProject, ProofItem, SiteSettings, TeamMember, Testimonial } from "@/types/content";
 
 /** Real founder photography supplied by the client. */
 export const founderPhoto = {
@@ -85,117 +85,7 @@ export const fallbackCaseStudies: CaseStudy[] = [
   },
 ];
 
-export const fallbackResources: Resource[] = [
-  {
-    slug: "qualified-lead-generation-playbook",
-    title: "Qualified Lead Generation Playbook",
-    kind: "Playbook",
-    category: "acquire",
-    description: "How to attract fewer time wasters and more people your sales team actually wants to call.",
-    outline: [
-      "Why cheap leads get expensive",
-      "Qualification that starts before the form",
-      "Offer, creative and audience alignment",
-      "Form design that filters without killing volume",
-      "What should happen in the first hour after an enquiry",
-    ],
-    gating: "email",
-    relatedService: "/services/client-acquisition",
-    featured: true,
-    placeholder: true,
-  },
-  {
-    slug: "seo-and-ai-search-guide",
-    title: "SEO and AI Search Guide",
-    kind: "Guide",
-    category: "search",
-    description: "Visibility for how people discover businesses now: Google, Maps, publications and AI answers.",
-    outline: [
-      "How discovery has changed",
-      "Search, Maps and AI answers: what each one reads",
-      "Entity consistency and why it matters",
-      "Content that answers real questions",
-      "Measuring visibility beyond rankings",
-    ],
-    gating: "email",
-    relatedService: "/services/client-acquisition",
-    featured: true,
-    placeholder: true,
-  },
-  {
-    slug: "brand-perception-checklist",
-    title: "Brand Perception Checklist",
-    kind: "Checklist",
-    category: "brand",
-    description: "See your business the way a new customer does in the first ten seconds.",
-    outline: [
-      "Identity consistency across touchpoints",
-      "Website first impression",
-      "Social presence and tone",
-      "Photography and creative quality",
-      "Reviews, PR and third party proof",
-    ],
-    gating: "open",
-    relatedService: "/services/branding-marketing",
-    featured: true,
-    placeholder: true,
-  },
-  {
-    slug: "conversion-leak-checklist",
-    title: "Conversion Leak Checklist",
-    kind: "Checklist",
-    category: "convert",
-    description: "Where your website is quietly losing people, and what to fix first.",
-    outline: ["Speed and mobile experience", "Headline clarity", "Proof placement", "Calls to action", "Form friction"],
-    gating: "open",
-    relatedService: "/services/conversion",
-    featured: false,
-    placeholder: true,
-  },
-  {
-    slug: "revenue-leakage-audit",
-    title: "Revenue Leakage Audit",
-    kind: "Audit",
-    category: "automate",
-    description: "How much revenue is quietly leaking after the lead arrives?",
-    outline: [
-      "Response speed by channel",
-      "Lead routing and ownership",
-      "Follow up consistency",
-      "Pipeline stage hygiene",
-      "Attribution from lead to revenue",
-    ],
-    gating: "form",
-    relatedService: "/services/automation-revenue-systems",
-    featured: true,
-    placeholder: true,
-  },
-  {
-    slug: "madvert-studios-portfolio",
-    title: "Madvert Studios Portfolio",
-    kind: "Portfolio",
-    category: "brand",
-    description: "See the work before you hear the pitch.",
-    outline: ["Static and motion ads", "Explainers", "Cinematic production", "Talking head content", "AI commercials"],
-    gating: "open",
-    externalUrl: "/studios#showreel",
-    relatedService: "/studios",
-    featured: true,
-    placeholder: true,
-  },
-  {
-    slug: "tech-opportunity-audit",
-    title: "Tech Opportunity Audit",
-    kind: "Audit",
-    category: "build",
-    description: "What could technology remove from your business this month?",
-    outline: ["Manual work inventory", "Tool and data map", "Integration gaps", "Build versus buy", "Where AI genuinely helps"],
-    gating: "qualified",
-    relatedService: "/services/tech-product-development",
-    featured: false,
-    placeholder: true,
-  },
-];
+export { leadMagnets as fallbackResources } from "@/content/lead-magnets";
 
 export const fallbackTestimonials: Testimonial[] = [
   { id: "t1", quote: "[REAL CLIENT TESTIMONIAL]", name: "[CLIENT NAME]", role: "[ROLE]", company: "[COMPANY]", placeholder: true },

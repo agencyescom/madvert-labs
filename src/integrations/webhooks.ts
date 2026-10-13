@@ -34,13 +34,16 @@ export function flatten(lead: LeadPayload) {
     service: lead.service,
     intent: lead.intent,
     resource: lead.resource?.slug,
+    lead_magnet: lead.resource?.title,
+    lead_source: lead.resource?.sourceId ?? `website_${lead.kind}`,
+    resource_delivered: lead.resource?.delivered,
     booking_start: lead.booking?.start,
     booking_timezone: lead.booking?.timezone,
     booking_link: lead.booking?.eventLink,
     attachment_url: lead.attachmentUrl,
     ...Object.fromEntries(Object.entries(lead.answers).map(([k, v]) => [`answer_${k}`, v])),
     ...lead.attribution,
-    tags: ["website", lead.kind, lead.service, lead.intent].filter(Boolean),
+    tags: ["website", lead.kind, lead.service, lead.intent, lead.resource?.sourceId].filter(Boolean),
   };
 }
 
@@ -87,16 +90,26 @@ function slack(lead: LeadPayload) {
   return post(url, { text: lines.join("\n") });
 }
 
-/** Fan a lead out to every configured destination. Failures are logged and never block the visitor. */
-export async function dispatchLead(lead: LeadPayload) {
-  const flat = flatten(lead);
-  const hooks = [
+function automationHooks() {
+  return [
     process.env.GOHIGHLEVEL_WEBHOOK_URL,
     process.env.ZAPIER_WEBHOOK_URL,
     process.env.MAKE_WEBHOOK_URL,
     process.env.N8N_WEBHOOK_URL,
     process.env.GENERIC_WEBHOOK_URL,
   ].filter(Boolean) as string[];
+}
+
+/** Funnel events that are not leads (calendar opened / booked). Same destinations, different event name. */
+export async function dispatchEvent(payload: Record<string, unknown>) {
+  const results = await Promise.allSettled(automationHooks().map((u) => post(u, payload)));
+  results.forEach((r) => r.status === "rejected" && console.error("[events] destination failed:", r.reason));
+}
+
+/** Fan a lead out to every configured destination. Failures are logged and never block the visitor. */
+export async function dispatchLead(lead: LeadPayload) {
+  const flat = flatten(lead);
+  const hooks = automationHooks();
   const jobs = [...hooks.map((u) => post(u, flat)), hubspot(lead), slack(lead)].filter(Boolean) as Promise<void>[];
   const results = await Promise.allSettled(jobs);
   results.forEach((r) => r.status === "rejected" && console.error("[leads] destination failed:", r.reason));

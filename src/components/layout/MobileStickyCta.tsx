@@ -21,7 +21,7 @@ export function MobileStickyCta() {
   if (pathname.startsWith("/contact") || pathname.startsWith("/challenge")) return null;
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-40 px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 transition-transform duration-300 md:hidden ${
+      className={`fixed inset-x-0 bottom-0 z-[var(--z-sticky)] px-4 pb-[max(12px,env(safe-area-inset-bottom))] pt-3 transition-transform duration-300 md:hidden ${
         show ? "translate-y-0" : "translate-y-[120%]"
       }`}
       style={{ background: "linear-gradient(to top, var(--bg) 55%, transparent)" }}

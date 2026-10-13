@@ -30,7 +30,7 @@ const steps = [
       A campaign can perform perfectly inside a system that is <span className="t-grad">quietly leaking money.</span>
     </p>
     <div className="mt-8">
-      <Cta href="/contact?intent=growth-systems-audit" track="free_value_click" trackLabel="find_the_leak">
+      <Cta href="/resources/growth-systems-audit" track="lead_magnet_click" trackLabel="find_the_leak">
         Find the Leak
       </Cta>
     </div>

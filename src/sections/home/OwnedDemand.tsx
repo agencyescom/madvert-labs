@@ -264,7 +264,7 @@ export function OwnedDemand() {
             <Cta href="/services/client-acquisition#search-shift" track="service_cta_click" trackLabel="search_ai_visibility">
               Explore Search and AI Visibility
             </Cta>
-            <Link href="/resources/seo-and-ai-search-guide" data-track="free_value_click" data-track-label="seo_ai_guide" className="group/btn inline-flex items-center gap-2 text-[14.5px] font-medium text-accent-text">
+            <Link href="/resources/seo-and-ai-search-guide" data-track="lead_magnet_click" data-track-label="seo_ai_guide" className="group/btn inline-flex items-center gap-2 text-[14.5px] font-medium text-accent-text">
               Get the SEO and AI Search Guide <Arrow />
             </Link>
           </div>

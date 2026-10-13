@@ -76,11 +76,11 @@ export function Header() {
 
   return (
     <>
-      <a href="#main" className="sr-only-focusable fixed left-4 top-3 z-[80] rounded-full bg-surface px-4 py-2 text-sm text-ink">
+      <a href="#main" className="sr-only-focusable fixed left-4 top-3 z-[var(--z-modal)] rounded-full bg-surface px-4 py-2 text-sm text-ink">
         Skip to content
       </a>
       <header
-        className="fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300"
+        className="fixed inset-x-0 top-0 z-[var(--z-header)] transition-[background-color,border-color,backdrop-filter] duration-300"
         style={{
           backgroundColor: solid ? "var(--header-bg)" : "transparent",
           backdropFilter: solid ? "blur(18px) saturate(1.4)" : "none",
@@ -171,8 +171,14 @@ export function Header() {
             <div
               id={megaId}
               onMouseEnter={openMega}
-              className="anim-menu absolute inset-x-0 top-full hidden border-b border-line xl:block"
-              style={{ backgroundColor: "var(--header-bg)", backdropFilter: "blur(22px) saturate(1.4)", WebkitBackdropFilter: "blur(22px) saturate(1.4)" }}
+              className="anim-menu absolute inset-x-0 top-full z-[var(--z-menu)] hidden border-b xl:block"
+              style={{
+                background: "var(--menu-bg)",
+                borderColor: "var(--menu-border)",
+                boxShadow: "var(--menu-shadow)",
+                backdropFilter: "blur(18px)",
+                WebkitBackdropFilter: "blur(18px)",
+              }}
             >
               <div className="container-x grid grid-cols-12 gap-8 py-9">
                 <div className="col-span-3 border-r border-line pr-8">
@@ -227,7 +233,7 @@ export function Header() {
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
-            className="anim-fade fixed inset-0 z-40 overflow-y-auto bg-bg pt-[76px] xl:hidden"
+            className="anim-fade fixed inset-0 z-[var(--z-drawer)] overflow-y-auto bg-[var(--surface-solid)] pt-[76px] xl:hidden"
           >
             <div className="bg-blueprint pointer-events-none absolute inset-0 opacity-60" aria-hidden="true" />
             <nav aria-label="Mobile" className="container-x relative pb-10 pt-6">

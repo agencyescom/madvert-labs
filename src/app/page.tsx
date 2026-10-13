@@ -16,11 +16,13 @@ import { Proof } from "@/sections/home/Proof";
 import { CasePreview } from "@/sections/home/CasePreview";
 import { WhyMadvert } from "@/sections/home/WhyMadvert";
 import { ChallengeBlock } from "@/sections/home/ChallengeBlock";
-import { AboutTeaser } from "@/sections/home/AboutTeaser";
 import { Vault } from "@/sections/home/Vault";
 import { FounderBlock } from "@/sections/shared/FounderBlock";
 import { FinalCta } from "@/sections/shared/FinalCta";
 import { AccentHeadline } from "@/components/ui/Section";
+import { BookingSection } from "@/components/booking/BookingSection";
+import { ServicesGrid } from "@/sections/home/ServicesGrid";
+import { HireDepartment } from "@/sections/home/HireDepartment";
 
 const description =
   "Madvert Labs connects branding, customer acquisition, conversion, creative, automation and technology into one intelligent growth system built around your business.";
@@ -57,10 +59,6 @@ export default async function HomePage() {
 
       <Fragmentation />
       <Philosophy />
-      <PillarsGallery />
-      <OwnedDemand />
-      <AiLeverage />
-
       <section className="section pb-0" aria-labelledby="loop-title">
         <div className="container-x">
           <h2 id="loop-title" data-reveal className="t-h1 max-w-[900px]">
@@ -72,19 +70,26 @@ export default async function HomePage() {
           </p>
         </div>
       </section>
+      <PillarsGallery />
+      <ServicesGrid />
+      <HireDepartment />
+      <OwnedDemand />
+      <AiLeverage />
+
+
 
       <Proof items={proof} testimonials={testimonials} />
       <CasePreview studies={studies} />
       <WhyMadvert />
       <ChallengeBlock />
       <FounderBlock photo={settings.founderPhoto} />
-      <AboutTeaser />
       <Vault resources={resources} />
+      <BookingSection context="home" />
       <FinalCta
         title="You Probably Already Know Something Is Leaking."
         accent="Let Us Find Out Where."
-        primary={site.founderCta}
-        secondary={{ label: site.auditCta.label, href: site.auditCta.href }}
+        primary={site.primaryCta}
+        secondary={{ label: "Start With a Free Growth Systems Audit", href: "/resources/growth-systems-audit", track: "lead_magnet_click" }}
         micro="No pressure. No generic pitch. Just a serious conversation about growth."
       >
         <p>Bring the business. Bring the numbers. Bring the challenge.</p>

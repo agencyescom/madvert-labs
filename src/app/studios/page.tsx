@@ -10,6 +10,7 @@ import { AnswerBlock } from "@/sections/services/Blocks";
 import { EditTimeline } from "@/sections/studios/EditTimeline";
 import { Showreel } from "@/sections/studios/Showreel";
 import { FinalCta } from "@/sections/shared/FinalCta";
+import { BookingSection } from "@/components/booking/BookingSection";
 import type { PortfolioProject } from "@/types/content";
 
 const path = "/studios";
@@ -62,7 +63,7 @@ export default async function StudiosPage() {
                 Creative production for brands that want to stop the scroll, explain the value and look worth paying attention to.
               </p>
               <div data-reveal style={{ ["--reveal-delay" as string]: 200 }} className="mt-10 flex flex-col gap-4 sm:flex-row">
-                <Cta href="/contact?service=studios" size="lg" track="service_cta_click">
+                <Cta href="#book" size="lg" track="strategy_call_click" trackLabel="studios_hero">
                   Make Something Worth Stopping For
                 </Cta>
                 <Cta href="#showreel" size="lg" variant="secondary" arrow={false} icon={<PlayGlyph />} track="showreel_play" trackLabel="hero_watch_showreel">
@@ -156,7 +157,8 @@ export default async function StudiosPage() {
         faqs={faqs}
       />
 
-      <FinalCta title="Make the Next Scroll" accent="Stop Here." primary={{ label: "Start a Creative Project", href: "/contact?service=studios" }} track="service_cta_click" />
+      <FinalCta title="Make the Next Scroll" accent="Stop Here." primary={{ label: "Start a Creative Project", href: "#book" }} track="service_cta_click" />
+      <BookingSection eyebrow="Need This Built for Your Business?" context="studios" />
 
       <JsonLd data={schema.service({ name: "Madvert Studios", serviceType: "Creative and video production", description, path, audience: "Brands and established businesses" })} />
     </>

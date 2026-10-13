@@ -38,7 +38,7 @@ export function FinalCta({
               {primary.label}
             </Cta>
             {secondary ? (
-              <Cta href={secondary.href} size="lg" variant="secondary" track={secondary.track ?? "free_value_click"} className="!whitespace-normal text-center">
+              <Cta href={secondary.href} size="lg" variant="secondary" track={secondary.track ?? "lead_magnet_click"} className="!whitespace-normal text-center">
                 {secondary.label}
               </Cta>
             ) : null}

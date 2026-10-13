@@ -16,7 +16,8 @@ export const queries = {
   resources: `*[_type == "resource" && defined(slug.current)] | order(featured desc, title asc){
     "slug": slug.current, title, kind, category, description, outline, gating,
     "fileUrl": file.asset->url, externalUrl, "relatedService": relatedService->route, featured,
-    "cover": cover${image}, ${seo}
+    "cover": cover${image}, "coverAlt": coverAlt${image}, sourceId, badge, categoryLabel, heroHeadline, outcome, whoFor, formCta, cardCta,
+    successTitle, successBody, calendarTitle, calendarAccent, calendarBody, "related": related[]->slug.current, ${seo}
   }`,
   testimonials: `*[_type == "testimonial" && permission == true] | order(order asc){ "id": _id, quote, name, role, company, videoUrl }`,
   team: `*[_type == "teamMember"] | order(order asc){ name, role, bio, "photo": photo${image} }`,

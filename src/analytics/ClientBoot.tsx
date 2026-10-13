@@ -40,21 +40,29 @@ export function ClientBoot() {
     };
   }, []);
 
-  // Attribution + SPA page views on every route change (the first view is sent by the vendor snippets).
+  // Attribution on every route change. GA4 page views come from GA4 enhanced measurement (history changes),
+  // so no manual page_view here (that would double count). GTM gets a virtual_page_view for its own triggers.
   const first = useRef(true);
   useEffect(() => {
     captureAttribution();
+    if (pathname.startsWith("/services/") || pathname === "/studios") {
+      track("service_page_view", { page_path: pathname, service: pathname.split("/").pop() });
+    }
     if (first.current) {
       first.current = false;
       return;
     }
-    window.gtag?.("event", "page_view", { page_path: pathname, page_location: window.location.href });
+    window.dataLayer?.push({ event: "virtual_page_view", page_path: pathname, page_location: window.location.href });
     window.fbq?.("track", "PageView");
   }, [pathname]);
 
-  // Click tracking for anything carrying data-track.
+  // Click tracking for anything carrying data-track, plus automatic WhatsApp and email link tracking.
   useEffect(() => {
     const onClick = (ev: MouseEvent) => {
+      const link = (ev.target as HTMLElement | null)?.closest<HTMLAnchorElement>("a[href]");
+      const href = link?.getAttribute("href") ?? "";
+      if (/^(https?:\/\/)?(wa\.me|api\.whatsapp\.com|chat\.whatsapp\.com)/i.test(href)) track("whatsapp_click", { href, page: window.location.pathname });
+      if (href.startsWith("mailto:")) track("email_click", { href, page: window.location.pathname });
       const el = (ev.target as HTMLElement | null)?.closest<HTMLElement>("[data-track]");
       if (!el) return;
       const event = el.dataset.track as AnalyticsEvent;
@@ -68,7 +76,7 @@ export function ClientBoot() {
 
   // Scroll depth milestones per page.
   useEffect(() => {
-    const marks = [25, 50, 75, 90];
+    const marks = [50, 75, 90] as const;
     const hit = new Set<number>();
     let raf = 0;
     const onScroll = () => {
@@ -80,7 +88,7 @@ export function ClientBoot() {
         for (const m of marks) {
           if (pct >= m && !hit.has(m)) {
             hit.add(m);
-            track("scroll_depth", { percent: m, page: pathname });
+            track(`scroll_${m}`, { page_path: pathname });
           }
         }
       });

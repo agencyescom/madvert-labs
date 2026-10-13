@@ -6,11 +6,12 @@ import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { setEnhancedConversionData, track, trackConversion } from "@/analytics/track";
-import { Button } from "@/components/ui/Button";
+import { Button, Cta } from "@/components/ui/Button";
 import { growthBriefFields, investmentOptions } from "./schemas";
 import { Honeypot, TextArea, TextField, Turnstile, useFormMeta } from "./Fields";
 import { postJson } from "./submit";
-import { BookingWidget, type BookingPrefill } from "./BookingWidget";
+
+type BookingPrefill = { name: string; email: string };
 
 const clientSchema = growthBriefFields.extend({ website_confirm: z.string().optional() });
 type Values = z.input<typeof clientSchema>;
@@ -121,15 +122,7 @@ export function ContactFlow() {
     setEnhancedConversionData({ email: values.email, phone: values.phone });
     trackConversion("Lead", eventIdRef.current, { content_name: "growth_brief" });
     track("contact_form_complete", { intent: ctx.intent, service: ctx.service, investment: values.investment });
-    setPrefill({
-      name: values.name,
-      email: values.email,
-      phone: values.phone ?? "",
-      business: values.business.split(/[.\n]/)[0].slice(0, 120),
-      website: values.website ?? "",
-      problem: values.stuck,
-      market: values.market,
-    });
+    setPrefill({ name: values.name, email: values.email });
     setStatus("done");
     })(e);
 
@@ -141,11 +134,13 @@ export function ContactFlow() {
           <h2 className="t-h2 mt-4">Thank you, {prefill.name.split(" ")[0]}. We will review your business before we talk.</h2>
           <p className="t-body mt-4">A reply will come to {prefill.email}. If you would rather talk sooner, choose a time below.</p>
         </div>
-        <div id="book-after-brief">
+        <div>
           <h3 className="t-h2">Prefer a Conversation?</h3>
           <p className="t-lead mt-3">Book a Business Strategy Call with Usama and bring the real numbers.</p>
-          <div className="mt-8">
-            <BookingWidget prefill={prefill} autoOpen />
+          <div className="mt-6">
+            <Cta href="#book" size="lg" track="strategy_call_click" trackLabel="contact_after_brief">
+              Choose a Time
+            </Cta>
           </div>
         </div>
       </div>
