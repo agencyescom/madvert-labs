@@ -35,10 +35,12 @@ const conversionName: Record<LeadPayload["kind"], { meta: "Lead" | "Schedule" | 
  * Everything that happens after a valid lead: CRM and automation webhooks, internal notification,
  * server side conversions. Runs after the response is sent so the visitor never waits on third parties.
  */
-export function processLead(lead: LeadPayload) {
+export function processLead(lead: LeadPayload, opts: { alreadyDispatched?: boolean } = {}) {
   after(async () => {
     const conv = conversionName[lead.kind];
-    const tasks: Promise<unknown>[] = [dispatchLead(lead), sendMetaCapi(lead, conv.meta), sendGa4(lead, conv.ga)];
+    const tasks: Promise<unknown>[] = [sendMetaCapi(lead, conv.meta), sendGa4(lead, conv.ga)];
+    // Routes that must confirm CRM delivery before answering call dispatchLead themselves.
+    if (!opts.alreadyDispatched) tasks.unshift(dispatchLead(lead));
     const notify = process.env.LEAD_NOTIFICATION_EMAIL;
     if (notify) {
       const rows = Object.entries({ ...lead.contact, ...lead.answers, service: lead.service, intent: lead.intent, resource: lead.resource?.slug, attachment: lead.attachmentUrl, booking: lead.booking?.start })
