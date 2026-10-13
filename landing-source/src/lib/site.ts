@@ -20,7 +20,7 @@ export const BOOKING = {
    * If the embed code in GHL (Calendars → ⋯ → Share → Embed code) shows a different script URL
    * for your white-label domain, set NEXT_PUBLIC_GHL_EMBED_SCRIPT to that URL.
    */
-  embedScript: process.env.NEXT_PUBLIC_GHL_EMBED_SCRIPT || "https://link.msgsndr.com/js/form_embed.js",
+  embedScript: process.env.NEXT_PUBLIC_GHL_EMBED_SCRIPT || "https://api.madvertlabs.com/js/form_embed.js",
 } as const;
 
 /** The VSL, served from the page's own folder: /custom-patches/vsl.mp4 in production. */

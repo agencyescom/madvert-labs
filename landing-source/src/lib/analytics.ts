@@ -9,6 +9,11 @@ export type AnalyticsEvent =
   | "BookCallCTA"
   | "DiscoveryFormStarted"
   | "DiscoveryFormSubmitted"
+  | "application_started"
+  | "application_submitted"
+  | "application_crm_success"
+  | "application_crm_failed"
+  | "calendar_viewed"
   | "VSLPlay"
   | "VSL50"
   | "PricingViewed"
@@ -48,6 +53,8 @@ const ONCE: ReadonlySet<AnalyticsEvent> = new Set<AnalyticsEvent>([
   "VSL50",
   "CalendarViewed",
   "DiscoveryFormStarted",
+  "application_started",
+  "calendar_viewed",
 ]);
 const fired = new Set<string>();
 

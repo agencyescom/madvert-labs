@@ -32,9 +32,10 @@ export function GhlCalendar() {
   useEffect(() => {
     ensureEmbedScript();
     track("CalendarViewed");
+    track("calendar_viewed", { calendar_id: calendarId });
     const t = window.setTimeout(() => setSlow(true), 12000);
     return () => window.clearTimeout(t);
-  }, []);
+  }, [calendarId]);
 
   return (
     <div>
@@ -51,6 +52,9 @@ export function GhlCalendar() {
           src={BOOKING.calendarUrl}
           title="Book your discovery call with Madvert Labs"
           onLoad={() => setLoaded(true)}
+          allow="payment"
+          scrolling="no"
+          // Starting height until form_embed.js sizes the iframe to the current booking step.
           className="block h-[1080px] w-full border-0 sm:h-[860px]"
           style={{ width: "100%", border: "none", overflow: "hidden" }}
         />

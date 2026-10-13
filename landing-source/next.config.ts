@@ -8,7 +8,7 @@ import type { NextConfig } from "next";
  *   `basePath` makes Next emit every script, chunk-loader, font and CSS URL under
  *   /custom-patches, so the output can be dropped into the main site's
  *   public/custom-patches/ folder without hand-editing generated bundles.
- *   Form submissions then go to the main site's /api/custom-patches/leads route.
+ *   Form submissions then go to the main site's /api/apply route (GoHighLevel).
  */
 const EXPORT = process.env.CUSTOM_PATCHES_EXPORT === "1";
 const BASE_PATH = EXPORT ? "/custom-patches" : "";
@@ -44,7 +44,7 @@ const nextConfig: NextConfig = {
       }),
   env: {
     NEXT_PUBLIC_BASE_PATH: BASE_PATH,
-    NEXT_PUBLIC_LEADS_ENDPOINT: process.env.NEXT_PUBLIC_LEADS_ENDPOINT || (EXPORT ? "/api/custom-patches/leads" : "/api/apply"),
+    NEXT_PUBLIC_LEADS_ENDPOINT: process.env.NEXT_PUBLIC_LEADS_ENDPOINT || "/api/apply",
   },
 };
 

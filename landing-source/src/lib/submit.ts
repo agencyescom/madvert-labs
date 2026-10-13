@@ -5,15 +5,19 @@ import { getAttribution } from "./attribution";
  * delivered to at least one destination (CRM / webhook). Throws an actionable message otherwise,
  * so the UI never shows a success state for a lead that wasn't saved.
  *
- * Production (static export under /custom-patches): the main site's /api/custom-patches/leads.
- * Local server build: this project's /api/apply.
+ * Production (static export under /custom-patches): the main site's /api/apply (GoHighLevel).
+ * Local dev server: this project's own /api/apply.
  */
 export type LeadForm = "application" | "discovery";
 export type SubmitResult = { ok: true; qualified?: boolean };
 
 const ENDPOINT = process.env.NEXT_PUBLIC_LEADS_ENDPOINT || "/api/apply";
 
-export async function submitLead(form: LeadForm, answers: object, meta: { startedAt: number; honeypot: string }): Promise<SubmitResult> {
+export async function submitLead(
+  form: LeadForm,
+  answers: object,
+  meta: { startedAt: number; honeypot: string; submissionId?: string },
+): Promise<SubmitResult> {
   let res: Response;
   try {
     res = await fetch(ENDPOINT, {
@@ -21,6 +25,7 @@ export async function submitLead(form: LeadForm, answers: object, meta: { starte
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         form,
+        submissionId: meta.submissionId,
         answers,
         attribution: getAttribution(),
         page_url: typeof window !== "undefined" ? window.location.href : undefined,

@@ -13,8 +13,10 @@ import { GhlCalendar } from "./GhlCalendar";
 
 type Status = { kind: "idle" } | { kind: "submitting" } | { kind: "error"; message: string };
 
+const FAIL_MESSAGE = "We couldn’t save your application just yet. Your information is still here — please try again.";
+
 export function BookingSection({ instance = "book-call" }: { instance?: BookingInstance }) {
-  const { saved, calendarIn, showCalendarIn } = useBooking();
+  const { calendarIn } = useBooking();
   const here = calendarIn === instance;
   const elsewhere = calendarIn !== null && !here;
   const step2 = calendarIn !== null;
@@ -67,20 +69,23 @@ export function BookingSection({ instance = "book-call" }: { instance?: BookingI
             {here ? (
               <motion.div
                 key="calendar"
-                className="card p-2 shadow-lg sm:p-4"
+                id={`${instance}-calendar`}
+                className="card scroll-mt-24 p-2 shadow-lg sm:p-4"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4, ease: EASE }}
               >
-                {saved ? (
-                  <p className="px-2 pb-3 pt-1 text-center text-[0.88rem] text-muted sm:pt-0">
-                    Thanks{saved.name ? `, ${saved.name.split(" ")[0]}` : ""} — we have your details. Choose a time that suits you.
+                <div className="px-3 pb-5 pt-4 text-center sm:pt-3">
+                  <p className="chip chip-accent mx-auto !text-[0.66rem] uppercase !tracking-[0.16em]">
+                    <Check className="h-3.5 w-3.5" strokeWidth={3} aria-hidden /> Application received
                   </p>
-                ) : (
-                  <p className="px-2 pb-3 pt-1 text-center text-[0.88rem] text-muted sm:pt-0">
-                    Your form details weren&rsquo;t saved, so please complete the booking form below.
+                  <h3 className="display mt-4 text-[clamp(1.35rem,3.2vw,2.1rem)]">
+                    One Last Step — <span className="text-grad">Book Your Discovery Call</span>
+                  </h3>
+                  <p className="mx-auto mt-3 max-w-xl text-[0.95rem] leading-relaxed text-muted">
+                    Choose a time that works for you to complete your Patches Partnership application.
                   </p>
-                )}
+                </div>
                 <GhlCalendar />
               </motion.div>
             ) : elsewhere ? (
@@ -97,7 +102,7 @@ export function BookingSection({ instance = "book-call" }: { instance?: BookingI
               </motion.div>
             ) : (
               <motion.div key="form" initial={false} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.25 }}>
-                <DiscoveryForm instance={instance} onSkip={() => showCalendarIn(instance)} />
+                <DiscoveryForm instance={instance} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -107,7 +112,7 @@ export function BookingSection({ instance = "book-call" }: { instance?: BookingI
   );
 }
 
-function DiscoveryForm({ instance, onSkip }: { instance: BookingInstance; onSkip: () => void }) {
+function DiscoveryForm({ instance }: { instance: BookingInstance }) {
   // Field ids must be unique: this form is on the page twice.
   const p = instance === "book-call" ? "d" : "d2";
   const [d, setD] = useState<DiscoveryAnswers>(EMPTY_DISCOVERY);
@@ -116,38 +121,53 @@ function DiscoveryForm({ instance, onSkip }: { instance: BookingInstance; onSkip
   const [honeypot, setHoneypot] = useState("");
   const started = useRef(false);
   const startedAt = useRef(0);
+  // Synchronous lock + one id per application attempt: rapid clicks and retries can't create
+  // a second application (the server de-duplicates on this id as well).
+  const inFlight = useRef(false);
+  const submissionId = useRef("");
   const { markSaved } = useBooking();
 
   useEffect(() => {
     startedAt.current = Date.now();
+    submissionId.current = crypto.randomUUID();
   }, []);
 
   const set = useCallback(<K extends keyof DiscoveryAnswers>(k: K, v: DiscoveryAnswers[K]) => {
     if (!started.current) {
       started.current = true;
       track("DiscoveryFormStarted");
+      track("application_started", { form_location: instance });
     }
     setD((p) => ({ ...p, [k]: v }));
     setErrors((e) => (e[k] ? { ...e, [k]: undefined } : e));
-  }, []);
+  }, [instance]);
   const toggle = (k: "customerChannels" | "markets", v: string) => set(k, d[k].includes(v) ? d[k].filter((x) => x !== v) : [...d[k], v]);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (status.kind === "submitting") return;
+    if (inFlight.current) return;
     const errs = validateDiscovery(d);
     setErrors(errs);
     if (Object.keys(errs).length) {
       document.getElementById(`f-${p}_${Object.keys(errs)[0]}`)?.focus();
       return;
     }
+    inFlight.current = true;
     setStatus({ kind: "submitting" });
+    track("application_submitted", { form_location: instance });
     try {
-      await submitLead("discovery", d, { startedAt: startedAt.current, honeypot });
+      // Resolves only after the server confirms GoHighLevel saved the contact and opportunity.
+      await submitLead("discovery", d, { startedAt: startedAt.current, honeypot, submissionId: submissionId.current });
       track("DiscoveryFormSubmitted");
+      track("application_crm_success", { form_location: instance });
       markSaved({ name: d.fullName, email: d.email, business: d.businessName }, instance);
-    } catch (err) {
-      setStatus({ kind: "error", message: err instanceof Error ? err.message : "We couldn't save your details. Please try again." });
+      // Bring the newly revealed calendar into view once it has rendered.
+      window.setTimeout(() => document.getElementById(`${instance}-calendar`)?.scrollIntoView({ behavior: "smooth", block: "start" }), 450);
+    } catch {
+      track("application_crm_failed", { form_location: instance });
+      // Answers stay in the form; the same submission id is reused on retry.
+      setStatus({ kind: "error", message: FAIL_MESSAGE });
+      inFlight.current = false;
     }
   };
 
@@ -187,12 +207,9 @@ function DiscoveryForm({ instance, onSkip }: { instance: BookingInstance; onSkip
             <p className="flex items-start gap-2 font-semibold text-red-600 dark:text-red-300">
               <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden /> {status.message}
             </p>
-            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 pl-6">
+            <div className="mt-2 pl-6">
               <button type="submit" className="font-semibold text-fg underline underline-offset-4">
                 Try again
-              </button>
-              <button type="button" onClick={onSkip} className="font-semibold text-fg underline underline-offset-4">
-                Continue to the calendar without saving
               </button>
             </div>
           </motion.div>
@@ -206,7 +223,7 @@ function DiscoveryForm({ instance, onSkip }: { instance: BookingInstance; onSkip
         <button type="submit" className="btn btn-primary w-full sm:w-auto" disabled={status.kind === "submitting"}>
           {status.kind === "submitting" ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Saving…
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> Saving your application…
             </>
           ) : (
             <>
