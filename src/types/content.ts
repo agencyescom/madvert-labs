@@ -43,7 +43,7 @@ export type CaseStudy = {
   placeholder?: boolean;
 };
 
-export type ResourceCategory = "acquire" | "convert" | "search" | "brand" | "automate" | "build";
+export type ResourceCategory = "acquire" | "convert" | "search" | "brand" | "automate" | "build" | "content";
 export type GatingType = "open" | "email" | "form" | "qualified";
 
 export type Resource = {
@@ -52,6 +52,7 @@ export type Resource = {
   kind: string;
   category: ResourceCategory;
   description: string;
+  /** Benefit bullets: what the reader actually gets out of it. */
   outline: string[];
   gating: GatingType;
   fileUrl?: string;
@@ -59,8 +60,30 @@ export type Resource = {
   relatedService?: string;
   featured?: boolean;
   cover?: ImageAsset;
+  /** Optional secondary artwork for the landing page (e.g. a 3D mockup of the same guide). */
+  coverAlt?: ImageAsset;
   seo?: { title?: string; description?: string };
   placeholder?: boolean;
+  // Lead magnet landing page
+  sourceId?: string;
+  badge?: string;
+  categoryLabel?: string;
+  heroHeadline?: string;
+  outcome?: string;
+  whoFor?: string[];
+  formCta?: string;
+  cardCta?: string;
+  extraFields?: ("company" | "website")[];
+  insight?: { title: string; points: string[] };
+  successTitle?: string;
+  successBody?: string;
+  calendarTitle?: string;
+  calendarAccent?: string;
+  calendarBody?: string;
+  proof?: { categories: CaseStudyCategory[]; labels: string[] };
+  related?: string[];
+  /** Official artwork has not been supplied yet; a branded CSS cover is shown meanwhile. */
+  artworkPending?: boolean;
 };
 
 export type Faq = { q: string; a: string };

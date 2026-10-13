@@ -37,7 +37,7 @@ export function Hero({ image }: { image?: ImageAsset }) {
             machine instead of six separate vendors.
           </p>
           <div data-reveal style={{ ["--reveal-delay" as string]: 280 }} className="mt-10 flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center">
-            <Cta href={site.founderCta.href} size="lg" track="hero_strategy_call_click" className="!whitespace-normal text-center">
+            <Cta href={site.founderCta.href} size="lg" track="strategy_call_click" trackLabel="hero" className="!whitespace-normal text-center">
               {site.founderCta.label}
             </Cta>
             <Cta href="/services" variant="secondary" size="lg" arrow={false} icon={<PlayGlyph />} track="service_cta_click" trackLabel="hero_see_how">

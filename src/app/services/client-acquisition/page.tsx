@@ -7,6 +7,7 @@ import { ServiceHero } from "@/sections/services/ServiceHero";
 import { AnswerBlock, Capability, FreeValue, Statement } from "@/sections/services/Blocks";
 import { CheapLeads, LeadRadar, QualifyingForm, SearchSurfaces, StreamsMerge } from "@/sections/services/Visuals";
 import { FinalCta } from "@/sections/shared/FinalCta";
+import { BookingSection } from "@/components/booking/BookingSection";
 
 const path = "/services/client-acquisition";
 const description =
@@ -23,7 +24,7 @@ export default async function AcquisitionPage() {
         title="Your Sales Team Does Not Need More Phone Numbers."
         accent="It Needs More People Worth Calling."
         sub="Madvert builds qualified customer acquisition systems across paid and organic channels so your sales team spends more time speaking with real opportunities and less time chasing noise."
-        primary={{ label: "Build Qualified Demand", href: "/contact?service=client-acquisition" }}
+        primary={{ label: "Build Qualified Demand", href: "#book" }}
         secondary={{ label: "Get the Lead Generation Playbook", href: "/resources/qualified-lead-generation-playbook" }}
         crumbs={[
           { name: "What We Do", path: "/services" },
@@ -120,6 +121,7 @@ export default async function AcquisitionPage() {
       />
 
       <FinalCta title="Stop Optimising for Leads" accent="Your Sales Team Does Not Want." primary={{ label: "Book an Acquisition Strategy Call", href: site.primaryCta.href }} />
+      <BookingSection eyebrow="Need This Built for Your Business?" context="services:client-acquisition" />
 
       <JsonLd data={schema.service({ name: "Client Acquisition", serviceType: "Lead generation and customer acquisition", description, path, audience: "Established businesses" })} />
     </>

@@ -33,11 +33,10 @@ Without any environment variables the site runs fully on clearly marked placehol
 | `/services/tech-product-development` | Tech and Product Development |
 | `/studios` | Madvert Studios (showreel at `#showreel`) |
 | `/case-studies`, `/case-studies/[slug]` | Evidence Room with filters and dossier pages |
-| `/resources`, `/resources/[slug]` | Madvert Vault with per resource gating |
+| `/resources`, `/resources/[slug]` | Madvert Vault and one landing page per lead magnet |
 | `/about`, `/contact` (`#book`), `/challenge`, `/privacy` | |
 | `/api/leads` | Growth brief, challenge (with optional upload) and resource requests |
-| `/api/calendar/availability`, `/api/calendar/book` | Strategy call booking |
-| `/api/calendar/oauth/start`, `/api/calendar/oauth/callback` | One time calendar authorisation |
+| `/api/events` | Calendar opened / booked hooks for the CRM |
 | `/api/revalidate` | Sanity publish webhook |
 
 Contact links accept `?service=<slug>` and `?intent=growth-systems-audit|tech-opportunity-audit`; both travel with the lead.
@@ -52,7 +51,7 @@ src/
   animations/     lazy GSAP scene hook, scroll step hooks
   cms/            Sanity client, GROQ queries, cached readers, placeholder fallback content
   forms/          Zod schemas, fields, ContactFlow, BookingWidget, ChallengeForm, ResourceGate
-  integrations/   Google Calendar, CRM webhooks, Meta CAPI, GA4 MP, email, rate limit, spam
+  integrations/   CRM webhooks, Meta CAPI, GA4 MP, email, rate limit, spam
   analytics/      event names, track(), client boot (reveals, click tracking, scroll depth, attribution)
   lib/            site config, SEO helpers, theme boot script, attribution
   hooks/ types/
@@ -90,21 +89,15 @@ No testimonials, clients, metrics, certifications or awards are invented. Every 
 
 Founder photography is included (`public/images/usama-abbas-dahri*`) and used in the hero, founder sections and About; a Sanity upload in Site Settings overrides it. Replace before launch: showreel, portfolio, proof items, case studies, team photos, resource files and covers, and the privacy policy (`/privacy` is marked for legal review).
 
-## Google Calendar booking
+## Booking calendar
 
-The initial calendar owner is Usama Abbas Dahri (`GOOGLE_CALENDAR_ID=usamaabbasdahri@gmail.com`). Everything is environment driven, so a dedicated Madvert calendar can replace it later.
+All booking CTAs lead to one calendar: the Madvert LeadConnector widget
+(`https://api.madvertlabs.com/widget/booking/pvk8u6OhzYeIizvLDelx`, override with `NEXT_PUBLIC_BOOKING_URL`).
 
-1. Google Cloud console: enable the Google Calendar API, create an OAuth client of type "Web application" and add the redirect URI `https://<your-domain>/api/calendar/oauth/callback`.
-2. Set `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `CALENDAR_SETUP_SECRET`, `GOOGLE_CALENDAR_ID`, `CALENDAR_TIMEZONE` and `CALENDAR_BUSINESS_HOURS` and deploy.
-3. Signed in as the calendar owner, visit `/api/calendar/oauth/start?secret=<CALENDAR_SETUP_SECRET>`, approve, and copy the refresh token shown once into `GOOGLE_REFRESH_TOKEN`. Redeploy.
-
-Business hours are never assumed. Example (Monday to Friday, 10:00 to 13:00 and 15:00 to 18:00 in `CALENDAR_TIMEZONE`):
-
-```
-CALENDAR_BUSINESS_HOURS={"1":[["10:00","13:00"],["15:00","18:00"]],"2":[["10:00","13:00"],["15:00","18:00"]],"3":[["10:00","13:00"],["15:00","18:00"]],"4":[["10:00","13:00"],["15:00","18:00"]],"5":[["10:00","13:00"],["15:00","18:00"]]}
-```
-
-Meeting length (default 30), buffers (default 15 before and 15 after), minimum notice and booking window are configurable. Only free/busy is read; visitors only ever receive computed free slots. Bookings re-check the slot, create "Madvert Labs Business Strategy Call" with the visitor as attendee, the form answers in the description and a Google Meet link, and Google sends the invitation. With `RESEND_API_KEY` set, a confirmation email is sent too. The visitor's time zone is detected and can be changed.
+* `<MadvertBookingCalendar />` is the only component that embeds it (lazy loaded near the viewport, auto resized by the widget's `form_embed.js`).
+* `<BookingSection />` ("Partner Up with MADVERT Labs") sits before the footer on the home, service, Studios, What We Do, case studies, resources, about, contact and every lead magnet page, with contextual copy.
+* Any link to `#book` (header, mobile sticky CTA, service and final CTAs) smooth scrolls to that section, or opens the calendar in a modal (full screen sheet on mobile) on pages without one.
+* `calendar_open` fires when the calendar loads; `calendar_booking_complete` fires when the widget reports a completed booking through `postMessage` (best effort; treat the CRM's own appointment record as the source of truth).
 
 ## Leads, CRM and conversions
 
@@ -116,7 +109,27 @@ After the response is sent, leads fan out to whichever destinations are configur
 
 ## Analytics
 
-GTM, GA4, Google Ads, Meta Pixel and Microsoft Clarity each load only when their ID is set. Events: `hero_strategy_call_click`, `service_cta_click`, `free_value_click`, `case_study_open`, `resource_download`, `contact_form_start`, `contact_form_complete`, `calendar_open`, `calendar_booking_complete`, `showreel_play`, `portfolio_open`, `theme_switch`, `challenge_madvert_click`, plus `scroll_depth` at 25, 50, 75 and 90 percent and SPA page views. Add `data-track="<event>"` to any link to track it.
+GTM (`GTM-MDFSNH4H`) is the tag management layer and loads once. GA4 (`G-MNM7Y974JB`) loads once through gtag, **unless** `NEXT_PUBLIC_GA4_VIA_GTM=true`, in which case GA4 must be configured as a tag inside GTM. Use one or the other, never both, or page views double count. Route changes are measured by GA4 enhanced measurement ("page changes based on browser history events", on by default); the site never sends a manual page_view. Every event is also pushed to `dataLayer` (plus `virtual_page_view` on route changes) for GTM triggers. Google Ads, Meta Pixel and Clarity load only when their IDs are set.
+
+`strategy_call_click`, `calendar_open`, `calendar_booking_complete`, `service_card_click`, `service_cta_click`, `service_page_view`, `lead_magnet_click`, `contact_form_start`, `contact_form_complete`, `case_study_open`, `resource_download`, `showreel_play`, `whatsapp_click`, `email_click` (both automatic for `wa.me` and `mailto:` links), `scroll_50`, `scroll_75`, `scroll_90`, `theme_switch`, and the lead magnet funnel: `lead_magnet_view`, `lead_magnet_form_start`, `lead_magnet_conversion`, `lead_magnet_download`, `lead_magnet_calendar_click`, `lead_magnet_related_resource_click` (each with `lead_magnet_name`, `page_path` and UTM source, medium and campaign). Add `data-track="<event>"` to any link to track it.
+
+## Lead magnets (Madvert Vault)
+
+Every resource has its own landing page at `/resources/<slug>`, built from one template and the list in `src/content/lead-magnets.ts` (Sanity `resource` documents can add or override entries without code). Cards never open a file directly.
+
+| Slug | Resource | CRM source id |
+| --- | --- | --- |
+| `landing-pages-that-sell` | The Art of Building Landing Pages That Sell | `leadmagnet_landing_pages` |
+| `seo-ai-search-playbook` | Get Found on Google. Get Discovered by AI. | `leadmagnet_seo_ai` |
+| `meta-ads-pre-launch-checklist` | Ultimate Meta Ads Pre-Launch Checklist | `leadmagnet_meta_ads` |
+| `ai-content-automation-playbook` | Never Run Out of Content Again | `leadmagnet_content_automation` |
+| `automated-lead-engine` | Build Your Automated Lead Engine | `leadmagnet_lead_engine` |
+| `build-that-offer` | Build That Offer Then Retire (artwork pending) | `leadmagnet_offer` |
+| `growth-systems-audit`, `brand-perception-checklist`, `qualified-lead-generation-playbook`, `conversion-leak-checklist`, `revenue-leakage-audit`, `tech-opportunity-audit`, `madvert-studios-showreel` | Audits, checklists and showreel | `leadmagnet_*` |
+
+Official cover artwork lives in `public/lead-magnets/<slug>.webp` (plus `.jpg` for email and social previews).
+
+On submission (first name + email, plus company or website where useful) the lead is validated, then sent to the CRM webhooks with `lead_source` = the source id, `lead_magnet`, tags and full UTM attribution. Use that tag in the CRM to deliver the resource and start the matching nurture. If a resource has a `fileUrl` it is also unlocked on the page. Calendar opened / booked hooks are posted to `/api/events` and forwarded to the same webhooks (`madvert.calendar_opened`, `madvert.calendar_booked`) with the lead magnet attached.
 
 ## SEO and AI search
 
@@ -128,7 +141,7 @@ Unique titles, descriptions, canonicals, Open Graph and Twitter cards on every p
 2. Framework preset **Next.js** is detected automatically. Leave the build command, output directory and root directory on their defaults.
 3. **Environment Variables**: add `NEXT_PUBLIC_SITE_URL` (your live URL, e.g. `https://madvertlabs.com`) plus any values from `.env.example` you use. `NEXT_PUBLIC_*` values are baked in at build time, so redeploy after changing them.
 4. **Deploy.** Every push to `main` redeploys; every other branch gets a preview URL.
-5. **Domains**: Project → Settings → Domains → add your domain and follow the DNS instructions. Use the same URL for `NEXT_PUBLIC_SITE_URL` and in the Google OAuth redirect URI.
+5. **Domains**: Project → Settings → Domains → add your domain and follow the DNS instructions. Use the same URL for `NEXT_PUBLIC_SITE_URL`.
 
 Notes:
 

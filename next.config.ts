@@ -17,6 +17,13 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
+  async redirects() {
+    return [
+      { source: "/resources/seo-and-ai-search-guide", destination: "/resources/seo-ai-search-playbook", permanent: true },
+      { source: "/resources/seo-ai-search-guide", destination: "/resources/seo-ai-search-playbook", permanent: true },
+      { source: "/resources/madvert-studios-portfolio", destination: "/resources/madvert-studios-showreel", permanent: true },
+    ];
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

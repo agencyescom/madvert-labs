@@ -1,26 +1,36 @@
 import Script from "next/script";
+import { analyticsIds } from "@/lib/site";
 
-/** Third party analytics. Each vendor only loads when its ID is configured. All load after hydration. */
+/**
+ * GTM is the tag management layer (loaded once). GA4 is loaded directly through gtag unless
+ * NEXT_PUBLIC_GA4_VIA_GTM=true, in which case GA4 must be configured inside the GTM container.
+ * Either way GA4 is loaded exactly once. SPA navigations are measured by GA4 enhanced measurement
+ * ("page changes based on browser history events"), so no manual page_view is sent (no duplicates).
+ * Every custom event is also pushed to dataLayer for GTM triggers.
+ */
 export function AnalyticsScripts() {
-  const gtm = process.env.NEXT_PUBLIC_GTM_ID;
-  const ga4 = process.env.NEXT_PUBLIC_GA4_ID;
+  const { gtm, ga4, ga4ViaGtm } = analyticsIds;
   const ads = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
   const pixel = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   const clarity = process.env.NEXT_PUBLIC_CLARITY_ID;
-  const gtagId = ga4 ?? ads;
+  const directGa4 = ga4 && !ga4ViaGtm ? ga4 : undefined;
+  const gtagId = directGa4 ?? ads;
 
   return (
     <>
+      <Script id="dl-init" strategy="afterInteractive">
+        {`window.dataLayer=window.dataLayer||[];window.__ga4ViaGtm=${ga4ViaGtm ? "true" : "false"};`}
+      </Script>
       {gtm ? (
         <Script id="gtm" strategy="afterInteractive">
-          {`(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtm}');`}
+          {`(function(w,d,s,l,i){if(w.__gtmLoaded)return;w.__gtmLoaded=true;w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','${gtm}');`}
         </Script>
       ) : null}
       {gtagId ? (
         <>
           <Script src={`https://www.googletagmanager.com/gtag/js?id=${gtagId}`} strategy="afterInteractive" />
           <Script id="gtag-init" strategy="afterInteractive">
-            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());${ga4 ? `gtag('config','${ga4}');` : ""}${ads ? `gtag('config','${ads}',{allow_enhanced_conversions:true});` : ""}`}
+            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());${directGa4 ? `gtag('config','${directGa4}');` : ""}${ads ? `gtag('config','${ads}',{allow_enhanced_conversions:true});` : ""}`}
           </Script>
         </>
       ) : null}

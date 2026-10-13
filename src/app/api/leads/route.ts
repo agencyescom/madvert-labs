@@ -100,23 +100,18 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true });
   }
 
-  // resource
+  // resource (lead magnet)
   const resource = await getResource(data.resourceSlug);
   if (!resource) return fail(404, "Resource not found");
-  if ((resource.gating === "form" || resource.gating === "qualified") && (!data.name || !data.business)) {
-    return fail(422, "Please complete the form.", { name: ["Required"], business: ["Required"] });
-  }
-  if (resource.gating === "qualified" && !data.challenge) return fail(422, "Please complete the form.", { challenge: ["Required"] });
+  const downloadUrl = resource.gating === "qualified" ? undefined : resource.fileUrl ?? resource.externalUrl;
   const lead: LeadPayload = {
     ...base,
     kind: "resource",
-    contact: { name: data.name, email: data.email, business: data.business, website: data.website },
-    answers: { challenge: data.challenge },
-    resource: { slug: resource.slug, title: resource.title, gating: resource.gating },
+    contact: { name: data.firstName, email: data.email, business: data.company, website: data.website },
+    answers: { lead_magnet: resource.title },
+    resource: { slug: resource.slug, title: resource.title, gating: resource.gating, sourceId: resource.sourceId, delivered: Boolean(downloadUrl) },
     service: resource.relatedService,
   };
   processLead(lead);
-  // Qualified resources are reviewed by the team before they are sent.
-  const downloadUrl = resource.gating === "qualified" ? undefined : resource.fileUrl ?? resource.externalUrl;
   return NextResponse.json({ ok: true, downloadUrl, delivery: downloadUrl ? "instant" : "email" });
 }

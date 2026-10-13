@@ -4,6 +4,8 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileStickyCta } from "@/components/layout/MobileStickyCta";
+import { BookingController } from "@/components/booking/BookingController";
+import { AmbientBackground } from "@/components/visuals/AmbientBackground";
 import { IconDefs } from "@/components/ui/Icon3D";
 import { ClientBoot } from "@/analytics/ClientBoot";
 import { AnalyticsScripts } from "@/analytics/AnalyticsScripts";
@@ -47,10 +49,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body>
         <IconDefs />
+        <AmbientBackground />
         <Header />
         <main id="main">{children}</main>
         <Footer />
         <MobileStickyCta />
+        <BookingController />
         <ClientBoot />
         <AnalyticsScripts />
         <JsonLd data={[schema.organization(), schema.website(), schema.founder()]} />

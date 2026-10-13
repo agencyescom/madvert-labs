@@ -58,7 +58,7 @@ export function ServiceHero({
               {secondary ? (
                 <Link
                   href={secondary.href}
-                  data-track={secondary.track ?? "free_value_click"}
+                  data-track={secondary.track ?? "lead_magnet_click"}
                   data-track-label={secondary.label}
                   className="group/btn inline-flex items-center gap-2 text-[15px] font-medium text-accent-text"
                 >

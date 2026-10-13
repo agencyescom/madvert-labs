@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import { Eyebrow } from "@/components/ui/Section";
 import { pageMetadata } from "@/lib/seo";
-import { BookingWidget } from "@/forms/BookingWidget";
+import { BookingSection } from "@/components/booking/BookingSection";
 import { ContactFlow } from "@/forms/ContactFlow";
 
 const description = "Tell Madvert Labs what is happening, what you have tried and what a great result looks like. Send a growth brief or book a business strategy call with Usama.";
@@ -61,20 +61,13 @@ export default function ContactPage() {
         </div>
       </section>
 
-      <section id="book" className="section scroll-mt-20 border-t border-line" aria-labelledby="book-title">
-        <div className="container-x grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-10">
-          <div className="lg:col-span-4">
-            <h2 id="book-title" className="t-h1">
-              Prefer a <span className="t-grad">Conversation?</span>
-            </h2>
-            <p className="t-lead mt-6">Book a Business Strategy Call with Usama and bring the real numbers.</p>
-            <p className="t-small mt-6">30 minutes. Your time zone is detected automatically and you can change it.</p>
-          </div>
-          <div className="lg:col-span-8">
-            <BookingWidget />
-          </div>
-        </div>
-      </section>
+      <BookingSection
+        eyebrow="Prefer a Conversation?"
+        title="Partner Up with"
+        accent="MADVERT Labs."
+        body="Book a Business Strategy Call with Usama and bring the real numbers. We will look at the business, the current system and the next most valuable move."
+        context="contact"
+      />
 
       <section className="section-tight border-t border-line">
         <div className="container-x text-center">

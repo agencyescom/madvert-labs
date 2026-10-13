@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Cta } from "@/components/ui/Button";
-import { ResourceCover } from "@/components/visuals/ResourceCover";
+import { LeadMagnetCover } from "@/components/lead-magnets/LeadMagnetCover";
 import type { Resource } from "@/types/content";
 
 export function Vault({ resources }: { resources: Resource[] }) {
-  const featured = resources.filter((r) => r.featured).slice(0, 5);
+  const featured = resources.filter((r) => r.featured && !r.artworkPending).slice(0, 5);
   return (
     <section className="section overflow-hidden" aria-labelledby="vault-title">
       <div className="container-x">
@@ -23,10 +23,12 @@ export function Vault({ resources }: { resources: Resource[] }) {
         <ul className="-mx-[var(--pad-x)] mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-[var(--pad-x)] pb-4 lg:mx-0 lg:grid lg:grid-cols-5 lg:overflow-visible lg:px-0">
           {featured.map((r, i) => (
             <li key={r.slug} data-reveal style={{ ["--reveal-delay" as string]: i * 80 }} className="w-[220px] shrink-0 snap-start lg:w-auto">
-              <Link href={`/resources/${r.slug}`} data-track="free_value_click" data-track-label={`vault_${r.slug}`} className="group block">
-                <ResourceCover resource={r} className="transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-2 group-hover:rotate-[-1.2deg]" />
+              <Link href={`/resources/${r.slug}`} data-track="lead_magnet_click" data-track-label={`vault_${r.slug}`} className="group block">
+                <div className="transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-2">
+                  <LeadMagnetCover resource={r} size="sm" interactive={false} />
+                </div>
                 <p className="mt-4 text-[14.5px] font-medium text-ink">{r.title}</p>
-                <p className="text-[13px] text-ink-3">{r.kind}</p>
+                <p className="text-[13px] text-accent-text">{r.cardCta ?? "Get the Guide"} →</p>
               </Link>
             </li>
           ))}

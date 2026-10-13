@@ -82,7 +82,7 @@ export function PillarsGallery() {
                       </Cta>
                       <Link
                         href={p.freeValue.href}
-                        data-track={p.key === "studios" ? "showreel_play" : "free_value_click"}
+                        data-track={p.key === "studios" ? "showreel_play" : "lead_magnet_click"}
                         data-track-label={`pillar_${p.key}_free_value`}
                         className="group/btn inline-flex items-center gap-2 text-[14.5px] font-medium text-accent-text"
                       >

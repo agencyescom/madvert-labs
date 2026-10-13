@@ -1,4 +1,5 @@
 import type { AnalyticsEvent } from "./events";
+import { getAttribution } from "@/lib/attribution";
 
 type Params = Record<string, string | number | boolean | undefined>;
 
@@ -9,6 +10,7 @@ declare global {
     fbq?: (...args: unknown[]) => void;
     clarity?: (...args: unknown[]) => void;
     __madvertReady?: boolean;
+    __ga4ViaGtm?: boolean;
   }
 }
 
@@ -19,13 +21,26 @@ export function track(event: AnalyticsEvent, params: Params = {}) {
     const clean = Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined));
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event, ...clean });
-    window.gtag?.("event", event, clean);
+    if (!window.__ga4ViaGtm) window.gtag?.("event", event, clean);
     window.fbq?.("trackCustom", event, clean);
     window.clarity?.("event", event);
     if (process.env.NODE_ENV === "development") console.debug("[track]", event, clean);
   } catch {
     /* analytics must never break the page */
   }
+}
+
+/** Lead magnet events always carry the resource name, page and campaign attribution. */
+export function trackLeadMagnet(event: AnalyticsEvent, leadMagnet: string, params: Params = {}) {
+  const a = getAttribution();
+  track(event, {
+    lead_magnet_name: leadMagnet,
+    page_path: typeof window !== "undefined" ? window.location.pathname : undefined,
+    utm_source: a.utm_source,
+    utm_medium: a.utm_medium,
+    utm_campaign: a.utm_campaign,
+    ...params,
+  });
 }
 
 /** Standard conversion events with deduplication ids shared with the server (Meta CAPI). */

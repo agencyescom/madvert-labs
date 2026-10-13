@@ -53,7 +53,7 @@ export function ChallengeForm({ uploadsEnabled }: { uploadsEnabled: boolean }) {
         <p className="t-lead mt-4">We will look at the system and come back with what we think is actually happening.</p>
         <p className="t-body mt-8">Want to talk it through sooner?</p>
         <div className="mt-5">
-          <Cta href="/contact#book" track="strategy_call_click" trackLabel="challenge_success">
+          <Cta href="#book" track="strategy_call_click" trackLabel="challenge_success">
             Book a Business Strategy Call
           </Cta>
         </div>

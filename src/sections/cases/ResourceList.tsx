@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ResourceCover } from "@/components/visuals/ResourceCover";
+import { ResourceCard } from "@/components/lead-magnets/ResourceCard";
 import type { Resource, ResourceCategory } from "@/types/content";
 
 const cats: { key: ResourceCategory | "all"; label: string }[] = [
@@ -10,6 +9,7 @@ const cats: { key: ResourceCategory | "all"; label: string }[] = [
   { key: "acquire", label: "Acquire" },
   { key: "convert", label: "Convert" },
   { key: "search", label: "Search" },
+  { key: "content", label: "Content" },
   { key: "brand", label: "Brand" },
   { key: "automate", label: "Automate" },
   { key: "build", label: "Build" },
@@ -17,7 +17,9 @@ const cats: { key: ResourceCategory | "all"; label: string }[] = [
 
 export function ResourceList({ resources }: { resources: Resource[] }) {
   const [c, setC] = useState<(typeof cats)[number]["key"]>("all");
-  const list = useMemo(() => (c === "all" ? resources : resources.filter((r) => r.category === c)), [c, resources]);
+  // Official artwork first, then the rest of the Vault.
+  const sorted = useMemo(() => [...resources].sort((a, b) => Number(Boolean(a.artworkPending)) - Number(Boolean(b.artworkPending))), [resources]);
+  const list = useMemo(() => (c === "all" ? sorted : sorted.filter((r) => r.category === c)), [c, sorted]);
   return (
     <>
       <div role="toolbar" aria-label="Filter resources" className="flex flex-wrap gap-2">
@@ -35,14 +37,10 @@ export function ResourceList({ resources }: { resources: Resource[] }) {
           </button>
         ))}
       </div>
-      <ul className="mt-12 grid grid-cols-2 gap-x-5 gap-y-12 md:grid-cols-3 lg:grid-cols-4">
+      <ul className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {list.map((r) => (
           <li key={r.slug}>
-            <Link href={`/resources/${r.slug}`} data-track="free_value_click" data-track-label={`vault_${r.slug}`} className="group block">
-              <ResourceCover resource={r} className="transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-2" />
-              <p className="mt-4 font-display text-[16px] font-semibold text-ink">{r.title}</p>
-              <p className="mt-1 text-[14px] text-ink-3">{r.description}</p>
-            </Link>
+            <ResourceCard r={r} />
           </li>
         ))}
       </ul>

@@ -12,6 +12,7 @@ import { Philosophy } from "@/sections/home/Philosophy";
 import { GrowthLoop } from "@/sections/home/GrowthLoop";
 import { AnswerBlock } from "@/sections/services/Blocks";
 import { FinalCta } from "@/sections/shared/FinalCta";
+import { BookingSection } from "@/components/booking/BookingSection";
 
 const description =
   "Branding, client acquisition, conversion, creative production, automation and technology, connected into one growth system. See how Madvert Labs works.";
@@ -90,6 +91,7 @@ export default async function ServicesPage() {
       />
 
       <FinalCta title="Bring Us the Business Problem." accent="We Will Start There." primary={site.founderCta} secondary={{ label: site.auditCta.label, href: site.auditCta.href }} />
+      <BookingSection eyebrow="Ready When You Are" context="services" />
     </>
   );
 }

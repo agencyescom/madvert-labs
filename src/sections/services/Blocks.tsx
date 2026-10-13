@@ -198,7 +198,7 @@ export function FreeValue({
               </p>
             ) : null}
             <div data-reveal style={{ ["--reveal-delay" as string]: 120 }} className="mt-9">
-              <Cta href={href} track="free_value_click" trackLabel={label}>
+              <Cta href={href} track="lead_magnet_click" trackLabel={label}>
                 {label}
               </Cta>
             </div>

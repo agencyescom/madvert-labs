@@ -14,10 +14,11 @@ export const site = {
     shortName: "Usama",
     role: "Founder, Madvert Labs",
   },
-  primaryCta: { label: "Book a Business Strategy Call", href: "/contact#book" },
-  founderCta: { label: "Book a Business Strategy Call with Usama", href: "/contact#book" },
-  shortCta: { label: "Book a Strategy Call", href: "/contact#book" },
-  auditCta: { label: "Start With a Free Growth Systems Audit", href: "/contact?intent=growth-systems-audit" },
+  // "#book" scrolls to the page's booking section, or opens the booking modal when the page has none.
+  primaryCta: { label: "Book Your Business Strategy Call", href: "#book" },
+  founderCta: { label: "Book a Business Strategy Call with Usama", href: "#book" },
+  shortCta: { label: "Book a Strategy Call", href: "#book" },
+  auditCta: { label: "Start With a Free Growth Systems Audit", href: "/resources/growth-systems-audit" },
 } as const;
 
 export type ServiceSlug =
@@ -104,7 +105,7 @@ export const pillars: Pillar[] = [
     summary: "When growth needs a tool, we design and build the tool.",
     headline: "If Growth Needs a Tool, We Build the Tool.",
     cta: "Build What Growth Needs",
-    freeValue: { label: "Request a Tech Opportunity Audit", href: "/contact?intent=tech-opportunity-audit" },
+    freeValue: { label: "Request a Tech Opportunity Audit", href: "/resources/tech-opportunity-audit" },
     inMegaMenu: true,
   },
 ];
@@ -131,6 +132,19 @@ export const footerNav = [
   { label: "Contact Us", href: "/contact" },
   { label: "Challenge Madvert", href: "/challenge" },
 ];
+
+/** The one booking calendar used everywhere (LeadConnector / GoHighLevel widget). */
+export const booking = {
+  url: process.env.NEXT_PUBLIC_BOOKING_URL ?? "https://api.madvertlabs.com/widget/booking/pvk8u6OhzYeIizvLDelx",
+  embedScript: "https://link.msgsndr.com/js/form_embed.js",
+};
+
+/** Analytics defaults. Env vars override; set NEXT_PUBLIC_GA4_VIA_GTM=true if GA4 is configured inside GTM. */
+export const analyticsIds = {
+  gtm: process.env.NEXT_PUBLIC_GTM_ID ?? "GTM-MDFSNH4H",
+  ga4: process.env.NEXT_PUBLIC_GA4_ID ?? "G-MNM7Y974JB",
+  ga4ViaGtm: process.env.NEXT_PUBLIC_GA4_VIA_GTM === "true",
+};
 
 export function absoluteUrl(path = "/") {
   return `${site.url}${path.startsWith("/") ? path : `/${path}`}`;

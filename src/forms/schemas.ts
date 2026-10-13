@@ -93,11 +93,10 @@ export const challengeSchema = challengeFields.extend({
 });
 
 export const resourceRequestFields = z.object({
+  firstName: z.string({ error: "Please enter your first name" }).trim().min(1, "Please enter your first name").max(80),
   email: z.string({ error: "Please enter a valid email" }).trim().email("Please enter a valid email").max(200),
-  name: optionalText(120),
-  business: optionalText(300),
+  company: optionalText(200),
   website: url,
-  challenge: optionalText(1500),
 });
 
 export const resourceRequestSchema = resourceRequestFields.extend({
@@ -108,26 +107,6 @@ export const resourceRequestSchema = resourceRequestFields.extend({
   ...guardSchema.shape,
 });
 
-export const bookingFields = z.object({
-  name: z.string({ error: "Please enter your name" }).trim().min(2, "Please enter your name").max(120),
-  email: z.string({ error: "Please enter a valid email" }).trim().email("Please enter a valid email").max(200),
-  phone: z.string({ error: "Phone or WhatsApp helps us reach you" }).trim().min(6, "Phone or WhatsApp helps us reach you").max(40),
-  business: z.string({ error: "Business name" }).trim().min(2, "Business name").max(200),
-  website: url,
-  problem: z.string({ error: "What is the main problem?" }).trim().min(5, "What is the main problem?").max(2000),
-  market: z.string({ error: "Which market?" }).trim().min(2, "Which market?").max(300),
-  notes: optionalText(2000),
-});
-
-export const bookingSchema = bookingFields.extend({
-  start: z.string().datetime({ offset: true }),
-  timezone: z.string().max(80),
-  attribution: attributionSchema,
-  eventId: z.string().max(80),
-  ...guardSchema.shape,
-});
-
 export type GrowthBrief = z.infer<typeof growthBriefSchema>;
 export type ChallengeSubmission = z.infer<typeof challengeSchema>;
 export type ResourceRequest = z.infer<typeof resourceRequestSchema>;
-export type BookingRequest = z.infer<typeof bookingSchema>;

@@ -9,6 +9,7 @@ import { AnswerBlock, Capability, FreeValue, Statement } from "@/sections/servic
 import { IdentityAlign } from "@/sections/services/IdentityAlign";
 import { AudienceFit, Touchpoints360 } from "@/sections/services/Visuals";
 import { FinalCta } from "@/sections/shared/FinalCta";
+import { BookingSection } from "@/components/booking/BookingSection";
 
 const path = "/services/branding-marketing";
 const description =
@@ -26,7 +27,7 @@ export default async function BrandingPage() {
         accent="Should Look Like One."
         campaignLine="Being Good Is Not Enough If You Look Forgettable."
         sub="We build and execute complete brand and marketing systems that shape how your business looks, sounds, communicates and shows up across every important touchpoint."
-        primary={{ label: "Build My Brand", href: "/contact?service=branding-marketing" }}
+        primary={{ label: "Build My Brand", href: "#book" }}
         secondary={{ label: "Get the Brand Perception Checklist", href: "/resources/brand-perception-checklist" }}
         crumbs={[
           { name: "What We Do", path: "/services" },
@@ -143,6 +144,7 @@ export default async function BrandingPage() {
       />
 
       <FinalCta title="Build a Brand Your Marketing Can" accent="Actually Be Proud Of." primary={{ label: "Book a Brand Strategy Call", href: site.primaryCta.href }} />
+      <BookingSection eyebrow="Need This Built for Your Business?" context="services:branding" />
 
       <JsonLd
         data={schema.service({

@@ -10,7 +10,7 @@ export type LeadPayload = {
   answers: Record<string, string | undefined>;
   service?: string;
   intent?: string;
-  resource?: { slug: string; title?: string; gating?: string };
+  resource?: { slug: string; title?: string; gating?: string; sourceId?: string; delivered?: boolean };
   booking?: { start: string; end: string; timezone: string; eventLink?: string; meetLink?: string };
   attachmentUrl?: string;
   attribution: Partial<Attribution>;
