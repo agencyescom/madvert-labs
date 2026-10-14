@@ -159,7 +159,7 @@ function DiscoveryForm({ instance }: { instance: BookingInstance }) {
       // Resolves only after the server confirms GoHighLevel saved the contact and opportunity.
       await submitLead("discovery", d, { startedAt: startedAt.current, honeypot, submissionId: submissionId.current });
       track("DiscoveryFormSubmitted");
-      track("application_crm_success", { form_location: instance });
+      track("application_crm_success", { form_location: instance }, { eventId: submissionId.current });
       markSaved({ name: d.fullName, email: d.email, business: d.businessName }, instance);
       // Bring the newly revealed calendar into view once it has rendered.
       window.setTimeout(() => document.getElementById(`${instance}-calendar`)?.scrollIntoView({ behavior: "smooth", block: "start" }), 450);

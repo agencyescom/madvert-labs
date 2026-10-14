@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { Analytics } from "@/components/Analytics";
 import { Providers } from "@/components/Providers";
 import { themeInitScript } from "@/components/ThemeProvider";
+import { META_PIXEL_ID, metaPixelScript } from "@/lib/analytics";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
@@ -67,8 +68,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        {/* Meta Pixel base code, as provided by Meta: in <head> so PageView fires before hydration. */}
+        {META_PIXEL_ID && <script id="meta-pixel" dangerouslySetInnerHTML={{ __html: metaPixelScript(META_PIXEL_ID) }} />}
       </head>
       <body>
+        {META_PIXEL_ID && (
+          <noscript>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img height="1" width="1" style={{ display: "none" }} alt="" src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`} />
+          </noscript>
+        )}
         <Providers>{children}</Providers>
         <Analytics />
       </body>

@@ -152,7 +152,14 @@ const normalisePhone = (p: string) => {
   return t.startsWith("+") ? `+${t.slice(1).replace(/\D/g, "")}` : t.replace(/[^\d]/g, "");
 };
 
-async function submit(cfg: GhlConfig, a: Answers, attr: z.infer<typeof schema>["attribution"], req: Request, pageUrl?: string): Promise<Result> {
+async function submit(
+  cfg: GhlConfig,
+  a: Answers,
+  attr: z.infer<typeof schema>["attribution"],
+  req: Request,
+  pageUrl: string | undefined,
+  submissionId: string,
+): Promise<Result> {
   const [firstName, ...rest] = a.fullName.trim().split(/\s+/);
   const markets = a.markets.map((m) => MARKET_LABEL[m]);
 
@@ -256,7 +263,8 @@ async function submit(cfg: GhlConfig, a: Answers, attr: z.infer<typeof schema>["
   // so a configured GHL inbound webhook can't create a second contact.
   const lead: LeadPayload = {
     kind: "growth_brief",
-    eventId: crypto.randomUUID(),
+    // Same id the page sends with its Pixel "Lead", so Meta deduplicates the browser + CAPI events.
+    eventId: submissionId,
     submittedAt: new Date().toISOString(),
     contact: { name: a.fullName.trim(), email: a.email.trim(), phone: a.phone.trim(), business: a.businessName.trim(), website: a.website.trim() },
     answers: {
@@ -318,7 +326,7 @@ export async function POST(req: Request) {
   const key = `${data.submissionId}:${data.answers.email.toLowerCase()}`;
   const result = await remember(key, async () => {
     try {
-      return await submit(cfg.config, data.answers, data.attribution, req, data.page_url);
+      return await submit(cfg.config, data.answers, data.attribution, req, data.page_url, data.submissionId);
     } catch (e) {
       if (e instanceof GhlError) console.error(`[apply] ${e.step} failed: HTTP ${e.status} ${e.detail}`);
       else console.error("[apply] unexpected error:", e instanceof Error ? e.message : e);

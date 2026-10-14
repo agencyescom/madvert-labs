@@ -1,8 +1,15 @@
 /**
  * Analytics hooks. Every event is pushed to window.dataLayer (GTM-ready) and,
- * when the matching env ID is configured, forwarded to the Meta Pixel and GA4.
- * No IDs are hard-coded — see .env.example.
+ * when configured, forwarded to the Meta Pixel and GA4.
  */
+
+/** Madvert Labs Meta Pixel. Override with NEXT_PUBLIC_META_PIXEL_ID; set it to "off" to disable. */
+const PIXEL_ENV = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+export const META_PIXEL_ID = PIXEL_ENV === "off" ? "" : /^\d{6,20}$/.test(PIXEL_ENV ?? "") ? PIXEL_ENV! : "1410121457947973";
+
+/** Meta's base pixel code (fbevents.js loader + init + PageView). */
+export const metaPixelScript = (id: string) =>
+  `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','${id}');fbq('track','PageView');`;
 export type AnalyticsEvent =
   | "PageView"
   | "HeroCTA"
@@ -43,6 +50,8 @@ const META_STANDARD: Partial<Record<AnalyticsEvent, string>> = {
   ApplicationSubmitted: "SubmitApplication",
   QualifiedApplication: "Lead",
   MeetingBooked: "Schedule",
+  // Sent only after GoHighLevel confirmed the application was saved.
+  application_crm_success: "Lead",
 };
 
 /** Events that should only fire once per page session. */
@@ -58,7 +67,8 @@ const ONCE: ReadonlySet<AnalyticsEvent> = new Set<AnalyticsEvent>([
 ]);
 const fired = new Set<string>();
 
-export function track(event: AnalyticsEvent, props: Props = {}) {
+/** `eventId` is passed to Meta as eventID so the server-side Conversions API copy is deduplicated. */
+export function track(event: AnalyticsEvent, props: Props = {}, opts: { eventId?: string } = {}) {
   if (typeof window === "undefined") return;
   if (ONCE.has(event)) {
     if (fired.has(event)) return;
@@ -72,8 +82,9 @@ export function track(event: AnalyticsEvent, props: Props = {}) {
     if (event !== "PageView") {
       if (window.fbq) {
         const std = META_STANDARD[event];
-        if (std) window.fbq("track", std, props);
-        else window.fbq("trackCustom", event, props);
+        const extra = opts.eventId ? [{ eventID: opts.eventId }] : [];
+        if (std) window.fbq("track", std, props, ...extra);
+        else window.fbq("trackCustom", event, props, ...extra);
       }
       if (window.gtag) window.gtag("event", event, props);
     }
