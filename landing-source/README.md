@@ -63,6 +63,11 @@ went to and anything GHL could not store (for example a dropdown whose options d
 | --- | --- |
 | `NEXT_PUBLIC_GHL_CALENDAR_URL` | `https://api.madvertlabs.com/widget/booking/m2v95rY845IT0tQwdbEL` |
 | `NEXT_PUBLIC_GHL_EMBED_SCRIPT` | `https://api.madvertlabs.com/js/form_embed.js` |
-| `NEXT_PUBLIC_META_PIXEL_ID`, `NEXT_PUBLIC_GA4_ID`, `NEXT_PUBLIC_GTM_ID` | none: tags load only when set |
+| `NEXT_PUBLIC_META_PIXEL_ID` | `1410121457947973` (base code in `<head>`; `off` disables it) |
+| `NEXT_PUBLIC_GA4_ID`, `NEXT_PUBLIC_GTM_ID` | none: tags load only when set |
+
+Meta Pixel events: `PageView` on load, `Lead` only after GoHighLevel confirms the application was saved
+(its eventID is the submission id, which the server also uses for the Conversions API copy, so Meta
+deduplicates them), plus custom events such as `application_submitted`, `calendar_viewed` and `VSLPlay`.
 
 No testimonials, results, guarantees or certifications are shown. Sample figures on the page are labelled as demo or illustrative.
