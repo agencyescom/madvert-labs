@@ -88,14 +88,14 @@ function MetaVisual() {
       <MetaMark x={14} y={18} s={0.85} />
       <text x="36" y="28" className="scv-t f-ink2" fontSize="7.5" fontWeight="600">Ads Manager</text>
       <line x1="8" x2="128" y1="35.5" y2="35.5" className="s-st" strokeWidth=".8" />
-      <text x="15" y="51" className="scv-t f-ink" fontSize="8.5" fontWeight="700">Lead campaign</text>
-      <rect x="98" y="43" width="22" height="11" rx="5.5" className="m-track k" fill={META} />
-      <circle cx="114.5" cy="48.5" r="4" fill="#fff" className="m-knob k" />
+      <text x="15" y="51" className="scv-t f-ink" fontSize="8" fontWeight="700">Lead campaign</text>
+      <rect x="80" y="43" width="22" height="11" rx="5.5" className="m-track k" fill={META} />
+      <circle cx="96.5" cy="48.5" r="4" fill="#fff" className="m-knob k" />
       <rect x="15" y="59" width="66" height="13" rx="6.5" className="f-accsoft" />
       <text x="21" y="68.2" className="scv-t f-acc" fontSize="6.8" fontWeight="700">Objective · Leads</text>
       <text x="15" y="88" className="scv-t f-ink3" fontSize="6.8">Delivery</text>
-      <circle cx="84" cy="85.6" r="2.4" className="f-succ m-live k" />
-      <text x="89" y="88" className="scv-t f-succ" fontSize="6.8" fontWeight="700">Active</text>
+      <circle cx="64" cy="85.6" r="2.4" className="f-succ m-live k" />
+      <text x="69" y="88" className="scv-t f-succ" fontSize="6.8" fontWeight="700">Active</text>
       <path d="M15 134 C 30 132, 40 124, 54 121 S 80 108, 92 104 S 110 96, 120 93 L120 138 L15 138Z" fill={`url(#${id}fade)`} className="m-area k" />
       <path d="M15 134 C 30 132, 40 124, 54 121 S 80 108, 92 104 S 110 96, 120 93" fill="none" stroke={META} strokeWidth="1.8" strokeLinecap="round" pathLength={1} className="m-line k" />
 
@@ -371,7 +371,7 @@ function DevVisual() {
         <text x="151" y="125.6" className="scv-t scv-mono f-ink" fontSize="6.4">/api/leads</text>
         <rect x="126" y="132" width="21" height="10" rx="3" className="f-accsoft" />
         <text x="136.5" y="139.3" textAnchor="middle" className="scv-t f-acc" fontSize="5.6" fontWeight="700">GET</text>
-        <text x="151" y="139.6" className="scv-t scv-mono f-ink" fontSize="6.4">/api/pipeline</text>
+        <text x="151" y="139.6" className="scv-t scv-mono f-ink" fontSize="6.4">/api/crm</text>
       </g>
       <circle cx="200" cy="124" r="2.6" fill="#00e5ff" className="d-pkt d-pkt0 k" />
       <circle cx="160" cy="112" r="2.6" fill="#00e5ff" className="d-pkt d-pkt1 k" />
@@ -561,7 +561,7 @@ function MotionVisual() {
       <text x="193" y="66" fill="#fff" fontSize="12" fontWeight="800" className="scv-t scv-display mo-l mo-l1 k">IT</text>
       <text x="193" y="86" fill="#00e5ff" fontSize="19" fontWeight="800" className="scv-t scv-display mo-l mo-l2 k">MOVE</text>
       <rect x="193" y="91" width="40" height="2.4" rx="1.2" fill="#00e5ff" className="mo-under k" />
-      <rect x="236" y="34" width="20" height="20" rx="6" fill="#ff7a59" opacity=".9" className="mo-shape k" />
+      <rect x="238" y="54" width="16" height="16" rx="5" fill="#ff7a59" opacity=".9" className="mo-shape k" />
       {/* timeline */}
       <line x1="16" x2="264" y1="113.5" y2="113.5" className="s-st" strokeWidth=".8" />
       <text x="18" y="125" className="scv-t f-ink3" fontSize="5.8" fontWeight="700">Shape</text>

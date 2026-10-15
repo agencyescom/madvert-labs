@@ -217,7 +217,7 @@ const MODS: Mod[] = [
 type Layout = { W: number; H: number; cx: number; cy: number; rx: number; ry: number; cardW: number };
 const LAYOUTS: Record<"scene" | "compact", Layout> = {
   scene: { W: 600, H: 600, cx: 300, cy: 304, rx: 212, ry: 206, cardW: 25 },
-  compact: { W: 640, H: 420, cx: 320, cy: 212, rx: 244, ry: 150, cardW: 22 },
+  compact: { W: 640, H: 500, cx: 320, cy: 252, rx: 244, ry: 188, cardW: 22 },
 };
 
 function points(L: Layout, n: number) {
@@ -468,10 +468,12 @@ export function GrowthSystem({ variant = "scene" }: { variant?: "scene" | "compa
             </span>
             <div className="gs-mcard">
               <div className="gs-mtext">
-                <span className="gs-mic" aria-hidden="true">
-                  <Glyph name={m.icon} size={18} />
-                </span>
-                <p className="gs-mtitle">{m.title}</p>
+                <p className="gs-mtitle">
+                  <span className="gs-mic" aria-hidden="true">
+                    <Glyph name={m.icon} size={16} />
+                  </span>
+                  {m.title}
+                </p>
                 <p className="gs-mdesc">{m.desc}</p>
               </div>
               <div className="gs-mmini">
