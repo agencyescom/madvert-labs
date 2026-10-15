@@ -87,6 +87,26 @@ const paths: Record<string, ReactNode> = {
     </>
   ),
   flag: <path d="M5 17V3.5m0 0h9l-2 3.5 2 3.5H5" />,
+  building: <path d="M4 17V5.5L10 3v14M10 7.5l6 2V17M2.5 17h15M6.5 7.5v.1M6.5 10.5v.1M6.5 13.5v.1M13 11.5v.1M13 14v.1" />,
+  team: (
+    <>
+      <circle cx="7.5" cy="7" r="2.6" />
+      <path d="M2.8 16c.6-2.7 2.4-4.2 4.7-4.2s4.1 1.5 4.7 4.2" />
+      <circle cx="13.8" cy="7.6" r="2.1" />
+      <path d="M13.2 11.9c2 .1 3.4 1.4 4 3.6" />
+    </>
+  ),
+  megaphone: <path d="M3.5 8.5v3a1 1 0 0 0 1 1h2l6 3.5v-12l-6 3.5h-2a1 1 0 0 0-1 1ZM6.5 12.5l1 4h2l-1-4M15 7.5a3.5 3.5 0 0 1 0 5" />,
+  star: <path d="m10 3 2.1 4.4 4.8.6-3.5 3.3.9 4.8L10 13.8 5.7 16.1l.9-4.8L3.1 8l4.8-.6Z" />,
+  film: (
+    <>
+      <rect x="3" y="4.5" width="14" height="11" rx="2" />
+      <path d="M3 8h14M3 12h14M7 4.5v11M13 4.5v11" />
+    </>
+  ),
+  palette: <path d="M10 3a7 7 0 0 0 0 14c1.2 0 1.7-.8 1.4-1.7-.4-1.1.3-2.3 1.6-2.3H15a2.5 2.5 0 0 0 2-2.8C16.6 6.3 13.6 3 10 3ZM6.5 9.5v.1M8.5 6.5v.1M12 6.5v.1" />,
+  book: <path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H16v12H5.5A1.5 1.5 0 0 0 4 16.5v-12ZM4 16.5A1.5 1.5 0 0 0 5.5 18H16M7.5 6.5h5" />,
+  rocket: <path d="M11.5 3.5c2.6.2 4.8 2.4 5 5-1.2 2.7-3.6 5-6.6 6.4l-2.8-2.8C8.5 9.1 10.8 6.7 11.5 3.5ZM7.1 12.1 4.5 11l1.6-2.6 2.6-.2M8 13l1.1 2.6 2.6-1.6.2-2.6M5.2 14.8 3.5 16.5" />,
   download: <path d="M10 4v9m-4-4 4 4 4-4M4 15.5h12" />,
   refresh: <path d="M15.5 8A6 6 0 0 0 4.6 6.5M4.5 12a6 6 0 0 0 10.9 1.5M15.5 3.5V8H11M4.5 16.5V12H9" />,
   eye: (
@@ -153,10 +173,19 @@ export function Waves() {
     </svg>
   );
   return (
-    <div className="ob-waves" aria-hidden="true">
-      {wave("w1")}
-      {wave("w2")}
-    </div>
+    <>
+      <div className="ob-aurora" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+        <i />
+      </div>
+      <div className="ob-particles" aria-hidden="true" />
+      <div className="ob-waves" aria-hidden="true">
+        {wave("w1")}
+        {wave("w2")}
+      </div>
+    </>
   );
 }
 
@@ -379,8 +408,9 @@ export function Chips({ options, value, onChange }: { options: readonly string[]
 export function WhyWeNeedThis({ title, children }: { title: string; children: ReactNode }) {
   return (
     <aside className="ob-why">
-      <span className="icon">
-        <Icon name="shield" size={18} />
+      <span className="ob-tile3d" style={{ width: 40, height: 40, borderRadius: 12, background: "linear-gradient(150deg,#6fb8ff 0%,#1f7bff 45%,#0a3fb8 100%)" }}>
+        <span className="ob-tile3d-shine" style={{ borderRadius: 12 }} />
+        <Icon name="shield" size={19} stroke={2.1} className="relative" />
       </span>
       <div>
         <h4>{title}</h4>

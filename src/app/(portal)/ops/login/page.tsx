@@ -9,5 +9,5 @@ export const metadata: Metadata = { title: "Madvert Operations" };
 export default async function OpsLogin() {
   await connection();
   if (await opsUser()) redirect("/ops/onboarding");
-  return <LoginForm configured={opsConfigured()} />;
+  return <LoginForm configured={await opsConfigured()} />;
 }

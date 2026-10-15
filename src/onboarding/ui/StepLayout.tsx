@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { PHASES } from "@/onboarding/progress";
 import type { PhaseKey } from "@/onboarding/types";
+import { Art3D } from "./art3d";
 import { Btn, SaveBadge, StatusPill } from "./kit";
 import type { View } from "./PortalApp";
 import { usePortal } from "./store";
@@ -23,6 +24,9 @@ export function StepHeader({ phase, title, accent, intro, aside }: { phase: Phas
         {intro ? <div className="ob-lead mt-4">{intro}</div> : null}
       </div>
       <div className="flex flex-col items-start gap-2 md:items-end">
+        <span className="hidden md:block">
+          <Art3D name={phase} size={104} />
+        </span>
         <StatusPill status={pr.status} />
         {aside}
       </div>

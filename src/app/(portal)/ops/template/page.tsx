@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "Onboarding template · Operations" }
 
 export default async function OpsTemplate() {
   await connection();
-  const user = await requireOpsPage();
+  const user = await requireOpsPage("admin");
   const sections = [...BUSINESS_SECTIONS, ...OFFER_SECTIONS].map((s) => ({
     key: s.key,
     title: s.title,

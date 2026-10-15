@@ -148,7 +148,10 @@ The portal and Operations use their own root layout (`src/app/(portal)`): no mar
 | --- | --- |
 | `/onboarding/[token]` | Client portal: Welcome → Command center → 01 Business → 02 Access → 03 Assets → 04 Strategy (optional Offer Workshop) → 05 Kickoff → confirmation + missing items |
 | `/onboarding/task/[token]` | Delegated task link: shows **only** the one task that was sent (data for everything else is stripped server side) |
-| `/ops/login` | Team sign in |
+| `/ops/login` | Team sign in (individual accounts) |
+| `/ops/team`, `/ops/account`, `/ops/invite/[token]` | Team management (owner / admin / member), own password, one-time invite / reset links |
+| `/offer-builder` | Free public Offer Builder: a few questions → one click → complete offer, share link, save as PDF |
+| `/offer/[slug]` | Shared offer (from the public builder or a client's workshop) |
 | `/ops/onboarding` | Dashboard: progress, Business / Meta / Google / Website / WhatsApp / Assets / Offer / Kickoff, last activity, owner, risk flags, "Configuration Required" panel |
 | `/ops/onboarding/new` | Create onboarding (company, contact, engagement services, e-commerce / local flags, team), copy or email the link |
 | `/ops/onboarding/[id]` | Client detail: missing access/assets, risk flags, client questions, access verification, secure credentials (reveal is audited), business answers, workspace files, offer summary (fact vs idea), internal notes, team, kickoff, delegated tasks, automation events, audit log, PDF, new link / revoke |
@@ -178,6 +181,22 @@ src/onboarding/
                            events, emails, reminders, insights (risk flags, offer summary), pdf, ops, settings, guides, schema.sql
   ui/                      portal (PortalApp, steps, Uploader, Guides, store with autosave) and ops/
 ```
+
+### Team accounts
+
+Everyone signs in with their own email and password (scrypt-hashed). On first deploy, sign in once with any email in `OPS_ADMIN_EMAILS` and `OPS_ADMIN_PASSWORD`: that creates the first **owner** account, after which the shared password stops working. Owners and admins invite people at `/ops/team` (one-time link, emailed when Resend is configured, otherwise shown to copy). Roles: **owner** (everything, incl. owners and removing accounts), **admin** (settings, guides, template, team, credential reveal), **member** (run onboardings, notes, verification, CRM, PDFs). Disabling someone or changing a password ends their sessions immediately. Every action is audited against the person.
+
+### Create client in CRM
+
+Each client page in Operations has a **Create client in CRM** button (highlighted once onboarding is complete). With `GHL_ACCESS_TOKEN` + `GHL_LOCATION_ID` (GoHighLevel private integration with contacts and opportunities scopes) it upserts the contact, adds tags (`madvert-client`, `onboarding-complete`, `service-*`), adds an onboarding summary note and, if `ONBOARDING_GHL_PIPELINE_ID` + `ONBOARDING_GHL_STAGE_ID` are set, opens an opportunity. Running it again updates the same contact. Without the API token it sends `onboarding.CLIENT_CREATED_IN_CRM` to the automation webhooks instead. No credentials or file links are sent.
+
+### Offer Builder
+
+The client's Offer Workshop has **Generate my offer**: one click turns their answers into a complete offer (three headlines, promise, value stack with total value, bonuses, guarantee, proof, objection answers, P.S.) with copy, save-as-PDF and a share link. Only guarantees ticked *Client Approved Claim* are included. The same generator powers the public `/offer-builder` (with an example fill) for anyone, clients or not. Everything is assembled from the user's own answers; no numbers or claims are invented.
+
+### Subdomain (onboarding.madvertlabs.com)
+
+Same Vercel project as the website. Set `ONBOARDING_HOST=onboarding.madvertlabs.com` and `ONBOARDING_BASE_URL=https://onboarding.madvertlabs.com`, then in Vercel → Project → Settings → Domains add `onboarding.madvertlabs.com` and create the DNS record Vercel shows (CNAME `onboarding` → `cname.vercel-dns.com`). On that host `/` goes to the Offer Builder (or the dashboard when signed in), marketing paths redirect to madvertlabs.com, and portal paths on the main domain redirect to the subdomain.
 
 ### Service-based onboarding
 
@@ -212,13 +231,15 @@ Default guides cover Meta partner access and portfolio creation, Google Ads, GA4
 | Production database | `DATABASE_URL` (Postgres) |
 | Signing / link encryption | `ONBOARDING_SECRET` (32+ chars) |
 | Credential vault | `ONBOARDING_ENCRYPTION_KEY` (`openssl rand -hex 32`) |
-| Team sign in | `OPS_ADMIN_PASSWORD`, optional `OPS_ADMIN_EMAILS` |
+| First owner account | `OPS_ADMIN_PASSWORD` + `OPS_ADMIN_EMAILS` (used once, then team accounts) |
+| Create client in CRM | `GHL_ACCESS_TOKEN`, `GHL_LOCATION_ID` (+ optional `ONBOARDING_GHL_PIPELINE_ID`, `ONBOARDING_GHL_STAGE_ID`, `GHL_APP_BASE`) |
+| Subdomain | `ONBOARDING_HOST`, `ONBOARDING_BASE_URL`, domain added in Vercel |
 | File uploads in production | Vercel Blob store → `BLOB_READ_WRITE_TOKEN` |
 | Emails (link, delegated tasks, reminders) | `RESEND_API_KEY`, `EMAIL_FROM` (verified domain) |
 | Google Drive client folders | Service account (`GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`), parent folder in a Shared Drive shared with it as Content manager (`GOOGLE_DRIVE_PARENT_FOLDER_ID`), Drive API enabled |
 | Exact kickoff times | GoHighLevel workflow "Appointment booked" → Webhook to `/api/onboarding/webhooks/booking` with header `x-webhook-secret: ONBOARDING_BOOKING_WEBHOOK_SECRET` (otherwise the widget's booking message or the client's own confirmation is used) |
 | Reminders | `CRON_SECRET` (Vercel adds it to cron requests) |
-| Company values | Meta Partner Business ID, Google Ads manager ID and access emails in `/ops/settings` |
+| Company values | Defaults: Meta Partner Business ID 977388997110589, access emails info@madvertlabs.com; Google Ads manager ID optional. Editable in `/ops/settings` |
 
 Not built as live API integrations (by design, no credentials available): Meta, Google, GoHighLevel and e-sign APIs. Access is granted by the client inside each platform and verified by the team in Operations; nothing pretends to be connected automatically.
 

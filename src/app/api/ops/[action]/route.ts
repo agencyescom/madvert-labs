@@ -1,9 +1,10 @@
-import type { CompanySettings, CustomQuestion, GuideStep, InternalNote, Onboarding, Objection, OfferWorkshop, SecretRecord, ServiceKey, TemplateOverride } from "@/onboarding/types";
+import type { CompanySettings, CustomQuestion, GuideStep, InternalNote, Onboarding, Objection, OfferWorkshop, SecretRecord, ServiceKey, TeamRole, TeamUser, TemplateOverride } from "@/onboarding/types";
 import { SERVICE_KEYS } from "@/onboarding/template/services";
-import { checkOpsLogin, endOpsSession, opsConfigured, requireOps, startOpsSession } from "@/onboarding/server/auth";
-import { decrypt, newId } from "@/onboarding/server/crypto";
+import { checkOpsLogin, endOpsSession, hashPassword, opsConfigured, passwordProblem, requireOpsSession, roleAtLeast, startOpsSession, teamUserByEmail, verifyPassword } from "@/onboarding/server/auth";
+import { decrypt, hashToken, newId, newToken } from "@/onboarding/server/crypto";
+import { createClientInCrm } from "@/onboarding/server/crm";
 import { db } from "@/onboarding/server/db";
-import { sendOnboardingLink } from "@/onboarding/server/emails";
+import { sendOnboardingLink, sendTeamInvite } from "@/onboarding/server/emails";
 import { audit } from "@/onboarding/server/events";
 import { body, handle, json, sameOrigin } from "@/onboarding/server/http";
 import { addNote, afterChange, createOnboarding, loadContext, recordBooking, regenerateLink, revokeLink, saveOfferLists, updateAccess } from "@/onboarding/server/repo";
@@ -25,25 +26,52 @@ export async function POST(req: Request, { params }: Ctx) {
     if (!sameOrigin(req)) return json({ error: "Invalid origin" }, 403);
 
     if (action === "login") {
-      if (!opsConfigured()) return json({ error: "Operations sign-in is not configured. Set OPS_ADMIN_PASSWORD.", configurationRequired: true }, 503);
+      if (!(await opsConfigured())) return json({ error: "Operations sign-in is not configured. Set OPS_ADMIN_PASSWORD to create the first owner.", configurationRequired: true }, 503);
       const ip = clientIp(req);
       if (!(await rateLimit(`ops-login:${ip}`, 8, 900)).ok) return json({ error: "Too many attempts. Try again in 15 minutes." }, 429);
       const b = await body<{ email: string; password: string }>(req);
-      if (!checkOpsLogin(String(b.email ?? ""), String(b.password ?? ""))) {
+      const u = await checkOpsLogin(String(b.email ?? ""), String(b.password ?? ""));
+      if (!u) {
         await audit({ actor: `team:${String(b.email ?? "").slice(0, 120)}`, action: "ops.login_failed", ip });
         return json({ error: "Email or password is incorrect." }, 401);
       }
-      await startOpsSession(String(b.email));
-      await audit({ actor: `team:${b.email}`, action: "ops.login", ip });
+      await startOpsSession(u);
+      await audit({ actor: `team:${u.email}`, action: "ops.login", ip });
       return json({ ok: true });
     }
     if (action === "logout") {
       await endOpsSession();
       return json({ ok: true });
     }
+    if (action === "invite-accept") {
+      const ip = clientIp(req);
+      if (!(await rateLimit(`ops-invite:${ip}`, 10, 900)).ok) return json({ error: "Too many attempts. Try again later." }, 429);
+      const b = await body<{ token: string; name?: string; password: string }>(req);
+      const [u] = await db().find<TeamUser>("team_users", { inviteHash: hashToken(String(b.token ?? "")) });
+      if (!u || !u.inviteExpiresAt || Date.parse(u.inviteExpiresAt) < Date.now() || u.status === "disabled") return json({ error: "This invite link is invalid or has expired. Ask an admin for a new one." }, 400);
+      const problem = passwordProblem(String(b.password ?? ""));
+      if (problem) return json({ error: problem }, 400);
+      const next: TeamUser = {
+        ...u,
+        name: String(b.name ?? "").trim().slice(0, 80) || u.name,
+        passwordHash: await hashPassword(String(b.password)),
+        status: "active",
+        inviteHash: undefined,
+        inviteExpiresAt: undefined,
+        sessionVersion: u.sessionVersion + 1,
+        updatedAt: new Date().toISOString(),
+      };
+      await db().put("team_users", next);
+      await startOpsSession(next);
+      await audit({ actor: `team:${u.email}`, action: "team.invite_accepted", ip });
+      return json({ ok: true });
+    }
 
-    const user = await requireOps();
+    const session = await requireOpsSession();
+    const user = session.email;
     const actor = `team:${user}`;
+    const ADMIN_ONLY = ["settings", "guide-save", "guide-image", "template", "template-reset", "custom-question", "secret-reveal", "team-invite", "team-update", "team-reset", "team-delete"];
+    if (ADMIN_ONLY.includes(action) && !roleAtLeast(session.role, "admin")) return json({ error: "Only admins can do this." }, 403);
 
     switch (action) {
       case "create": {
@@ -267,6 +295,86 @@ export async function POST(req: Request, { params }: Ctx) {
         await db().put("custom_questions", q);
         await audit({ actor, action: "template.question_added", target: q.id });
         return json({ ok: true, question: q });
+      }
+
+      case "account-password": {
+        const b = await body<{ current: string; next: string }>(req);
+        const u = await db().get<TeamUser>("team_users", session.id);
+        if (!u || !(await verifyPassword(String(b.current ?? ""), u.passwordHash))) return json({ error: "Your current password is incorrect." }, 400);
+        const problem = passwordProblem(String(b.next ?? ""));
+        if (problem) return json({ error: problem }, 400);
+        const next = { ...u, passwordHash: await hashPassword(String(b.next)), sessionVersion: u.sessionVersion + 1, updatedAt: new Date().toISOString() };
+        await db().put("team_users", next);
+        await startOpsSession(next);
+        await audit({ actor, action: "team.password_changed" });
+        return json({ ok: true });
+      }
+
+      case "team-invite":
+      case "team-reset": {
+        const b = await body<{ id?: string; email?: string; name?: string; role?: TeamRole }>(req);
+        let u: TeamUser | null = b.id ? await db().get<TeamUser>("team_users", String(b.id)) : null;
+        const now = new Date().toISOString();
+        if (action === "team-invite") {
+          const email = String(b.email ?? "").trim().toLowerCase();
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ error: "Enter a valid email." }, 400);
+          if (await teamUserByEmail(email)) return json({ error: "That person already has an account. Use Reset to send a new link." }, 400);
+          const role: TeamRole = b.role === "admin" || (b.role === "owner" && session.role === "owner") ? b.role : "member";
+          u = { id: newId("usr_"), email, name: String(b.name ?? "").trim().slice(0, 80) || email.split("@")[0], role, status: "invited", sessionVersion: 1, invitedBy: user, createdAt: now, updatedAt: now };
+        }
+        if (!u) return json({ error: "Not found" }, 404);
+        if (u.role === "owner" && session.role !== "owner") return json({ error: "Only an owner can reset another owner." }, 403);
+        const token = newToken();
+        u = { ...u, inviteHash: hashToken(token), inviteExpiresAt: new Date(Date.now() + 7 * 86400_000).toISOString(), updatedAt: now };
+        await db().put("team_users", u);
+        const base = (process.env.ONBOARDING_BASE_URL ?? (process.env.ONBOARDING_HOST ? `https://${process.env.ONBOARDING_HOST}` : undefined) ?? process.env.NEXT_PUBLIC_SITE_URL ?? new URL(req.url).origin).replace(/\/$/, "");
+        const link = `${base}/ops/invite/${token}`;
+        const emailed = await sendTeamInvite(u.email, u.name, session.name || user, link, action === "team-reset");
+        await audit({ actor, action: action === "team-invite" ? "team.invited" : "team.reset_link", target: u.email });
+        return json({ ok: true, link, emailed });
+      }
+
+      case "team-update": {
+        const b = await body<{ id: string; role?: TeamRole; status?: "active" | "disabled"; name?: string }>(req);
+        const u = await db().get<TeamUser>("team_users", String(b.id));
+        if (!u) return json({ error: "Not found" }, 404);
+        if (u.id === session.id && (b.role || b.status)) return json({ error: "You can’t change your own role or status." }, 400);
+        if ((u.role === "owner" || b.role === "owner") && session.role !== "owner") return json({ error: "Only an owner can change owners." }, 403);
+        const next: TeamUser = { ...u, updatedAt: new Date().toISOString() };
+        if (b.role && ["owner", "admin", "member"].includes(b.role)) next.role = b.role;
+        if (b.name) next.name = String(b.name).slice(0, 80);
+        if (b.status === "disabled") {
+          next.status = "disabled";
+          next.sessionVersion = u.sessionVersion + 1;
+        } else if (b.status === "active" && u.passwordHash) next.status = "active";
+        const all = await db().find<TeamUser>("team_users");
+        const owners = all.map((x) => (x.id === next.id ? next : x)).filter((x) => x.role === "owner" && x.status === "active");
+        if (!owners.length) return json({ error: "There must always be at least one active owner." }, 400);
+        await db().put("team_users", next);
+        await audit({ actor, action: "team.updated", target: `${u.email}:${next.role}:${next.status}` });
+        return json({ ok: true });
+      }
+
+      case "team-delete": {
+        if (session.role !== "owner") return json({ error: "Only an owner can remove accounts." }, 403);
+        const b = await body<{ id: string }>(req);
+        const u = await db().get<TeamUser>("team_users", String(b.id));
+        if (!u) return json({ error: "Not found" }, 404);
+        if (u.id === session.id) return json({ error: "You can’t remove yourself." }, 400);
+        await db().remove("team_users", u.id);
+        await audit({ actor, action: "team.removed", target: u.email });
+        return json({ ok: true });
+      }
+
+      case "crm": {
+        const b = await body<{ id: string }>(req);
+        try {
+          const res = await createClientInCrm(String(b.id), user);
+          return json(res, res.ok ? 200 : "configurationRequired" in res ? 503 : 400);
+        } catch (e) {
+          console.error("[crm]", e);
+          return json({ error: e instanceof Error ? e.message : "CRM sync failed" }, 502);
+        }
       }
 
       case "secret-reveal": {

@@ -68,6 +68,8 @@ export interface Onboarding {
   /** Cached progress so the ops list does not recompute everything. */
   progressCache?: { overall: number; phases: Record<string, number> };
   createdBy: string;
+  /** Set when the team pushes the client into the CRM ("Create client in CRM"). */
+  crm?: { provider: "gohighlevel" | "webhook"; contactId?: string; opportunityId?: string; url?: string; syncedAt: ISODate; syncedBy: string };
   createdAt: ISODate;
   updatedAt: ISODate;
 }
@@ -336,7 +338,8 @@ export type EventName =
   | "MISSING_ACCESS"
   | "DELEGATED_TASK_SENT"
   | "DELEGATED_TASK_COMPLETED"
-  | "REMINDER_SENT";
+  | "REMINDER_SENT"
+  | "CLIENT_CREATED_IN_CRM";
 
 export interface OnboardingEvent {
   id: string;
@@ -419,3 +422,36 @@ export interface MissingItem {
   state: "Pending" | "Awaiting verification" | "Needs help" | "During kickoff" | "Create before launch" | "Not started";
   required: boolean;
 }
+
+/* ───────── Team (Madvert Operations users) ───────── */
+
+export type TeamRole = "owner" | "admin" | "member";
+
+export interface TeamUser {
+  id: string;
+  email: string;
+  name: string;
+  role: TeamRole;
+  status: "invited" | "active" | "disabled";
+  /** scrypt$<N>$<salt>$<hash>. Never leaves the server. */
+  passwordHash?: string;
+  /** sha256 of the one-time invite / reset token. */
+  inviteHash?: string;
+  inviteExpiresAt?: ISODate;
+  /** Bumped on password change or deactivation so every existing session ends. */
+  sessionVersion: number;
+  lastLoginAt?: ISODate;
+  invitedBy?: string;
+  createdAt: ISODate;
+  updatedAt: ISODate;
+}
+
+export interface OfferShare {
+  id: string; // public slug
+  onboardingId?: string;
+  source: "client" | "public";
+  input: Record<string, unknown>;
+  createdAt: ISODate;
+  views: number;
+}
+

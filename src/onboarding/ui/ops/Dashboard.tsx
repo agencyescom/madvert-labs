@@ -22,6 +22,7 @@ type Row = {
   lastActivity: string | null;
   owner: string;
   risks: number;
+  crm: boolean;
 };
 
 const ago = (iso: string | null) => {
@@ -110,7 +111,7 @@ export function Dashboard({ rows, config }: { rows: Row[]; config: { label: stri
         </div>
         {shown.length ? (
           <div className="overflow-x-auto">
-            <table className="ob-table min-w-[1180px]">
+            <table className="ob-table min-w-[1260px]">
               <thead>
                 <tr>
                   <th>Client</th>
@@ -124,6 +125,7 @@ export function Dashboard({ rows, config }: { rows: Row[]; config: { label: stri
                   <th>Offer</th>
                   <th>Kickoff</th>
                   <th>Activity</th>
+                  <th>CRM</th>
                   <th>Owner</th>
                 </tr>
               </thead>
@@ -153,6 +155,7 @@ export function Dashboard({ rows, config }: { rows: Row[]; config: { label: stri
                     </td>
                     <td className="text-[13px]">{r.kickoff ? (r.kickoff === "booked" ? <StatusPill status="booked" /> : new Date(r.kickoff).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })) : "Not booked"}</td>
                     <td className="text-[13px] text-[var(--ob-ink-2)]">{ago(r.lastActivity)}</td>
+                    <td>{r.crm ? <StatusPill status="completed" label="In CRM" /> : r.overall >= 100 ? <StatusPill status="pending" label="Ready" /> : <span className="text-[12px] text-[var(--ob-ink-3)]">—</span>}</td>
                     <td className="text-[13px]">{r.owner}</td>
                   </tr>
                 ))}

@@ -5,7 +5,9 @@ import { accessStatusOf, computeProgress, missingItems } from "../progress";
 import { ACCESS_BY_KEY, GOOGLE_KEYS } from "../template/access";
 import { ASSET_CATEGORY_BY_KEY } from "../template/assets";
 import { SERVICES } from "../template/services";
-import { opsUser } from "./auth";
+import type { TeamRole } from "../types";
+import { opsSession, roleAtLeast } from "./auth";
+import { crmMode } from "./crm";
 import { vaultConfigured } from "./crypto";
 import { db, dbDriver } from "./db";
 import { driveConfigured } from "./drive";
@@ -14,9 +16,10 @@ import { currentLink, listEvents, loadContext, progressInput } from "./repo";
 import { getSettings, missingSettings } from "./settings";
 import { signedFileUrl, storageDriver } from "./storage";
 
-export async function requireOpsPage() {
-  const u = await opsUser();
+export async function requireOpsPage(min: TeamRole = "member") {
+  const u = await opsSession();
   if (!u) redirect("/ops/login");
+  if (!roleAtLeast(u.role, min)) redirect("/ops/onboarding");
   return u;
 }
 
@@ -31,6 +34,7 @@ export async function configStatus() {
     { label: "Google Drive workspace", ok: driveConfigured(), note: driveConfigured() ? "Folders created automatically" : "Service account not configured. Internal folders only." },
     { label: "Automation webhooks", ok: Boolean(process.env.ONBOARDING_WEBHOOK_URL || process.env.GOHIGHLEVEL_WEBHOOK_URL || process.env.N8N_WEBHOOK_URL), note: "ONBOARDING_WEBHOOK_URL / GOHIGHLEVEL_WEBHOOK_URL / N8N_WEBHOOK_URL" },
     { label: "Booking webhook", ok: Boolean(process.env.ONBOARDING_BOOKING_WEBHOOK_SECRET), note: "ONBOARDING_BOOKING_WEBHOOK_SECRET for exact kickoff times" },
+    { label: "CRM (Create client in CRM)", ok: crmMode() !== "none", note: crmMode() === "gohighlevel" ? "GoHighLevel API" : crmMode() === "webhook" ? "Automation webhook" : "Set GHL_ACCESS_TOKEN + GHL_LOCATION_ID" },
     { label: "Reminder cron", ok: Boolean(process.env.CRON_SECRET), note: "CRON_SECRET" },
     { label: "Company integrations", ok: missingSettings(s).length === 0, note: missingSettings(s).length ? `Missing: ${missingSettings(s).join(", ")}` : "Complete" },
   ];
@@ -66,6 +70,7 @@ export async function overview() {
       lastActivity: o.lastClientActivityAt ?? null,
       owner: o.assignedOwner ?? "",
       risks: riskFlags(ctx).filter((r) => r.level !== "low").length,
+      crm: Boolean(o.crm),
     });
   }
   return rows;
@@ -94,6 +99,7 @@ export async function detail(id: string) {
     progress: p,
     missing,
     link: currentLink(ctx.onboarding),
+    crm: { mode: crmMode(), synced: ctx.onboarding.crm ?? null, complete: Boolean(ctx.onboarding.completedAt) || missing.filter((m) => m.required).length === 0 },
     risks: riskFlags(ctx),
     offer: offerSummary(ctx),
     notes: notes.sort((a, b) => b.createdAt.localeCompare(a.createdAt)),

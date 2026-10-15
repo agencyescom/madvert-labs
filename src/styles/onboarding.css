@@ -1142,3 +1142,302 @@
     transition: none !important;
   }
 }
+
+/* ───────── Living background: aurora blobs + drifting particles ───────── */
+.ob-aurora {
+  position: fixed;
+  inset: -10%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  filter: saturate(1.15);
+}
+.ob-aurora i {
+  position: absolute;
+  width: 46vmax;
+  height: 46vmax;
+  border-radius: 50%;
+  filter: blur(70px);
+  opacity: 0.42;
+  mix-blend-mode: multiply;
+  will-change: transform;
+}
+.ob-aurora i:nth-child(1) {
+  left: -8%;
+  top: -12%;
+  background: radial-gradient(circle at 30% 30%, #5fd6ff, #00b4ff 45%, transparent 70%);
+  animation: ob-blob1 26s ease-in-out infinite alternate;
+}
+.ob-aurora i:nth-child(2) {
+  right: -10%;
+  top: 8%;
+  background: radial-gradient(circle at 60% 40%, #8fb6ff, #2d6bff 45%, transparent 70%);
+  animation: ob-blob2 32s ease-in-out infinite alternate;
+}
+.ob-aurora i:nth-child(3) {
+  left: 25%;
+  bottom: -22%;
+  background: radial-gradient(circle at 50% 50%, #8ff6ff, #00e5ff 40%, transparent 70%);
+  animation: ob-blob3 28s ease-in-out infinite alternate;
+  opacity: 0.32;
+}
+.ob-aurora i:nth-child(4) {
+  right: 18%;
+  bottom: 4%;
+  width: 30vmax;
+  height: 30vmax;
+  background: radial-gradient(circle, #b9a8ff, #7c5cff 45%, transparent 70%);
+  animation: ob-blob2 36s ease-in-out infinite alternate-reverse;
+  opacity: 0.18;
+}
+[data-theme="dark"] .ob-aurora i {
+  mix-blend-mode: screen;
+  opacity: 0.22;
+}
+[data-theme="dark"] .ob-aurora i:nth-child(4) {
+  opacity: 0.12;
+}
+@keyframes ob-blob1 {
+  to {
+    transform: translate(18vw, 14vh) scale(1.25);
+  }
+}
+@keyframes ob-blob2 {
+  to {
+    transform: translate(-16vw, 18vh) scale(0.85);
+  }
+}
+@keyframes ob-blob3 {
+  to {
+    transform: translate(-10vw, -20vh) scale(1.2);
+  }
+}
+.ob-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.6px 1.6px at 12% 22%, rgb(0 160 255 / 0.55), transparent 60%),
+    radial-gradient(1.2px 1.2px at 78% 18%, rgb(0 229 255 / 0.55), transparent 60%),
+    radial-gradient(1.8px 1.8px at 42% 62%, rgb(0 180 255 / 0.45), transparent 60%),
+    radial-gradient(1.3px 1.3px at 88% 72%, rgb(0 229 255 / 0.5), transparent 60%),
+    radial-gradient(1.5px 1.5px at 24% 86%, rgb(10 108 255 / 0.45), transparent 60%),
+    radial-gradient(1.1px 1.1px at 64% 34%, rgb(0 229 255 / 0.5), transparent 60%);
+  background-size: 640px 640px;
+  animation: ob-particles 60s linear infinite;
+  opacity: 0.8;
+}
+@keyframes ob-particles {
+  to {
+    background-position: 640px -640px;
+  }
+}
+.ob-aurora-local {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(600px 300px at 15% 0%, rgb(0 180 255 / 0.25), transparent 60%),
+    radial-gradient(500px 300px at 100% 100%, rgb(0 229 255 / 0.18), transparent 60%);
+  animation: ob-local 14s ease-in-out infinite alternate;
+}
+@keyframes ob-local {
+  to {
+    transform: translate(3%, 2%) scale(1.05);
+  }
+}
+/* moving sheen across navy panels */
+.ob-navy::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgb(0 229 255 / 0.07) 48%, rgb(255 255 255 / 0.06) 50%, transparent 62%);
+  background-size: 250% 100%;
+  animation: ob-sheen 9s ease-in-out infinite;
+}
+@keyframes ob-sheen {
+  0% {
+    background-position: 120% 0;
+  }
+  60%,
+  100% {
+    background-position: -120% 0;
+  }
+}
+
+/* ───────── 3D icons ───────── */
+.ob-art {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ob-art svg {
+  overflow: visible;
+}
+.ob-art-float svg {
+  animation: ob-art-float 5.5s ease-in-out infinite;
+}
+.ob-conn:hover .ob-art,
+.ob-art:hover {
+  transform: perspective(400px) rotateY(-14deg) rotateX(8deg) scale(1.08);
+}
+@keyframes ob-art-float {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.ob-twinkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: ob-twinkle 2.4s ease-in-out infinite;
+}
+@keyframes ob-twinkle {
+  50% {
+    opacity: 0.25;
+    transform: scale(0.6);
+  }
+}
+.ob-flame {
+  transform-box: fill-box;
+  transform-origin: top center;
+  animation: ob-flame 0.35s ease-in-out infinite alternate;
+}
+@keyframes ob-flame {
+  to {
+    transform: scaleY(1.25) scaleX(0.9);
+  }
+}
+.ob-tile3d {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  color: #fff;
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.55) inset,
+    0 -3px 6px rgb(0 20 80 / 0.35) inset,
+    0 12px 22px -10px rgb(0 90 220 / 0.75),
+    0 3px 0 rgb(6 40 120 / 0.55);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.ob-tile3d:hover,
+.ob-conn:hover .ob-tile3d {
+  transform: translateY(-2px) rotate(-4deg);
+}
+.ob-tile3d-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(170deg, rgb(255 255 255 / 0.55) 0%, rgb(255 255 255 / 0.08) 42%, transparent 46%);
+  pointer-events: none;
+}
+.ob-avatar {
+  position: relative;
+  flex: none;
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 2px rgb(0 229 255 / 0.85),
+    0 10px 24px -8px rgb(0 160 255 / 0.8);
+}
+
+/* reveal for generated offers */
+.ob-rise {
+  animation: ob-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@keyframes ob-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+    filter: blur(4px);
+  }
+}
+.ob-seal {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  flex: none;
+  border-radius: 999px;
+  color: #03101d;
+  background: conic-gradient(from 0deg, #00e5ff, #0a6cff, #00e5ff, #8ff6ff, #00e5ff);
+  box-shadow: 0 8px 22px -6px rgb(0 200 255 / 0.9);
+  animation: ob-spin 12s linear infinite;
+}
+.ob-seal svg {
+  animation: ob-spin 12s linear infinite reverse;
+}
+.ob-build-glow {
+  position: relative;
+  isolation: isolate;
+}
+.ob-build-glow::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  z-index: -1;
+  border-radius: inherit;
+  background: conic-gradient(from var(--a, 0deg), #00e5ff, #0a5cff, #7c5cff, #00e5ff);
+  filter: blur(10px);
+  opacity: 0.8;
+  animation: ob-spin 4s linear infinite;
+}
+
+/* Meta screen replicas */
+.ob-fb {
+  font-family:
+    "Segoe UI",
+    Helvetica,
+    Arial,
+    sans-serif;
+  color: #1c2b33;
+  background: #f0f2f5;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgb(10 30 60 / 0.12),
+    0 26px 60px -30px rgb(0 40 120 / 0.55);
+  font-size: 11.5px;
+  position: relative;
+}
+.ob-fb .fb-hl {
+  position: relative;
+  box-shadow: 0 0 0 2.5px #00b4ff;
+  border-radius: 8px;
+  animation: ob-ring 2.2s ease-in-out infinite;
+}
+.ob-fb .fb-cursor {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 3px rgb(0 0 0 / 0.35));
+  animation: ob-cursor 2.2s ease-in-out infinite;
+}
+@keyframes ob-cursor {
+  50% {
+    transform: translate(-4px, -4px) scale(0.92);
+  }
+}
+
+@media print {
+  .ob-waves,
+  .ob-aurora,
+  .ob-particles,
+  .ob-header {
+    display: none !important;
+  }
+  .ob {
+    background: #fff !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ob-aurora i,
+  .ob-particles,
+  .ob-navy::before {
+    animation: none !important;
+  }
+}

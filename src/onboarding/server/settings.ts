@@ -9,12 +9,12 @@ export function defaultSettings(): CompanySettings {
   return {
     id: "company",
     integrations: {
-      metaPartnerBusinessId: env.MADVERT_META_PARTNER_ID ?? "",
+      metaPartnerBusinessId: env.MADVERT_META_PARTNER_ID ?? "977388997110589",
       googleAdsManagerId: env.MADVERT_GOOGLE_ADS_MANAGER_ID ?? "",
-      googleAccessEmail: env.MADVERT_GOOGLE_ACCESS_EMAIL ?? "",
-      websiteAccessEmail: env.MADVERT_WEBSITE_ACCESS_EMAIL ?? "",
-      dnsAccessEmail: env.MADVERT_DNS_ACCESS_EMAIL ?? "",
-      crmAccessEmail: env.MADVERT_CRM_ACCESS_EMAIL ?? "",
+      googleAccessEmail: env.MADVERT_GOOGLE_ACCESS_EMAIL ?? "info@madvertlabs.com",
+      websiteAccessEmail: env.MADVERT_WEBSITE_ACCESS_EMAIL ?? "info@madvertlabs.com",
+      dnsAccessEmail: env.MADVERT_DNS_ACCESS_EMAIL ?? "info@madvertlabs.com",
+      crmAccessEmail: env.MADVERT_CRM_ACCESS_EMAIL ?? "info@madvertlabs.com",
       shopifyCollaboratorCode: "",
       bookingUrl: env.ONBOARDING_BOOKING_URL ?? booking.url,
       supportEmail: env.MADVERT_SUPPORT_EMAIL ?? "hello@madvertlabs.com",
@@ -22,7 +22,7 @@ export function defaultSettings(): CompanySettings {
     },
     defaults: {
       accountManager: env.MADVERT_DEFAULT_ACCOUNT_MANAGER ?? "Usama Abbas Dahri",
-      accountManagerEmail: env.MADVERT_DEFAULT_ACCOUNT_MANAGER_EMAIL ?? "",
+      accountManagerEmail: env.MADVERT_DEFAULT_ACCOUNT_MANAGER_EMAIL ?? "info@madvertlabs.com",
       strategist: env.MADVERT_DEFAULT_STRATEGIST ?? "Usama Abbas Dahri",
       linkLifetimeDays: Number(env.ONBOARDING_LINK_DAYS ?? 60),
     },
@@ -61,7 +61,6 @@ export function missingSettings(s: CompanySettings) {
   const out: string[] = [];
   if (!i.metaPartnerBusinessId) out.push("Meta Partner Business ID");
   if (!i.googleAccessEmail) out.push("Google access email");
-  if (!i.googleAdsManagerId) out.push("Google Ads manager account ID");
   if (!i.websiteAccessEmail) out.push("Website access email");
   if (!i.dnsAccessEmail) out.push("DNS access email");
   if (!i.crmAccessEmail) out.push("CRM access email");

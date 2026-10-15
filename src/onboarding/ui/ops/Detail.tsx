@@ -1,5 +1,6 @@
 "use client";
 
+import { Art3D } from "../art3d";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { OpsDetail } from "@/onboarding/server/ops";
@@ -64,6 +65,7 @@ export function Detail({ d }: { d: View }) {
   return (
     <div className="grid gap-8">
       <Header d={d} refresh={refresh} />
+      <CrmPanel d={d} refresh={refresh} />
 
       <section className="grid gap-4 lg:grid-cols-[320px_1fr]">
         <div className="ob-navy flex flex-col items-center justify-center gap-3 p-8 text-center">
@@ -676,6 +678,48 @@ function Timeline({ d }: { d: View }) {
             ))}
         {(tab === "events" ? d.events : d.audits).length === 0 ? <li className="text-[13px] text-[var(--ob-ink-3)]">Nothing yet.</li> : null}
       </ul>
+    </section>
+  );
+}
+
+function CrmPanel({ d, refresh }: { d: View; refresh: () => void }) {
+  const { busy, msg, run } = useBusy();
+  const c = d.crm;
+  const synced = c.synced;
+  const go = async () => {
+    if (!c.complete && !synced && !confirm("Onboarding isn’t complete yet. Create the client in the CRM anyway?")) return;
+    await run(() => opsCall("crm", { id: d.onboarding.id }), synced ? "CRM record updated." : "Client created in the CRM.");
+    refresh();
+  };
+  return (
+    <section className={`${c.complete && !synced ? "ob-navy" : "ob-card"} relative overflow-hidden p-5 sm:p-6`}>
+      <div className="relative flex flex-wrap items-center gap-5">
+        <Art3D name="crm" size={68} />
+        <div className="min-w-0 flex-1">
+          <p className={`text-[11px] font-bold tracking-[0.2em] ${c.complete && !synced ? "text-[#7fdcff]" : "text-[var(--ob-blue)]"}`}>
+            {synced ? "IN CRM" : c.complete ? "ONBOARDING COMPLETE" : "CRM"}
+          </p>
+          <p className={`text-[17px] font-semibold ${c.complete && !synced ? "text-white" : ""}`}>
+            {synced
+              ? `Synced ${new Date(synced.syncedAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })} by ${synced.syncedBy} · ${synced.provider === "gohighlevel" ? "GoHighLevel" : "automation webhook"}`
+              : c.complete
+                ? "Everything is in. Create the client in your CRM with one click."
+                : "Create the client in your CRM once onboarding is complete."}
+          </p>
+          {c.mode === "none" ? <p className="mt-1 text-[13px] text-[var(--ob-warn)]">Configuration required: GHL_ACCESS_TOKEN + GHL_LOCATION_ID, or an automation webhook.</p> : null}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {synced?.url ? (
+            <a href={synced.url} target="_blank" rel="noopener noreferrer" className="ob-btn ob-btn-ghost ob-btn-sm">
+              <Icon name="external" size={15} /> Open in CRM
+            </a>
+          ) : null}
+          <Btn size="sm" icon={synced ? "refresh" : "plus"} disabled={busy || c.mode === "none"} onClick={go}>
+            {busy ? "Working…" : synced ? "Sync again" : "Create client in CRM"}
+          </Btn>
+        </div>
+      </div>
+      <Msg msg={msg} />
     </section>
   );
 }

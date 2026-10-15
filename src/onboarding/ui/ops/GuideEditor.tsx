@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import type { GuideStep } from "@/onboarding/types";
 import { GuideMock } from "../Guides";
+import { MetaScreen, hasMetaScreen } from "../MetaScreens";
 import { Btn, Field, StatusPill } from "../kit";
 import { Msg, opsCall, useBusy } from "./OpsKit";
 
@@ -118,6 +119,8 @@ function StepEditor({ s, onSaved }: { s: Step; onSaved: () => void }) {
         {s.screenshotUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={s.screenshotUrl} alt="" className="w-full rounded-2xl shadow-[0_0_0_1px_var(--ob-line-2)]" />
+        ) : hasMetaScreen(s.id) ? (
+          <MetaScreen id={s.id} />
         ) : s.illustration ? (
           <GuideMock ill={s.illustration} />
         ) : (

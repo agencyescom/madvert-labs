@@ -9,6 +9,7 @@ import { AccessStep } from "./AccessStep";
 import { AssetsStep } from "./AssetsStep";
 import { BusinessStep } from "./BusinessStep";
 import { KickoffStep } from "./KickoffStep";
+import { Art3D, Tile3D } from "./art3d";
 import { Bar, Btn, GlowMark, Icon, Ring, SaveBadge, StatusPill, ThemeSwitch, Waves } from "./kit";
 import { OfferStep } from "./OfferStep";
 import { PortalProvider, usePortal } from "./store";
@@ -280,9 +281,9 @@ function Welcome({ go }: { go: (v: View) => void }) {
               <span className="text-[12px] font-bold uppercase tracking-[0.22em] text-[#7fdcff]">Your onboarding</span>
             </div>
             <div className="grid grid-cols-1 gap-3 rounded-[24px] bg-white/[0.04] p-4 [&>*]:min-w-0 shadow-[inset_0_0_0_1px_rgb(255_255_255/0.08)] backdrop-blur sm:p-5">
-              <Info label="Company" value={o.companyName} icon="flag" />
-              <Info label="Your Madvert Team" value={o.team || o.services.join(" + ")} icon="sparkle" />
-              <Info label="Account Manager" value={o.accountManager.name} icon="user" />
+              <Info label="Company" value={o.companyName} icon="building" />
+              <Info label="Your Madvert Team" value={o.team || o.services.join(" + ")} icon="team" />
+              <Info label="Account Manager" value={o.accountManager.name} icon="user" photo={o.accountManagerPhoto} />
               <Info label="Estimated onboarding" value={`${o.estimatedMinutes[0]}–${o.estimatedMinutes[1]} minutes`} icon="clock" />
               {started ? (
                 <div className="rounded-2xl bg-white/[0.04] p-4">
@@ -310,12 +311,17 @@ function Welcome({ go }: { go: (v: View) => void }) {
   );
 }
 
-function Info({ label, value, icon }: { label: string; value: string; icon: string }) {
+function Info({ label, value, icon, photo }: { label: string; value: string; icon: string; photo?: string | null }) {
   return (
     <div className="flex items-center gap-4 rounded-2xl bg-white/[0.035] px-4 py-3.5">
-      <span className="grid h-10 w-10 flex-none place-items-center rounded-xl text-[#03101d]" style={{ background: "linear-gradient(135deg,#00b4ff,#00e5ff)" }}>
-        <Icon name={icon} size={18} />
-      </span>
+      {photo ? (
+        <span className="ob-avatar h-11 w-11">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={photo} alt="" className="h-full w-full object-cover" />
+        </span>
+      ) : (
+        <Tile3D icon={icon} size={44} tone={icon === "clock" ? "cyan" : "blue"} />
+      )}
       <span className="min-w-0">
         <span className="block text-[11px] font-semibold uppercase tracking-[0.18em] text-[#7f90a8]">{label}</span>
         <span className="block truncate text-[15.5px] font-semibold text-white">{value}</span>
@@ -359,7 +365,10 @@ function Home({ go }: { go: (v: View) => void }) {
               {o.companyName} · {o.team}. Work in any order. We’ll show you what is complete, what remains and what happens next.
             </p>
           </div>
-          <div className="flex flex-col gap-2 md:items-end">
+          <div className="flex flex-col items-start gap-4 md:items-end">
+            <span className="hidden md:block">
+              <Art3D name={next.key} size={96} />
+            </span>
             <Btn size="lg" arrow onClick={() => go(next.key)}>
               {progress.byKey[next.key].status === "incomplete" ? `Start ${next.label}` : `Continue ${next.label}`}
             </Btn>
@@ -384,9 +393,7 @@ function Home({ go }: { go: (v: View) => void }) {
           return (
             <button key={p.key} type="button" onClick={() => go(p.key)} className={`ob-card ob-card-hover ob-conn ob-enter`} style={{ animationDelay: `${i * 60}ms` }}>
               <div className="flex items-start justify-between">
-                <span className="grid h-11 w-11 place-items-center rounded-2xl text-white" style={{ background: "var(--ob-grad)", boxShadow: "0 10px 22px -10px rgb(0 150 255 / .9)" }}>
-                  <Icon name={c.icon} size={19} />
-                </span>
+                <Art3D name={p.key} size={76} className="-ml-1 -mt-1" />
                 <span className="text-[12px] font-bold tracking-[0.18em] text-[var(--ob-ink-3)]">{p.n}</span>
               </div>
               <div>

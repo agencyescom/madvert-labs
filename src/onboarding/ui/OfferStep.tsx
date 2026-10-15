@@ -1,9 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Art3D } from "./art3d";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { generateOffer, inputFromWorkshop } from "@/onboarding/offer/generate";
+import { OfferCard } from "./offer/OfferCard";
 import { BONUS_IDEAS, GUARANTEE_TYPES, OBJECTION_CATEGORIES } from "@/onboarding/template/questions";
 import type { ClientState } from "@/onboarding/server/views";
-import { Btn, Chips, Confetti, Field, GlowMark, Icon, StatusPill } from "./kit";
+import { Btn, Chips, Confetti, Field, GlowMark, Icon, Sheet, StatusPill } from "./kit";
 import type { View } from "./PortalApp";
 import { QuestionGrid } from "./QuestionField";
 import { StepFooter, StepHeader } from "./StepLayout";
@@ -74,7 +77,7 @@ export function OfferStep({ go }: { go: (v: View) => void }) {
             </div>
             <div className="hidden justify-center lg:flex">
               <div className="relative">
-                <GlowMark size={150} className="ob-float" />
+                <Art3D name="offer" size={190} />
                 <div className="absolute -bottom-8 left-1/2 h-6 w-40 -translate-x-1/2 rounded-full bg-[#00b4ff]/30 blur-xl" />
               </div>
             </div>
@@ -88,6 +91,64 @@ export function OfferStep({ go }: { go: (v: View) => void }) {
   return <Workshop go={go} onDone={() => setMode("done")} />;
 }
 
+function useGenerated() {
+  const { state } = usePortal();
+  return useMemo(
+    () =>
+      generateOffer(
+        inputFromWorkshop(state.onboarding.companyName, state.offer.values, {
+          bonuses: state.offer.bonuses,
+          guarantees: state.offer.guarantees,
+          objections: state.offer.objections,
+        }),
+      ),
+    [state.onboarding.companyName, state.offer],
+  );
+}
+
+function GeneratedOfferView() {
+  const { state, call } = usePortal();
+  const offer = useGenerated();
+  const pendingGuarantees = state.offer.guarantees.filter((g) => !g.clientApproved).length;
+  return (
+    <div className="grid gap-4">
+      <OfferCard
+        offer={offer}
+        onShare={async () => {
+          const r = await call<{ url: string }>("offer-share");
+          if (r.error) {
+            alert(r.error);
+            return null;
+          }
+          return r.url;
+        }}
+      />
+      <p className="text-[13px] text-[var(--ob-ink-3)]">
+        Built only from your answers. {pendingGuarantees ? `${pendingGuarantees} guarantee(s) are left out until you tick “Client Approved Claim”. ` : ""}Your strategy team will refine it with you before kickoff.
+      </p>
+    </div>
+  );
+}
+
+function GenerateButton() {
+  const { state, flush } = usePortal();
+  const [open, setOpen] = useState(false);
+  const v = state.offer.values;
+  const ready = Boolean((v.primary_offer || v.selling) && (v.outcome || v.end_result));
+  return (
+    <>
+      <Btn icon="sparkle" className="ob-build-glow" disabled={!ready} title={ready ? "" : "Answer Foundation first"} onClick={async () => (await flush(), setOpen(true))}>
+        {ready ? "Generate my offer" : "Answer Foundation to generate"}
+      </Btn>
+      <Sheet open={open} onClose={() => setOpen(false)} label="Your generated offer">
+        <div className="pt-4">
+          <GeneratedOfferView />
+        </div>
+      </Sheet>
+    </>
+  );
+}
+
 function OfferDone({ go, onEdit }: { go: (v: View) => void; onEdit: () => void }) {
   return (
     <section className="ob-card ob-card-pad relative overflow-hidden text-center">
@@ -99,6 +160,7 @@ function OfferDone({ go, onEdit }: { go: (v: View) => void; onEdit: () => void }
         </h1>
         <p className="ob-lead">Our strategy team will turn your answers into a draft offer before kickoff. Anything we suggest will be clearly marked as a Madvert idea for you to approve.</p>
         <div className="mt-2 flex flex-wrap justify-center gap-3">
+          <GenerateButton />
           <Btn arrow onClick={() => go("kickoff")}>
             Book your kickoff
           </Btn>
@@ -152,7 +214,13 @@ function Workshop({ go, onDone }: { go: (v: View) => void; onDone: () => void })
 
   return (
     <div>
-      <StepHeader phase="offer" title="Offer Creation" accent="Workshop" intro="Answer what you can. Short answers are fine. Everything saves automatically and you can stop at any point." />
+      <StepHeader
+        phase="offer"
+        title="Offer Creation"
+        accent="Workshop"
+        intro="Answer what you can. Short answers are fine. Everything saves automatically, and one click turns your answers into a complete offer."
+        aside={<GenerateButton />}
+      />
       <div className="grid gap-6 lg:grid-cols-[250px_1fr]">
         <nav className="flex gap-2 overflow-x-auto pb-1 lg:sticky lg:top-40 lg:flex-col lg:self-start" aria-label="Workshop sections">
           {sections.map((sec, i) => (

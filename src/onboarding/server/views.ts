@@ -25,6 +25,8 @@ export async function clientState(ctx: OnboardingContext) {
       firstName: o.contact.firstName,
       email: o.contact.email,
       accountManager: o.accountManager,
+      // Real photo for the founder; other managers get a 3D tile.
+      accountManagerPhoto: /usama/i.test(o.accountManager.name) ? "/images/usama-abbas-dahri-portrait.webp" : null,
       strategist: o.strategist ?? null,
       estimatedMinutes: o.estimatedMinutes,
       services: ctx.engagement.services.map((s) => SERVICES[s]?.label ?? s),

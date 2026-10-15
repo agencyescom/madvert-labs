@@ -451,7 +451,6 @@ function GoogleItem({ k, open, onToggle }: { k: string; open: boolean; onToggle:
               {k === "google_ads" ? (
                 <div className="mt-6 max-w-md">
                   <TextDetail platform={k} field="customer_id" label="Your Google Ads Customer ID" placeholder="123-456-7890" help="We’ll send a link request from the Madvert manager account." />
-                  {!state.integrations.googleAdsManagerId ? <ConfigRequired what="Google Ads manager account ID" /> : null}
                 </div>
               ) : email ? (
                 <div className="mt-6 flex flex-wrap items-center gap-3 rounded-2xl bg-[var(--ob-card-2)] p-4">

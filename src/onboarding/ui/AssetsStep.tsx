@@ -3,12 +3,22 @@
 import { useState } from "react";
 import { assetSectionDone } from "@/onboarding/progress";
 import { ASSET_SECTION_BY_KEY, PROOF_LINKS } from "@/onboarding/template/assets";
+import { Tile3D } from "./art3d";
 import { DelegateDialog } from "./Guides";
 import { Choices, Field, Icon, StatusPill, WhyWeNeedThis } from "./kit";
 import type { View } from "./PortalApp";
 import { StepFooter, StepHeader } from "./StepLayout";
 import { progressInputFrom, usePortal } from "./store";
 import { Uploader } from "./Uploader";
+
+const SECTION_ICON: Record<string, [string, "blue" | "cyan" | "navy" | "violet"]> = {
+  logos: ["palette", "blue"],
+  brand_guidelines: ["book", "violet"],
+  brand_assets: ["camera", "cyan"],
+  marketing: ["megaphone", "blue"],
+  social_proof: ["star", "violet"],
+  business_media: ["film", "navy"],
+};
 
 const ORDER = ["logos", "brand_guidelines", "brand_assets", "marketing", "social_proof", "business_media"];
 
@@ -62,10 +72,13 @@ export function AssetCard({ k, required, done }: { k: string; required: boolean;
   return (
     <section id={`asset-${k}`} className="ob-card ob-card-pad scroll-mt-40">
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div className="max-w-2xl">
+        <div className="flex max-w-2xl gap-4">
+          <Tile3D icon={SECTION_ICON[k]?.[0] ?? "file"} size={52} tone={SECTION_ICON[k]?.[1] ?? "blue"} />
+          <div>
           <p className={`text-[11px] font-bold tracking-[0.16em] ${required ? "text-[var(--ob-blue)]" : "text-[var(--ob-ink-3)]"}`}>{required ? "REQUESTED" : "OPTIONAL"}</p>
           <h2 className="ob-h2 mt-1">{k === "social_proof" ? "SOCIAL PROOF" : k === "business_media" ? "BUSINESS MEDIA LIBRARY" : section.title}</h2>
           <p className="mt-2 text-[15px] text-[var(--ob-ink-2)]">{section.intro}</p>
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <StatusPill status={done ? "completed" : count ? "in_progress" : "not_started"} label={done ? "Done" : count ? `${count} added` : undefined} />

@@ -40,6 +40,8 @@ export const COLLECTIONS = [
   "settings",
   "template_overrides",
   "custom_questions",
+  "team_users",
+  "offer_shares",
 ] as const;
 export type Collection = (typeof COLLECTIONS)[number];
 

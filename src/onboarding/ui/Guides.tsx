@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { ResolvedGuide } from "@/onboarding/server/guides";
 import type { GuideIllustration } from "@/onboarding/types";
 import { Btn, CopyButton, Field, Icon, Sheet } from "./kit";
+import { MetaScreen, hasMetaScreen } from "./MetaScreens";
 import { usePortal } from "./store";
 
 /* ───────── Illustration (original diagram of the settings screen) ───────── */
@@ -58,6 +59,8 @@ export function GuideMock({ ill }: { ill: GuideIllustration }) {
 }
 
 function StepVisual({ g }: { g: ResolvedGuide }) {
+  const { state } = usePortal();
+  if (!g.screenshotUrl && hasMetaScreen(g.id)) return <MetaScreen id={g.id} partnerId={state.integrations.metaPartnerId} />;
   if (g.screenshotUrl)
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={g.screenshotUrl} alt={`${g.title} screenshot`} className="w-full rounded-2xl shadow-[0_0_0_1px_var(--ob-line-2),0_22px_50px_-26px_rgb(0_60_140/0.5)]" loading="lazy" />;

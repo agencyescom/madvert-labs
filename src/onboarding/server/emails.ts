@@ -47,3 +47,16 @@ export function sendReminder(p: { to: string; firstName: string; url: string; it
     ),
   });
 }
+
+export function sendTeamInvite(to: string, name: string, from: string, url: string, reset: boolean) {
+  return sendEmail({
+    to,
+    subject: reset ? "Reset your Madvert Operations password" : `${from} invited you to Madvert Operations`,
+    html: emailShell(
+      reset ? "Set a new password" : `Welcome to the team, ${name}`,
+      `<p>${reset ? "Use the link below to set a new password for Madvert Operations." : `${esc(from)} added you to <strong style="color:#fff">Madvert Operations</strong>, where we run client onboarding.`}</p>
+       ${button(url, reset ? "Set new password" : "Create your password")}
+       <p style="font-size:13px;color:#7f8ea5">This link works once and expires in 7 days.</p>`,
+    ),
+  });
+}

@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Settings · Operations" };
 
 export default async function OpsSettings() {
   await connection();
-  const user = await requireOpsPage();
+  const user = await requireOpsPage("admin");
   return (
     <OpsShell user={user}>
       <SettingsForm initial={await getSettings()} config={await configStatus()} />

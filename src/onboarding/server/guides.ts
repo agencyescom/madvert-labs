@@ -23,7 +23,7 @@ export function fillPlaceholders(text: string, i: PublicIntegrations) {
     dnsAccessEmail: i.dnsAccessEmail,
     crmAccessEmail: i.crmAccessEmail,
   };
-  return text.replace(/\{\{(\w+)\}\}/g, (_, k: string) => map[k] || PLACEHOLDER);
+  return text.replace(/\{\{(\w+)\}\}/g, (_, k: string) => map[k] || (k === "googleAdsManagerId" ? "Madvert Labs" : PLACEHOLDER));
 }
 
 export function resolveGuides(guides: GuideStep[], i: PublicIntegrations) {

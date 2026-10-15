@@ -1,5 +1,6 @@
 "use client";
 
+import { Tile3D } from "./art3d";
 import { useRef, useState } from "react";
 import { ALLOWED_EXT, MAX_FILE_BYTES, type AssetSection } from "@/onboarding/template/assets";
 import { Btn, Icon, fmtBytes } from "./kit";
@@ -175,9 +176,7 @@ export function Uploader({ section, single = false }: { section: AssetSection; s
           void handle(e.dataTransfer.files);
         }}
       >
-        <span className="cloud">
-          <Icon name="upload" size={24} />
-        </span>
+        <Tile3D icon="upload" size={56} tone="cyan" className="ob-art-float" />
         <p className="text-[15.5px] font-semibold">Drag and drop files here</p>
         <p className="text-[13px] text-[var(--ob-ink-3)]">Multiple files welcome · images, video, PDF, ZIP, fonts, documents · up to {Math.round(MAX_FILE_BYTES / 1024 / 1024)} MB each</p>
         <div className="mt-2 flex flex-wrap justify-center gap-2">

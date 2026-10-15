@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Btn, Confetti, Field, GlowMark, Icon, StatusPill } from "./kit";
 import { MissingPanel, type View } from "./PortalApp";
+import { Art3D } from "./art3d";
 import { StepHeader } from "./StepLayout";
 import { usePortal } from "./store";
 
@@ -109,7 +110,7 @@ function BookKickoff({ go }: { go: (v: View) => void }) {
           <div className="ob-grid-bg pointer-events-none absolute inset-0" aria-hidden="true" />
           <div className="relative">
             <div className="flex items-center gap-4">
-              <GlowMark size={56} />
+              <Art3D name="kickoff" size={84} />
               <div>
                 <p className="text-[11px] font-bold tracking-[0.2em] text-[#7fdcff]">KICKOFF CALL</p>
                 <p className="text-[19px] font-semibold text-white">Meet the team. Finalise the growth plan.</p>

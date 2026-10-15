@@ -25,6 +25,8 @@ import {
 import { deleteObject, headObject, keyPrefix, putLocal, safeName, storageDriver } from "@/onboarding/server/storage";
 import { clientState, delegateState } from "@/onboarding/server/views";
 import { clientIp, rateLimit } from "@/integrations/rate-limit";
+import { inputFromWorkshop } from "@/onboarding/offer/generate";
+import { createOfferShare, sanitizeOfferInput, shareBase } from "@/onboarding/server/offers";
 
 type Ctx = { params: Promise<{ action: string }> };
 
@@ -285,6 +287,20 @@ export async function POST(req: Request, { params }: Ctx) {
         await db().put<DelegatedTask>("delegated_tasks", { ...t, status: "revoked" });
         await audit({ onboardingId: t.onboardingId, actor: who, action: "delegate.revoked", target: t.id });
         return respond(actor);
+      }
+
+      case "offer-share": {
+        clientOnly(actor);
+        const ctx = await context(actor);
+        const input = inputFromWorkshop(ctx.onboarding.companyName, ctx.workshop?.values ?? {}, {
+          bonuses: ctx.bonuses,
+          guarantees: ctx.guarantees,
+          objections: ctx.objections,
+        });
+        if (!input.outcome || !input.product) return json({ error: "Please answer the Foundation questions (what you sell and the outcome) first." }, 400);
+        const rec = await createOfferShare(sanitizeOfferInput(input), "client", ctx.onboarding.id);
+        await audit({ onboardingId: ctx.onboarding.id, actor: who, action: "offer.shared", target: rec.id });
+        return json({ ok: true, url: `${shareBase(req)}/offer/${rec.id}` });
       }
 
       case "start": {

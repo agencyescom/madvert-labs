@@ -12,16 +12,20 @@ export async function opsCall<T = Record<string, unknown>>(action: string, body?
 }
 
 const NAV = [
-  { href: "/ops/onboarding", label: "Onboarding", icon: "grid" },
-  { href: "/ops/onboarding/new", label: "New onboarding", icon: "plus" },
-  { href: "/ops/guides", label: "Guides", icon: "eye" },
-  { href: "/ops/template", label: "Template", icon: "edit" },
-  { href: "/ops/settings", label: "Settings", icon: "shield" },
+  { href: "/ops/onboarding", label: "Onboarding", icon: "grid", admin: false },
+  { href: "/ops/onboarding/new", label: "New onboarding", icon: "plus", admin: false },
+  { href: "/ops/guides", label: "Guides", icon: "eye", admin: true },
+  { href: "/ops/template", label: "Template", icon: "edit", admin: true },
+  { href: "/ops/team", label: "Team", icon: "user", admin: true },
+  { href: "/ops/settings", label: "Settings", icon: "shield", admin: true },
 ];
 
-export function OpsShell({ user, children }: { user: string; children: ReactNode }) {
+export type OpsUser = { name: string; email: string; role: "owner" | "admin" | "member" };
+
+export function OpsShell({ user, children }: { user: OpsUser; children: ReactNode }) {
   const path = usePathname();
   const router = useRouter();
+  const nav = NAV.filter((n) => !n.admin || user.role !== "member");
   return (
     <div className="ob">
       <Waves />
@@ -34,7 +38,7 @@ export function OpsShell({ user, children }: { user: string; children: ReactNode
             </span>
           </Link>
           <nav className="ml-4 hidden gap-1 lg:flex">
-            {NAV.map((n) => {
+            {nav.map((n) => {
               const active = n.href === "/ops/onboarding" ? path === n.href || (path.startsWith("/ops/onboarding/") && !path.endsWith("/new")) : path.startsWith(n.href);
               return (
                 <Link key={n.href} href={n.href} className={`flex items-center gap-2 rounded-full px-3.5 py-2 text-[13.5px] font-semibold ${active ? "bg-[var(--ob-card-solid)] shadow-[0_0_0_1px_rgb(0_160_255/0.35)]" : "text-[var(--ob-ink-2)] hover:text-[var(--ob-ink)]"}`}>
@@ -44,7 +48,14 @@ export function OpsShell({ user, children }: { user: string; children: ReactNode
             })}
           </nav>
           <div className="ml-auto flex items-center gap-2">
-            <span className="hidden text-[12.5px] text-[var(--ob-ink-3)] sm:inline">{user}</span>
+            <Link href="/ops/account" className="hidden items-center gap-2 rounded-full px-2 py-1 text-[12.5px] text-[var(--ob-ink-2)] hover:bg-[var(--ob-card)] sm:flex" title="Your account">
+              <span className="grid h-7 w-7 place-items-center rounded-full text-[11px] font-bold text-white" style={{ background: "var(--ob-grad)" }}>
+                {(user.name || user.email).slice(0, 1).toUpperCase()}
+              </span>
+              <span>
+                {user.name} <span className="text-[var(--ob-ink-3)]">· {user.role}</span>
+              </span>
+            </Link>
             <ThemeSwitch />
             <Btn
               variant="ghost"
@@ -59,7 +70,7 @@ export function OpsShell({ user, children }: { user: string; children: ReactNode
           </div>
         </div>
         <nav className="ob-wrap flex gap-1 overflow-x-auto pb-2 lg:hidden">
-          {NAV.map((n) => (
+          {nav.map((n) => (
             <Link key={n.href} href={n.href} className="flex-none rounded-full px-3 py-1.5 text-[13px] font-semibold text-[var(--ob-ink-2)]">
               {n.label}
             </Link>

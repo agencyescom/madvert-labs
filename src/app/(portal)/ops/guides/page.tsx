@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "Guides · Operations" };
 
 export default async function OpsGuides() {
   await connection();
-  const user = await requireOpsPage();
+  const user = await requireOpsPage("admin");
   const raw = await getGuides();
   const preview = resolveGuides(raw, publicIntegrations(await getSettings()));
   const steps = raw.map((g, i) => ({ ...g, screenshotUrl: preview[i].screenshotUrl, screenshotKey: undefined }));

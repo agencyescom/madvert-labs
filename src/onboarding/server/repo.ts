@@ -47,7 +47,7 @@ export const slugify = (s: string) =>
     .slice(0, 60) || "client";
 
 export function portalUrl(token: string) {
-  const base = (process.env.ONBOARDING_BASE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://madvertlabs.com").replace(/\/$/, "");
+  const base = (process.env.ONBOARDING_BASE_URL ?? (process.env.ONBOARDING_HOST ? `https://${process.env.ONBOARDING_HOST}` : undefined) ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://madvertlabs.com").replace(/\/$/, "");
   return `${base}/onboarding/${token}`;
 }
 export function currentLink(o: Onboarding) {
@@ -55,7 +55,7 @@ export function currentLink(o: Onboarding) {
   return t ? portalUrl(t) : null;
 }
 export function delegateUrl(token: string) {
-  const base = (process.env.ONBOARDING_BASE_URL ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://madvertlabs.com").replace(/\/$/, "");
+  const base = (process.env.ONBOARDING_BASE_URL ?? (process.env.ONBOARDING_HOST ? `https://${process.env.ONBOARDING_HOST}` : undefined) ?? process.env.NEXT_PUBLIC_SITE_URL ?? "https://madvertlabs.com").replace(/\/$/, "");
   return `${base}/onboarding/task/${token}`;
 }
 
