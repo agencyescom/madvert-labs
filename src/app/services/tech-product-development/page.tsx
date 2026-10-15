@@ -57,7 +57,7 @@ export default async function TechPage() {
         title="What Could Technology Remove From Your Business This Month?"
         label="Request a Tech Opportunity Audit"
         href="/resources/tech-opportunity-audit"
-        resource={{ title: "Tech Opportunity Audit", kind: "Audit", category: "build" }}
+        resource={{ title: "Tech Opportunity Audit", kind: "Audit", category: "automation" }}
       />
 
       <AnswerBlock

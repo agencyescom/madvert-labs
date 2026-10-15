@@ -1,13 +1,18 @@
 const image = `{ "url": asset->url, "alt": coalesce(alt, ""), "width": asset->metadata.dimensions.width, "height": asset->metadata.dimensions.height }`;
 const seo = `seo{ title, description }`;
 
+const testimonialFields = `"id": _id, quote, name, role, company, business, industry, market, duration,
+  "videoUrl": coalesce(video.asset->url, videoUrl), "posterUrl": poster.asset->url`;
+
 export const caseStudyFields = `
   "slug": slug.current, title, "client": client->name, industry, market, categories, services,
   summary, problem, diagnosis, move, strategy, execution, creative, system, result, learned,
   metrics[]{ label, value, context },
-  "testimonial": testimonial->{ "id": _id, quote, name, role, company, videoUrl },
+  "testimonial": testimonial->{ ${testimonialFields} },
   videoUrl, "featuredImage": featuredImage${image}, "gallery": gallery[]${image},
-  publishedAt, ${seo}
+  publishedAt, ${seo},
+  oneLiner, "cover": cover${image}, "pdfUrl": coalesce(pdf.asset->url, pdfUrl), region, systemType, featured,
+  challenge, context, built, implementation, outcome
 `;
 
 export const queries = {
@@ -19,7 +24,7 @@ export const queries = {
     "cover": cover${image}, "coverAlt": coverAlt${image}, sourceId, badge, categoryLabel, heroHeadline, outcome, whoFor, formCta, cardCta,
     successTitle, successBody, calendarTitle, calendarAccent, calendarBody, "related": related[]->slug.current, ${seo}
   }`,
-  testimonials: `*[_type == "testimonial" && permission == true] | order(order asc){ "id": _id, quote, name, role, company, videoUrl }`,
+  testimonials: `*[_type == "testimonial" && permission == true] | order(order asc){ ${testimonialFields} }`,
   team: `*[_type == "teamMember"] | order(order asc){ name, role, bio, "photo": photo${image} }`,
   faqs: `*[_type == "faq" && $scope in scopes] | order(order asc){ "q": question, "a": answer }`,
   portfolio: `*[_type == "portfolioProject"] | order(order asc){ "slug": slug.current, title, format, "client": client->name, videoUrl, "poster": poster${image} }`,

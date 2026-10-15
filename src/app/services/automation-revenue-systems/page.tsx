@@ -95,7 +95,7 @@ export default async function AutomationPage() {
         title="How Much Revenue Is Quietly Leaking After the Lead Arrives?"
         label="Run the Revenue Leakage Audit"
         href="/resources/revenue-leakage-audit"
-        resource={{ title: "Revenue Leakage Audit", kind: "Audit", category: "automate" }}
+        resource={{ title: "Revenue Leakage Audit", kind: "Audit", category: "automation" }}
       />
 
       <AnswerBlock

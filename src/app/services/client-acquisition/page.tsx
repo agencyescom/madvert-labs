@@ -106,7 +106,7 @@ export default async function AcquisitionPage() {
         title="Want Better Leads Before You Spend More?"
         label="Get the Qualified Lead Generation Playbook"
         href="/resources/qualified-lead-generation-playbook"
-        resource={{ title: "Qualified Lead Generation Playbook", kind: "Playbook", category: "acquire" }}
+        resource={{ title: "Qualified Lead Generation Playbook", kind: "Playbook", category: "leads" }}
       />
 
       <AnswerBlock

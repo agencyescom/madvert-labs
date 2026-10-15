@@ -1,10 +1,12 @@
-import Link from "next/link";
 import { Cta } from "@/components/ui/Button";
-import { LeadMagnetCover } from "@/components/lead-magnets/LeadMagnetCover";
+import { FeaturedResource } from "@/components/lead-magnets/FeaturedResource";
+import { ResourceCard } from "@/components/lead-magnets/ResourceCard";
 import type { Resource } from "@/types/content";
 
+/** Homepage echo of the Madvert Vault: the spotlight resource on its podium plus four resources with official artwork. */
 export function Vault({ resources }: { resources: Resource[] }) {
-  const featured = resources.filter((r) => r.featured && !r.artworkPending).slice(0, 5);
+  const spotlight = resources.find((r) => r.spotlight) ?? resources.find((r) => r.featured && !r.artworkPending);
+  const picks = resources.filter((r) => r.featured && !r.artworkPending && r.slug !== spotlight?.slug).slice(0, 4);
   return (
     <section className="section overflow-hidden" aria-labelledby="vault-title">
       <div className="container-x">
@@ -16,23 +18,24 @@ export function Vault({ resources }: { resources: Resource[] }) {
             </h2>
           </div>
           <div data-reveal style={{ ["--reveal-delay" as string]: 120 }} className="text-[16px] text-ink-2 lg:col-span-4 lg:col-start-9">
-            <p>No email bait dressed up as value.</p>
-            <p className="mt-1.5">Resources built to help you see your growth more clearly.</p>
+            <p>Free playbooks, checklists and growth resources for business owners.</p>
+            <p className="mt-1.5">No email bait dressed up as value.</p>
           </div>
         </div>
-        <ul className="-mx-[var(--pad-x)] mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-[var(--pad-x)] pb-4 lg:mx-0 lg:grid lg:grid-cols-5 lg:overflow-visible lg:px-0">
-          {featured.map((r, i) => (
-            <li key={r.slug} data-reveal style={{ ["--reveal-delay" as string]: i * 80 }} className="w-[220px] shrink-0 snap-start lg:w-auto">
-              <Link href={`/resources/${r.slug}`} data-track="lead_magnet_click" data-track-label={`vault_${r.slug}`} className="group block">
-                <div className="transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:-translate-y-2">
-                  <LeadMagnetCover resource={r} size="sm" interactive={false} />
-                </div>
-                <p className="mt-4 text-[14.5px] font-medium text-ink">{r.title}</p>
-                <p className="text-[13px] text-accent-text">{r.cardCta ?? "Get the Guide"} →</p>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-12">
+          {spotlight ? (
+            <div data-reveal="fade" className="lg:col-span-5">
+              <FeaturedResource r={spotlight} compact headingLevel="h3" />
+            </div>
+          ) : null}
+          <ul className={`grid grid-cols-1 gap-5 sm:grid-cols-2 ${spotlight ? "lg:col-span-7" : "lg:col-span-12 lg:grid-cols-4"}`}>
+            {picks.map((r, i) => (
+              <li key={r.slug} data-reveal style={{ ["--reveal-delay" as string]: i * 70 }} className={i > 1 ? "hidden sm:block" : undefined}>
+                <ResourceCard r={r} trackLabel={`vault_${r.slug}`} />
+              </li>
+            ))}
+          </ul>
+        </div>
         <div data-reveal className="mt-10">
           <Cta href="/resources" variant="secondary">
             Open the Vault

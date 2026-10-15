@@ -25,6 +25,8 @@ export const fallbackCaseStudies: CaseStudy[] = [
     categories: ["acquisition", "automation"],
     services: ["Client Acquisition", "Automation and Revenue Systems"],
     summary: "Lead volume looked healthy. The sales team disagreed.",
+    oneLiner: "Lead volume looked healthy. The sales team disagreed.",
+    systemType: "Lead Qualification System",
     problem: "[REAL CASE STUDY: what the client was experiencing and what it was costing them]",
     diagnosis: "[REAL CASE STUDY: what we found beneath the visible symptom]",
     move: "[REAL CASE STUDY: the first strategic decision and why]",
@@ -49,6 +51,8 @@ export const fallbackCaseStudies: CaseStudy[] = [
     categories: ["automation", "technology"],
     services: ["Automation and Revenue Systems"],
     summary: "Enquiries arrived on time. Replies did not.",
+    oneLiner: "Enquiries arrived on time. Replies did not.",
+    systemType: "Follow-Up Automation",
     problem: "[REAL CASE STUDY: what the client was experiencing and what it was costing them]",
     diagnosis: "[REAL CASE STUDY: what we found beneath the visible symptom]",
     move: "[REAL CASE STUDY: the first strategic decision and why]",
@@ -70,6 +74,8 @@ export const fallbackCaseStudies: CaseStudy[] = [
     categories: ["branding", "studios", "seo"],
     services: ["Branding and Marketing", "Madvert Studios", "Client Acquisition"],
     summary: "Excellent in person. Forgettable online.",
+    oneLiner: "Excellent in person. Forgettable online.",
+    systemType: "Brand and Content System",
     problem: "[REAL CASE STUDY: what the client was experiencing and what it was costing them]",
     diagnosis: "[REAL CASE STUDY: what we found beneath the visible symptom]",
     move: "[REAL CASE STUDY: the first strategic decision and why]",
@@ -87,10 +93,21 @@ export const fallbackCaseStudies: CaseStudy[] = [
 
 export { leadMagnets as fallbackResources } from "@/content/lead-magnets";
 
-export const fallbackTestimonials: Testimonial[] = [
-  { id: "t1", quote: "[REAL CLIENT TESTIMONIAL]", name: "[CLIENT NAME]", role: "[ROLE]", company: "[COMPANY]", placeholder: true },
-  { id: "t2", quote: "[REAL CLIENT TESTIMONIAL]", name: "[CLIENT NAME]", role: "[ROLE]", company: "[COMPANY]", placeholder: true },
-];
+/**
+ * Video testimonial slots. No real client videos have been supplied yet, so every entry is a
+ * bracketed placeholder (play disabled). Replace with real, client-approved entries in Sanity:
+ * name, business, industry, market, quote, videoUrl, poster and duration.
+ */
+export const fallbackTestimonials: Testimonial[] = Array.from({ length: 8 }, (_, i) => ({
+  id: `t${i + 1}`,
+  quote: "[Short client quote]",
+  name: "[Client name]",
+  business: "[Business]",
+  industry: "[Industry]",
+  market: "[Market]",
+  duration: "[0:00]",
+  placeholder: true,
+}));
 
 export const fallbackProof: ProofItem[] = [
   { kind: "campaign", label: "[REAL CAMPAIGN SCREENSHOT]", placeholder: true },
@@ -119,7 +136,12 @@ export const fallbackPortfolio: PortfolioProject[] = [
 
 export const fallbackSettings: SiteSettings = {
   founderPhoto,
-  heroImage: founderPhoto,
+  heroImage: {
+    url: "/images/usama-abbas-dahri-hero.webp",
+    alt: "Usama Abbas Dahri, Founder of Madvert Labs",
+    width: 800,
+    height: 1000,
+  },
   clientLogos: [],
   certifications: [],
 };

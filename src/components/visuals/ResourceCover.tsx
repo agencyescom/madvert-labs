@@ -1,19 +1,10 @@
 import { MadvertMark } from "@/components/ui/MadvertMark";
+import { categoryOf, resourceCategoryTint } from "@/lib/resource-categories";
 import type { Resource } from "@/types/content";
-
-const tints: Record<Resource["category"], string> = {
-  acquire: "#00b4ff",
-  convert: "#2dd4bf",
-  search: "#38bdf8",
-  brand: "#a78bfa",
-  automate: "#00e5ff",
-  build: "#34d399",
-  content: "#f59e0b",
-};
 
 /** A premium digital report cover rendered in CSS, used until real cover art is uploaded to the CMS. */
 export function ResourceCover({ resource, className = "" }: { resource: Pick<Resource, "title" | "kind" | "category">; className?: string }) {
-  const tint = tints[resource.category];
+  const tint = resourceCategoryTint[categoryOf(resource)];
   return (
     <div
       className={`relative aspect-[3/4] overflow-hidden rounded-[18px] border border-white/10 bg-[#0b1222] p-5 text-white shadow-[0_30px_60px_-30px_rgb(0_0_0/0.8),inset_0_1px_0_rgb(255_255_255/0.08)] ${className}`}

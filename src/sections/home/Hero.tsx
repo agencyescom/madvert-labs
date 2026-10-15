@@ -46,7 +46,7 @@ export function Hero({ image }: { image?: ImageAsset }) {
           </div>
         </div>
 
-        <div className="px-6 sm:px-10 lg:col-span-5 lg:px-0 xl:col-span-6" data-reveal="fade" style={{ ["--reveal-delay" as string]: 200 }}>
+        <div className="sm:px-10 lg:col-span-5 lg:px-0 xl:col-span-6" data-reveal="fade" style={{ ["--reveal-delay" as string]: 200 }}>
           <HeroVisual image={image} />
         </div>
       </div>

@@ -23,6 +23,7 @@ import { AccentHeadline } from "@/components/ui/Section";
 import { BookingSection } from "@/components/booking/BookingSection";
 import { ServicesGrid } from "@/sections/home/ServicesGrid";
 import { HireDepartment } from "@/sections/home/HireDepartment";
+import { IntroVideo } from "@/sections/home/IntroVideo";
 
 const description =
   "Madvert Labs connects branding, customer acquisition, conversion, creative, automation and technology into one intelligent growth system built around your business.";
@@ -45,6 +46,7 @@ export default async function HomePage() {
     <>
       <OpeningIntro />
       <Hero image={settings.heroImage} />
+      <IntroVideo />
 
       <section className="section pb-0" aria-label="The problem">
         <div className="container-x">
@@ -75,9 +77,6 @@ export default async function HomePage() {
       <HireDepartment />
       <OwnedDemand />
       <AiLeverage />
-
-
-
       <Proof items={proof} testimonials={testimonials} />
       <CasePreview studies={studies} />
       <WhyMadvert />

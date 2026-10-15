@@ -3,81 +3,12 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { useInView, useInViewOnce } from "@/animations/useActiveStep";
+import { useInView } from "@/animations/useActiveStep";
+import { DemandStory } from "./DemandStory";
 import { Cta, Arrow } from "@/components/ui/Button";
 import { Glyph } from "@/components/ui/Icon3D";
 
-/* ───────── Part A: rented vs owned demand ───────── */
-
-const months = 12;
-const X = (i: number) => 30 + (i * 520) / (months - 1);
-const Y = (v: number) => 210 - v * 1.7;
-const toPath = (vals: number[]) => vals.map((v, i) => `${i ? "L" : "M"}${X(i).toFixed(1)} ${Y(v).toFixed(1)}`).join(" ");
-
-const paidOn = [20, 34, 46, 55, 62, 68, 72, 76, 79, 82, 84, 86];
-const paidOff = [20, 34, 46, 55, 62, 68, 72, 76, 30, 10, 4, 2];
-const ownedOn = [14, 24, 36, 48, 58, 68, 78, 88, 96, 104, 110, 116];
-const ownedOff = [14, 24, 36, 48, 58, 68, 78, 88, 74, 72, 74, 78];
-
-function DemandChart() {
-  const [paid, setPaid] = useState(true);
-  const { ref, seen } = useInViewOnce<HTMLDivElement>(0.5);
-  const [touched, setTouched] = useState(false);
-
-  // Explain by doing: once the chart is on screen, switch the ads off (unless the visitor already did).
-  useEffect(() => {
-    if (!seen || touched) return;
-    const t = setTimeout(() => setPaid(false), 1400);
-    return () => clearTimeout(t);
-  }, [seen, touched]);
-
-  return (
-    <div ref={ref} className="panel p-6 sm:p-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <p className="t-label">Demand over 12 months</p>
-        <button
-          type="button"
-          role="switch"
-          aria-checked={paid}
-          onClick={() => {
-            setTouched(true);
-            setPaid((v) => !v);
-          }}
-          className="inline-flex items-center gap-3 rounded-full border border-line bg-glass py-1.5 pl-4 pr-1.5 text-[14px] font-medium"
-        >
-          Paid ads {paid ? "on" : "off"}
-          <span className={`relative h-6 w-11 rounded-full transition-colors duration-300 ${paid ? "bg-[linear-gradient(90deg,#00b4ff,#00e5ff)]" : "bg-[var(--line-strong)]"}`}>
-            <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-300 ${paid ? "translate-x-[22px]" : "translate-x-0.5"}`} />
-          </span>
-        </button>
-      </div>
-      <svg viewBox="0 0 580 240" className="mt-6 h-auto w-full" role="img" aria-label={paid ? "With paid ads on, both rented and owned demand rise." : "With paid ads off, rented demand collapses while owned demand holds."}>
-        {[0, 1, 2, 3].map((i) => (
-          <line key={i} x1="30" x2="550" y1={30 + i * 60} y2={30 + i * 60} stroke="var(--line)" />
-        ))}
-        <line x1={X(7.5)} x2={X(7.5)} y1="20" y2="215" stroke="var(--line-strong)" strokeDasharray="3 5" className={`transition-opacity duration-500 ${paid ? "opacity-0" : "opacity-100"}`} />
-        <text x={X(7.5) + 8} y="30" fontSize="11" fill="var(--ink-3)" className={`transition-opacity duration-500 ${paid ? "opacity-0" : "opacity-100"}`}>
-          Ads switched off
-        </text>
-        {/* rented */}
-        <path d={toPath(paidOn)} fill="none" stroke="var(--danger)" strokeWidth="2.4" strokeLinejoin="round" className="transition-opacity duration-700" opacity={paid ? 1 : 0} />
-        <path d={toPath(paidOff)} fill="none" stroke="var(--danger)" strokeWidth="2.4" strokeLinejoin="round" className="transition-opacity duration-700" opacity={paid ? 0 : 1} />
-        {/* owned */}
-        <path d={toPath(ownedOn)} fill="none" stroke="#00e5ff" strokeWidth="2.6" strokeLinejoin="round" className="transition-opacity duration-700" opacity={paid ? 1 : 0} />
-        <path d={toPath(ownedOff)} fill="none" stroke="#00e5ff" strokeWidth="2.6" strokeLinejoin="round" className="transition-opacity duration-700" opacity={paid ? 0 : 1} />
-      </svg>
-      <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-[13.5px] text-ink-2">
-        <li className="flex items-center gap-2">
-          <span className="h-[3px] w-5 rounded bg-[var(--danger)]" /> Paid only (rented)
-        </li>
-        <li className="flex items-center gap-2">
-          <span className="h-[3px] w-5 rounded bg-[#00e5ff]" /> Paid plus organic (owned)
-        </li>
-      </ul>
-      <p className="mt-4 text-[12px] text-ink-3">Illustrative pattern, not client data.</p>
-    </div>
-  );
-}
+/* Part A (rented vs owned demand) lives in DemandStory: a four-phase illustrated story. */
 
 /* ───────── Part B: discovery has changed ───────── */
 
@@ -220,24 +151,29 @@ function DiscoveryCard() {
 
 export function OwnedDemand() {
   return (
-    <section className="section overflow-hidden" aria-labelledby="owned-title">
-      <div className="container-x grid grid-cols-1 items-center gap-14 lg:grid-cols-12 lg:gap-10">
-        <div className="lg:col-span-5">
-          <h2 id="owned-title" data-reveal className="t-h1 !text-[clamp(32px,3.6vw,50px)]">
-            If Switching Off Your Ads Switches Off Your Business, You Do Not Own Demand.
-          </h2>
-          <p data-reveal style={{ ["--reveal-delay" as string]: 80 }} className="t-h2 t-grad mt-5 inline-block">
-            You Are Renting It.
-          </p>
-          <div data-reveal style={{ ["--reveal-delay" as string]: 140 }} className="mt-8 space-y-1.5 text-[17px] text-ink-2">
+    <section className="section overflow-x-clip" aria-labelledby="owned-title">
+      <div className="container-x">
+        <div className="grid grid-cols-1 items-end gap-8 lg:grid-cols-12 lg:gap-10">
+          <div className="lg:col-span-7">
+            <h2 id="owned-title" data-reveal className="t-h1 !text-[clamp(32px,3.6vw,50px)]">
+              If Switching Off Your Ads Switches Off Your Business, You Do Not Own Demand.
+            </h2>
+            <p data-reveal style={{ ["--reveal-delay" as string]: 80 }} className="t-h2 t-grad mt-5 inline-block">
+              You Are Renting It.
+            </p>
+          </div>
+          <div data-reveal style={{ ["--reveal-delay" as string]: 140 }} className="space-y-1.5 text-[17px] text-ink-2 lg:col-span-4 lg:col-start-9 lg:pb-2">
             <p>Paid acquisition gives you speed.</p>
             <p>Organic acquisition gives you an asset.</p>
             <p className="font-semibold text-ink">Smart businesses build both.</p>
           </div>
         </div>
-        <div data-reveal="fade" className="lg:col-span-6 lg:col-start-7">
-          <DemandChart />
+        <div className="mt-14 lg:mt-10">
+          <DemandStory />
         </div>
+        <p data-reveal className="t-h2 mx-auto mt-16 max-w-[860px] text-center lg:mt-20">
+          Paid Gets You There Faster. <span className="t-grad">Organic Helps You Stay There.</span>
+        </p>
       </div>
 
       <div className="container-x mt-28 grid grid-cols-1 items-center gap-14 md:mt-36 lg:grid-cols-12 lg:gap-10">

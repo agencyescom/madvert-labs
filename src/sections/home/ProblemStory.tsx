@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { StickyStory } from "@/components/story/StickyStory";
 import { Cta } from "@/components/ui/Button";
 
@@ -47,15 +48,18 @@ function ProblemStage({ step }: { step: number }) {
   const zoomed = step >= 2;
   const pipeline = step >= 3;
   const repaired = step >= 4;
+  const uid = useId().replace(/:/g, "");
+  const gGreen = `ps-green-${uid}`;
+  const gCyan = `ps-cyan-${uid}`;
   return (
     <div className="panel relative overflow-hidden p-2 sm:p-3" data-step={step}>
       <svg viewBox="0 0 640 470" className="problem-stage h-auto w-full" role="img" aria-label={stageLabel(step)}>
         <defs>
-          <linearGradient id="ps-green" x1="0" x2="0" y1="0" y2="1">
+          <linearGradient id={gGreen} x1="0" x2="0" y1="0" y2="1">
             <stop offset="0" stopColor={GREEN} stopOpacity="0.35" />
             <stop offset="1" stopColor={GREEN} stopOpacity="0" />
           </linearGradient>
-          <linearGradient id="ps-cyan" x1="0" x2="1">
+          <linearGradient id={gCyan} x1="0" x2="1">
             <stop offset="0" stopColor="#00b4ff" />
             <stop offset="1" stopColor="#00e5ff" />
           </linearGradient>
@@ -96,7 +100,7 @@ function ProblemStage({ step }: { step: number }) {
               ) : null}
             </g>
           ))}
-          <path d="M22 262 L80 236 L130 244 L190 200 L250 206 L310 160 L370 150 L398 128 L398 270 L22 270Z" fill="url(#ps-green)" />
+          <path d="M22 262 L80 236 L130 244 L190 200 L250 206 L310 160 L370 150 L398 128 L398 270 L22 270Z" fill={`url(#${gGreen})`} />
           <path d="M22 262 L80 236 L130 244 L190 200 L250 206 L310 160 L370 150 L398 128" fill="none" stroke={GREEN} strokeWidth="2.5" strokeLinejoin="round" />
           {/* notifications */}
           <g className="ps-anim" style={{ opacity: step === 0 ? 1 : 0 }}>
@@ -171,7 +175,7 @@ function ProblemStage({ step }: { step: number }) {
               ))
             : null}
           {/* repair ribbon */}
-          <path d="M36 383 L512 383" stroke="url(#ps-cyan)" strokeWidth="5" strokeLinecap="round" pathLength={1} className="ps-repair" style={{ strokeDashoffset: repaired ? 0 : 1 }} />
+          <path d="M36 383 L512 383" stroke={`url(#${gCyan})`} strokeWidth="5" strokeLinecap="round" pathLength={1} className="ps-repair" style={{ strokeDashoffset: repaired ? 0 : 1 }} />
           {repaired
             ? [0, 1, 2, 3].map((i) => <circle key={i} cx="40" cy="383" r="6" fill="#e0fbff" className="ps-flow" style={{ animationDelay: `${i * 0.55}s` }} />)
             : null}

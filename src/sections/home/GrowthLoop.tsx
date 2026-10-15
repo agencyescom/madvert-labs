@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { StickyStory } from "@/components/story/StickyStory";
 import { Glyph, type IconName } from "@/components/ui/Icon3D";
 
@@ -20,11 +21,12 @@ export function LoopDiagram({ active, className = "" }: { active: number; classN
   });
   const circ = 2 * Math.PI * R;
   const progress = (active + 1) / loopStages.length;
+  const gid = `loop-g-${useId().replace(/:/g, "")}`;
   return (
-    <div className={`relative mx-auto aspect-square w-full max-w-[460px] ${className}`}>
+    <div className={`relative mx-auto aspect-square w-full max-w-[300px] sm:max-w-[380px] lg:max-w-[460px] ${className}`}>
       <svg viewBox="0 0 400 400" className="absolute inset-0 h-full w-full" aria-hidden="true">
         <defs>
-          <linearGradient id="loop-g" x1="0" x2="1" y1="0" y2="1">
+          <linearGradient id={gid} x1="0" x2="1" y1="0" y2="1">
             <stop offset="0" stopColor="#00b4ff" />
             <stop offset="1" stopColor="#00e5ff" />
           </linearGradient>
@@ -35,7 +37,7 @@ export function LoopDiagram({ active, className = "" }: { active: number; classN
           cy={C}
           r={R}
           fill="none"
-          stroke="url(#loop-g)"
+          stroke={`url(#${gid})`}
           strokeWidth="3"
           strokeLinecap="round"
           strokeDasharray={circ}
@@ -47,8 +49,8 @@ export function LoopDiagram({ active, className = "" }: { active: number; classN
       </svg>
       <div className="absolute inset-0 grid place-items-center text-center">
         <div>
-          <p className="t-label">Madvert Growth Loop</p>
-          <p className="mt-2 font-display text-[26px] font-semibold tracking-tight text-ink">{loopStages[active].name}</p>
+          <p className="t-label hidden sm:block">Madvert Growth Loop</p>
+          <p className="font-display text-[22px] sm:mt-2 sm:text-[26px] font-semibold tracking-tight text-ink">{loopStages[active].name}</p>
         </div>
       </div>
       {pts.map((p, i) => (

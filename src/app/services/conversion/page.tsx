@@ -68,7 +68,7 @@ export default async function ConversionPage() {
         title="Where Is Your Website Quietly Losing People?"
         label="Get the Conversion Leak Checklist"
         href="/resources/conversion-leak-checklist"
-        resource={{ title: "Conversion Leak Checklist", kind: "Checklist", category: "convert" }}
+        resource={{ title: "Conversion Leak Checklist", kind: "Checklist", category: "conversion" }}
       />
 
       <AnswerBlock
