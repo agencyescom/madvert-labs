@@ -13,6 +13,9 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     "studio/**",
+    "landing-source/**",
+    // Generated static export of landing-source
+    "public/custom-patches/**",
   ]),
 ]);
 
