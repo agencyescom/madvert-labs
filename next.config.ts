@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // Two root layouts (marketing site + onboarding portal) need a global 404.
+  experimental: { globalNotFound: true },
   images: {
     formats: ["image/avif", "image/webp"],
     qualities: [40, 75, 85],
@@ -33,7 +35,18 @@ const nextConfig: NextConfig = {
     ];
   },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      // Private portal: never cached or indexed, and the bearer link never leaks through Referer.
+      {
+        source: "/(onboarding|ops)/:path*",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Cache-Control", value: "private, no-store" },
+        ],
+      },
+    ];
   },
   turbopack: {
     rules: {
