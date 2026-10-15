@@ -80,16 +80,6 @@
   transform: rotateY(90deg);
   background: repeating-linear-gradient(90deg, #ffffff 0 1px, #dfe8ef 1px 2px);
 }
-/* top face: page block seen from above */
-.vb-top {
-  position: absolute;
-  left: 0.6%;
-  right: 1.2%;
-  top: calc(var(--vb-t) * -1 + 1px);
-  height: calc(var(--vb-t) * 2 - 2px);
-  transform: rotateX(90deg);
-  background: repeating-linear-gradient(180deg, #ffffff 0 1px, #e3ebf1 1px 2px);
-}
 /* contact shadow on the surface below */
 .vb-shadow {
   position: absolute;
@@ -375,11 +365,11 @@
 /* glowing podium the featured book stands on */
 .vt-stage {
   position: relative;
-  padding-bottom: 12%;
+  padding-bottom: 15%;
 }
 .vt-stage .vb {
   z-index: 2;
-  width: 62%;
+  width: 70%;
   margin: 0 auto;
   --vb-ry: 22deg;
 }
@@ -402,8 +392,8 @@
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 96%;
-  height: 22%;
+  width: 100%;
+  height: 25%;
   transform: translateX(-50%);
 }
 .vt-podium::before,
@@ -424,7 +414,7 @@
 /* top face with lit rim */
 .vt-podium::after {
   top: 0;
-  height: 62%;
+  height: 56%;
   background: radial-gradient(60% 60% at 50% 45%, rgb(140 220 255 / 0.55), rgb(0 120 255 / 0.35) 55%, rgb(5 40 100 / 0.95) 100%);
   box-shadow:
     0 0 0 1.5px rgb(0 220 255 / 0.85),
@@ -484,4 +474,27 @@
   letter-spacing: -0.035em;
   text-transform: uppercase;
   color: var(--ink);
+}
+
+.vt-enter {
+  animation: vt-enter 900ms cubic-bezier(0.16, 1, 0.3, 1) 120ms both;
+}
+@keyframes vt-enter {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vt-enter {
+    animation: none;
+  }
+}
+@media (max-width: 420px) {
+  .vt-card .vt-cta {
+    height: 34px;
+    padding: 0 13px;
+    font-size: 13px;
+    gap: 6px;
+  }
 }

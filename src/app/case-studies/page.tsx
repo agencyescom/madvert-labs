@@ -6,6 +6,7 @@ import { pageMetadata } from "@/lib/seo";
 import { site } from "@/lib/site";
 import { CaseFilters } from "@/sections/cases/CaseFilters";
 import { FinalCta } from "@/sections/shared/FinalCta";
+import { CaseCarousel } from "@/components/case-studies/CaseCarousel";
 import { BookingSection } from "@/components/booking/BookingSection";
 
 const description = "Real problems. Real decisions. Real work. Real outcomes. Madvert Labs case studies across acquisition, SEO, branding, studios, automation and technology.";
@@ -33,8 +34,19 @@ export default async function CaseStudiesPage() {
           </div>
         </div>
       </section>
-      <section className="section-tight pt-10" aria-label="Case studies">
+      {studies.length > 1 ? (
+        <section className="relative hidden overflow-clip pb-16 pt-6 min-[900px]:block" aria-label="Featured case studies">
+          <div className="cs-glow" aria-hidden="true" />
+          <div className="container-x relative">
+            <CaseCarousel studies={studies.slice(0, 7)} label="Featured case studies" />
+          </div>
+        </section>
+      ) : null}
+      <section className="section-tight pt-10" aria-labelledby="all-cases-title">
         <div className="container-x">
+          <h2 id="all-cases-title" className="t-h2 mb-8">
+            Browse <span className="t-grad">Every Case File</span>
+          </h2>
           <CaseFilters studies={studies} />
         </div>
       </section>

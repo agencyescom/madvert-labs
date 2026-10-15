@@ -30,7 +30,6 @@ export function BookMockup({
       <div className="vb-book">
         <div className="vb-back" aria-hidden="true" />
         <div className="vb-pages" aria-hidden="true" />
-        <div className="vb-top" aria-hidden="true" />
         <div className="vb-spine" aria-hidden="true" />
         <div className="vb-front">
           {hasArt && resource.cover ? (

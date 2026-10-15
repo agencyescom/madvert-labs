@@ -57,7 +57,7 @@ export function CaseCarousel({ studies, label = "Case studies" }: { studies: Cas
                 key={s.slug}
                 className="cs-slide"
                 data-current={current || undefined}
-                data-far={abs > 2 || undefined}
+                data-far={abs > 1 || undefined}
                 style={{ ["--off" as string]: off, ["--abs" as string]: abs }}
                 role="group"
                 aria-roledescription="slide"
@@ -67,7 +67,7 @@ export function CaseCarousel({ studies, label = "Case studies" }: { studies: Cas
                 <div inert={!current} className="cs-slide-inner">
                   <CaseShowcaseCard study={s} size="lg" />
                 </div>
-                {!current && abs <= 2 ? <button type="button" tabIndex={-1} className="cs-slide-hit" onClick={() => setActive(i)} aria-label={`Show ${s.title}`} /> : null}
+                {!current && abs === 1 ? <button type="button" tabIndex={-1} className="cs-slide-hit" onClick={() => setActive(i)} aria-label={`Show ${s.title}`} /> : null}
               </div>
             );
           })}

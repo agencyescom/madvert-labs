@@ -1,22 +1,8 @@
 import { Cta } from "@/components/ui/Button";
-import { Glyph, type IconName } from "@/components/ui/Icon3D";
 import { Eyebrow } from "@/components/ui/Section";
-import { MadvertMark } from "@/components/ui/MadvertMark";
+import { GrowthSystem } from "@/components/visuals/growth-system/GrowthSystem";
 
-const team: { label: string; icon: IconName }[] = [
-  { label: "Strategy", icon: "strategy" },
-  { label: "Paid Media", icon: "paidMedia" },
-  { label: "SEO", icon: "seo" },
-  { label: "Creative", icon: "studios" },
-  { label: "Branding", icon: "branding" },
-  { label: "Conversion", icon: "conversion" },
-  { label: "CRM", icon: "crm" },
-  { label: "Automation", icon: "automation" },
-  { label: "Analytics", icon: "analytics" },
-  { label: "Development", icon: "development" },
-];
-
-/** One integrated external growth team, visualised as ten disciplines on one Growth Ribbon. */
+/** One integrated external growth team: seven modules that assemble into one system on the Madvert Growth Ribbon. */
 export function HireDepartment() {
   return (
     <section id="hire" className="section scroll-mt-20" aria-labelledby="hire-title">
@@ -46,37 +32,9 @@ export function HireDepartment() {
                 </Cta>
               </div>
             </div>
-            <div className="lg:col-span-7" data-reveal="fade">
-              <div className="draw-on-reveal relative mx-auto aspect-square w-full max-w-[560px]">
-                <svg viewBox="0 0 400 400" className="absolute inset-0 h-full w-full" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="hire-g" x1="0" x2="1" y1="0" y2="1">
-                      <stop offset="0" stopColor="#00b4ff" />
-                      <stop offset="1" stopColor="#00e5ff" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="200" cy="200" r="150" fill="none" stroke="var(--line-strong)" strokeDasharray="2 6" />
-                  <circle cx="200" cy="200" r="150" fill="none" stroke="url(#hire-g)" strokeWidth="2.5" pathLength={1} transform="rotate(-90 200 200)" style={{ filter: "drop-shadow(0 0 6px rgb(0 200 255 / .6))" }} />
-                  {team.map((_, i) => {
-                    const a = (i / team.length) * Math.PI * 2 - Math.PI / 2;
-                    return <path key={i} d={`M200 200 L ${200 + 150 * Math.cos(a)} ${200 + 150 * Math.sin(a)}`} stroke="var(--line)" />;
-                  })}
-                  <circle cx="200" cy="200" r="150" fill="none" stroke="#bff7ff" strokeWidth="3" className="ribbon-flow" opacity=".55" />
-                </svg>
-                <div className="absolute left-1/2 top-1/2 grid h-24 w-24 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-[26px] border border-[rgb(0_200_255/0.45)] bg-[var(--surface-solid)] shadow-[0_0_50px_-10px_rgb(0_200_255/0.7)] sm:h-28 sm:w-28">
-                  <MadvertMark className="h-7 w-auto text-ink" />
-                </div>
-                {team.map((t, i) => {
-                  const a = (i / team.length) * Math.PI * 2 - Math.PI / 2;
-                  return (
-                    <div key={t.label} className="absolute -translate-x-1/2 -translate-y-1/2 text-center" style={{ left: `${50 + 37.5 * Math.cos(a)}%`, top: `${50 + 37.5 * Math.sin(a)}%` }}>
-                      <span className="mx-auto grid h-11 w-11 place-items-center rounded-xl border border-line-strong bg-[var(--surface-solid)] sm:h-12 sm:w-12">
-                        <Glyph name={t.icon} size={22} />
-                      </span>
-                      <span className="mt-1.5 block whitespace-nowrap text-[10.5px] font-semibold text-ink-2 sm:text-[12px]">{t.label}</span>
-                    </div>
-                  );
-                })}
+            <div className="lg:col-span-7">
+              <div className="mx-auto w-full max-w-[600px] lg:py-6">
+                <GrowthSystem />
               </div>
             </div>
           </div>

@@ -320,10 +320,10 @@
     display: block;
   }
   .hv3-frame-pos {
-    left: 28.3333%;
-    top: 27.2727%;
-    width: 43.3333%;
-    height: 44.3182%;
+    left: 30%;
+    top: 29.5455%;
+    width: 40%;
+    height: 40.9091%;
   }
   .hv3-plate,
   .hv3-frame {
@@ -353,6 +353,9 @@
   }
   .hvp-head {
     margin-bottom: 0.45em;
+  }
+  .hvp-chip {
+    display: none;
   }
 }
 

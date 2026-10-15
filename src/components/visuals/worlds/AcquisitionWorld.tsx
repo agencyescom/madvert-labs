@@ -170,12 +170,12 @@ export function AcquisitionWorld({ className = "" }: { className?: string }) {
 
         {/* story strip */}
         <Card flat x={24} y={318} w={432} h={46} depth={30} className="acq-strip">
-          <rect x="22" y="13" width="388" height="3" rx="1.5" className="wf-soft-strong" />
-          <rect x="22" y="13" width="388" height="3" rx="1.5" fill={`url(#${grad})`} className="acq-progress" />
+          <rect x="40" y="13" width="352" height="3" rx="1.5" className="wf-soft-strong" />
+          <rect x="40" y="13" width="352" height="3" rx="1.5" fill={`url(#${grad})`} className="acq-progress" />
           {["Attention", "Lead", "Qualified", "Booked"].map((t, i) => (
             <g key={t} className={`acq-step acq-step-${i + 1}`}>
-              <circle cx={22 + i * 129.3} cy="14.5" r="6.5" className="acq-step-dot" />
-              <text x={22 + i * 129.3} y="40" textAnchor="middle" className="wt-step">
+              <circle cx={40 + i * 117.3} cy="14.5" r="6.5" className="acq-step-dot" />
+              <text x={40 + i * 117.3} y="40" textAnchor="middle" className="wt-step">
                 {t}
               </text>
             </g>

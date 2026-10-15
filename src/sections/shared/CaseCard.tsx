@@ -5,9 +5,9 @@ import type { CaseStudy } from "@/types/content";
 /** Case study "dossier" card: The Problem, The Move, The System, The Result. */
 export function CaseCard({ study, index }: { study: CaseStudy; index: number }) {
   const rows = [
-    ["The Problem", study.summary || study.problem],
-    ["The Move", study.move],
-    ["The System", study.system],
+    ["The Problem", study.challenge || study.summary || study.problem],
+    ["The Move", study.strategy || study.move],
+    ["The System", study.built || study.system],
     ["The Result", study.metrics[0] ? `${study.metrics[0].label}: ${study.metrics[0].value}` : study.result],
   ];
   return (

@@ -23,6 +23,9 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      { source: "/case-studies/better-leads-not-more-leads", destination: "/case-studies", permanent: true },
+      { source: "/case-studies/ads-working-follow-up-not", destination: "/case-studies", permanent: true },
+      { source: "/case-studies/strong-business-weak-presence", destination: "/case-studies", permanent: true },
       { source: "/resources/seo-and-ai-search-guide", destination: "/resources/seo-ai-search-playbook", permanent: true },
       { source: "/resources/seo-ai-search-guide", destination: "/resources/seo-ai-search-playbook", permanent: true },
       { source: "/resources/madvert-studios-portfolio", destination: "/resources/madvert-studios-showreel", permanent: true },

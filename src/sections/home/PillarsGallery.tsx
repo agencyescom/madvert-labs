@@ -5,16 +5,16 @@ import { useRef } from "react";
 import { useScrollScene } from "@/animations/gsap";
 import { Cta, Arrow } from "@/components/ui/Button";
 import { PillarWorld } from "@/components/visuals/PillarWorld";
-import type { IconName } from "@/components/ui/Icon3D";
 import { pillars } from "@/lib/site";
 
-const worlds: Record<string, { satellites: IconName[]; tint: string }> = {
-  "branding-marketing": { satellites: ["webApps", "paidMedia", "studios", "crm"], tint: "#a78bfa" },
-  "client-acquisition": { satellites: ["paidMedia", "seo", "aiSearch", "tracking"], tint: "#00b4ff" },
-  conversion: { satellites: ["webApps", "mobileApps", "analytics", "growth"], tint: "#2dd4bf" },
-  studios: { satellites: ["mobileApps", "paidMedia", "aiAgents", "branding"], tint: "#f59e0b" },
-  "automation-revenue-systems": { satellites: ["crm", "aiAgents", "tracking", "analytics"], tint: "#00e5ff" },
-  "tech-product-development": { satellites: ["webApps", "mobileApps", "systems", "aiAgents"], tint: "#34d399" },
+/** Accent per pillar for the index number (each world carries its own full palette). */
+const tints: Record<string, string> = {
+  "branding-marketing": "#8b7bff",
+  "client-acquisition": "#00b4ff",
+  conversion: "#2dd4bf",
+  studios: "#f59e0b",
+  "automation-revenue-systems": "#00c8e6",
+  "tech-product-development": "#34d399",
 };
 
 export function PillarsGallery() {
@@ -64,13 +64,13 @@ export function PillarsGallery() {
       <div data-viewport className="relative mt-16 lg:flex lg:h-[min(720px,calc(100vh-var(--header-h)-40px))] lg:snap-x lg:snap-mandatory lg:items-center lg:overflow-x-auto lg:[&.is-pinned]:snap-none lg:[&.is-pinned]:overflow-hidden">
         <ol data-track className="container-x flex flex-col gap-6 lg:w-max lg:max-w-none lg:flex-row lg:gap-8 lg:pr-[var(--pad-x)] lg:[margin-left:max(var(--pad-x),calc((100vw-var(--container))/2))]">
           {pillars.map((p, i) => {
-            const w = worlds[p.key];
+            const tint = tints[p.key] ?? "#00b4ff";
             return (
               <li key={p.key} className="lg:w-[min(1040px,78vw)] lg:shrink-0 lg:snap-center">
                 <article className="panel grid h-full grid-cols-1 items-center gap-6 overflow-hidden p-7 sm:p-10 md:grid-cols-2 lg:min-h-[540px] lg:gap-10 lg:p-12">
                   <div className="order-2 md:order-1">
                     <p className="flex items-center gap-3 font-display text-[12px] font-semibold tracking-[0.2em] text-ink-3">
-                      <span style={{ color: w.tint }}>0{i + 1}</span>
+                      <span style={{ color: tint }}>0{i + 1}</span>
                       <span className="h-px w-6 bg-[var(--line-strong)]" />
                       <span className="uppercase">{p.title}</span>
                     </p>
@@ -93,7 +93,7 @@ export function PillarsGallery() {
                     </div>
                   </div>
                   <div className="order-1 md:order-2">
-                    <PillarWorld icon={p.icon} satellites={w.satellites} tint={w.tint} className="mx-auto max-w-[460px]" />
+                    <PillarWorld icon={p.icon} className="mx-auto max-w-[480px]" />
                   </div>
                 </article>
               </li>

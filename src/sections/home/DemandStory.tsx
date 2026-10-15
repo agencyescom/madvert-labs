@@ -67,7 +67,7 @@ const DIAGS = [
 
 const MODULES = [
   { k: "SEO", g: "seo", d: "Rank where buyers search" },
-  { k: "AI Search", g: "aiSearch", d: "Get cited in AI answers" },
+  { k: "AI Search", g: "aiAgents", d: "Get cited in AI answers" },
   { k: "Content", g: "studios", d: "Answer real questions" },
   { k: "Digital PR", g: "branding", d: "Earn authority and mentions" },
 ] as const;
@@ -256,7 +256,7 @@ function Curve({ phase, play, W = 600, H = 200 }: { phase: Phase; play: boolean;
         </text>
       </g>
       <g className="od-fade" opacity={fade(phase === 2)}>
-        <text x={W - padR} y={Y(4) - 10} textAnchor="end" className="od-lbl" fill="var(--danger)">
+        <text x={X(1.6)} y={Y(4) - 10} className="od-lbl" fill="var(--danger)">
           Owned demand: barely there
         </text>
       </g>
@@ -264,7 +264,7 @@ function Curve({ phase, play, W = 600, H = 200 }: { phase: Phase; play: boolean;
         <text x={X(11)} y={Y(total[11]) - 12} textAnchor="end" className="od-lbl" fill="var(--od-paid-text)">
           Paid on top
         </text>
-        <text x={X(11)} y={Y(ownedGrow[11]) + 22} textAnchor="end" className="od-lbl" fill="var(--od-owned-text)">
+        <text x={X(11)} y={Y(ownedGrow[11]) + 32} textAnchor="end" className="od-lbl" fill="var(--od-owned-text)">
           Owned demand
         </text>
       </g>

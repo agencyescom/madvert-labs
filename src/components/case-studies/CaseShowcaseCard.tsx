@@ -1,24 +1,19 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Arrow } from "@/components/ui/Button";
 import type { CaseStudy } from "@/types/content";
-import { CaseCover } from "./CaseCover";
+import { CoverMedia } from "./CoverMedia";
 import "@/styles/cases.css";
 import { caseKicker, categoryLabels, oneLiner, primaryCategory, verifiedMetrics } from "./utils";
 
 /** Premium case study card: cover, kicker, title, one-liner, verified metrics only, and CTAs. */
 export function CaseShowcaseCard({ study, size = "md", headingLevel = 3 }: { study: CaseStudy; size?: "lg" | "md"; headingLevel?: 2 | 3 }) {
-  const metrics = verifiedMetrics(study).slice(0, 3);
+  const metrics = verifiedMetrics(study).slice(0, size === "lg" ? 3 : 2);
   const cat = primaryCategory(study);
   const H = headingLevel === 2 ? "h2" : "h3";
   return (
     <article className={`cs-card cs-card--${size}`}>
       <div className="cs-card-media">
-        {study.cover?.url ? (
-          <Image src={study.cover.url} alt={study.cover.alt || ""} fill sizes="(min-width:1024px) 640px, 90vw" className="cs-card-img" />
-        ) : (
-          <CaseCover category={cat} className="cs-card-img" />
-        )}
+        <CoverMedia study={study} sizes={size === "lg" ? "(min-width:900px) 360px, 70vw" : "(min-width:1024px) 260px, 70vw"} />
         <span className="cs-chip cs-chip--cat">
           <span className="cs-chip-dot" aria-hidden="true" />
           {categoryLabels[cat]}
@@ -36,7 +31,7 @@ export function CaseShowcaseCard({ study, size = "md", headingLevel = 3 }: { stu
         {metrics.length ? (
           <dl className="cs-metrics">
             {metrics.map((m) => (
-              <div key={m.label} className="cs-metric">
+              <div key={`${m.label}-${m.value}`} className="cs-metric">
                 <dt>{m.label}</dt>
                 <dd>{m.value}</dd>
               </div>

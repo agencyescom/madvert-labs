@@ -20,16 +20,16 @@ export default async function ResourcesPage() {
         intro={
           <>
             <Breadcrumbs items={[{ name: "Madvert Vault", path: "/resources" }]} />
-            <div className="mt-10" data-reveal>
+            <div className="mt-10">
               <Eyebrow>Free Growth Resources</Eyebrow>
             </div>
-            <h1 id="page-title" data-reveal style={{ ["--reveal-delay" as string]: 60 }} className="vt-title mt-6">
+            <h1 id="page-title" className="vt-title mt-6">
               Madvert <span className="t-grad">Vault</span>
             </h1>
-            <p data-reveal style={{ ["--reveal-delay" as string]: 120 }} className="t-lead mt-6 max-w-[30ch] !text-[clamp(19px,1.7vw,24px)] text-ink-2">
+            <p className="t-lead mt-6 max-w-[30ch] !text-[clamp(19px,1.7vw,24px)] text-ink-2">
               Free Playbooks, Checklists &amp; Growth Resources for Business Owners.
             </p>
-            <p data-reveal style={{ ["--reveal-delay" as string]: 150 }} className="mt-3 text-[15px] text-ink-3">
+            <p className="mt-3 text-[15px] text-ink-3">
               No two thousand word articles written only to impress Google.
             </p>
           </>

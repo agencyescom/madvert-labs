@@ -26,7 +26,7 @@ type Node = {
 };
 
 const W = { w: 600, h: 640, frame: { x: 175, y: 164, w: 250, h: 312 } };
-const M = { w: 360, h: 440, frame: { x: 102, y: 120, w: 156, h: 195 } };
+const M = { w: 360, h: 440, frame: { x: 108, y: 130, w: 144, h: 180 } };
 
 const NODES: Node[] = [
   { kind: "meta", label: "Meta", d: [94, 118], m: [64, 52], s: [-70, -46, -7] },

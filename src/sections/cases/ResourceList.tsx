@@ -74,8 +74,6 @@ export function ResourceList({ resources, intro }: { resources: Resource[]; intr
                 e.preventDefault();
                 document.getElementById("vault-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
               }}
-              data-reveal
-              style={{ ["--reveal-delay" as string]: 180 }}
             >
               <label htmlFor={searchId} className="sr-only">
                 Search resources
@@ -109,7 +107,7 @@ export function ResourceList({ resources, intro }: { resources: Resource[]; intr
             </form>
           </div>
           {spotlight ? (
-            <div className="lg:col-span-7" data-reveal="fade" style={{ ["--reveal-delay" as string]: 120 }}>
+            <div className="vt-enter lg:col-span-7">
               <FeaturedResource r={spotlight} />
             </div>
           ) : null}

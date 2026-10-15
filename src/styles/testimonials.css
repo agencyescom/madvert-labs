@@ -23,10 +23,12 @@
   --tm-h: 300px;
   --tm-gap: 22px;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 18px;
 }
 .tm-row-wrap {
   position: relative;
+  min-width: 0;
 }
 .tm-row-head {
   display: flex;

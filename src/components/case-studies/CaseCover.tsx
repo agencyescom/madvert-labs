@@ -74,8 +74,8 @@ export function CaseCover({ category, className = "", label = true }: { category
 
       {label ? (
         <g>
-          <rect x="32" y="32" width="8" height="8" rx="2" fill={a} />
-          <text x="50" y="40.5" fill="#ffffff" fillOpacity="0.72" fontSize="12" fontWeight="600" letterSpacing="3">
+          <rect x="32" y="456" width="8" height="8" rx="2" fill={a} />
+          <text x="50" y="464.5" fill="#ffffff" fillOpacity="0.72" fontSize="12" fontWeight="600" letterSpacing="3">
             MADVERT LABS · CASE FILE
           </text>
         </g>

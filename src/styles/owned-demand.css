@@ -32,9 +32,9 @@
   padding-block: 24px;
 }
 .od-stage {
-  padding: 18px;
+  padding: 16px;
   display: grid;
-  gap: 14px;
+  gap: 12px;
   background:
     radial-gradient(120% 60% at 80% 0%, rgb(0 180 255 / 0.07), transparent 60%),
     var(--surface-glass);
@@ -42,7 +42,7 @@
 }
 .od-row1 {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) 72px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.1fr) 92px minmax(0, 1fr);
   align-items: stretch;
 }
 .od-row3 {
@@ -323,7 +323,7 @@
   min-height: 60px;
 }
 .od-flow-v {
-  height: 44px;
+  height: 52px;
   width: 60px;
   margin: -6px auto;
 }
@@ -435,8 +435,8 @@
   color: var(--danger);
 }
 .od-bars {
-  margin-top: 12px;
-  height: 64px;
+  margin-top: 10px;
+  height: 60px;
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 5px;
@@ -570,9 +570,15 @@
   border-color: transparent;
   color: var(--od-owned-text);
 }
+.od-diag {
+  display: flex;
+  flex-direction: column;
+}
 .od-diag-list {
+  flex: 1;
   margin-top: 10px;
   display: grid;
+  align-content: space-evenly;
   gap: 7px;
   transition: opacity 0.6s var(--ease), filter 0.6s var(--ease);
 }
@@ -664,7 +670,7 @@
   align-items: center;
   gap: 10px;
   min-width: 0;
-  padding: 9px 12px 9px 16px;
+  padding: 7px 12px 7px 16px;
   border-radius: 13px;
   border: 1px dashed var(--line-strong);
   background: transparent;
@@ -709,8 +715,8 @@
 .od-mod-ic {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   flex: none;
   border-radius: 9px;
   background: var(--surface-2);
@@ -790,7 +796,32 @@
   .od-flow-v .od-flow-p {
     transform: translateY(calc((var(--i) + 1) / 7 * 100% - 100%));
   }
+  .od-flow-p:nth-child(odd) {
+    display: none;
+  }
   .od-flow[data-mode="off"] .od-flow-p {
     opacity: 0.15;
+  }
+}
+
+/* short laptop screens: keep the sticky stage inside the viewport */
+@media (min-width: 1024px) and (max-height: 840px) {
+  .od-sticky {
+    padding-block: 12px;
+  }
+  .od-stage {
+    gap: 10px;
+    padding: 12px;
+  }
+  .od-opps-legend,
+  .od-mod-d,
+  .od-camp-rows > :last-child {
+    display: none;
+  }
+  .od-card {
+    padding: 10px 14px;
+  }
+  .od-diag-list {
+    gap: 4px;
   }
 }

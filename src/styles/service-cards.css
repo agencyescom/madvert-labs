@@ -1,0 +1,302 @@
+/* ───────────── Service card artwork (src/components/visuals/service-cards) ─────────────
+   Idle = finished story still. Hover / focus (pointer devices) or .scv-live (touch, in view) replays the story. */
+
+.scv-box,
+.gs-vars {
+  --scv-dur: 6.4s;
+  --scv-p: #15213a;
+  --scv-p2: #1a2844;
+  --scv-st: rgb(255 255 255 / 0.1);
+  --scv-hi: rgb(255 255 255 / 0.05);
+  --scv-mu: rgb(255 255 255 / 0.08);
+  --scv-mu2: rgb(255 255 255 / 0.16);
+  --scv-ink: #f5f8fc;
+  --scv-ink2: #c4cfdf;
+  --scv-ink3: #8c9ab1;
+  --scv-acc: #3fd4ff;
+  --scv-accsoft: rgb(0 180 255 / 0.14);
+  --scv-succ: #34d399;
+  --scv-succsoft: rgb(52 211 153 / 0.12);
+  --scv-link: #8ab4f8;
+  --scv-sh: #000;
+  --scv-sho: 0.5;
+  --scv-user: rgb(0 180 255 / 0.16);
+}
+.scv-box {
+  position: relative;
+  aspect-ratio: 280 / 156;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(120% 90% at 85% 0%, rgb(0 180 255 / 0.14), transparent 60%),
+    linear-gradient(160deg, #101d33, #0b1322);
+}
+[data-theme="light"] .scv-box,
+[data-theme="light"] .gs-vars {
+  --scv-p: #ffffff;
+  --scv-p2: #f3f9fc;
+  --scv-st: rgb(10 35 70 / 0.12);
+  --scv-hi: rgb(255 255 255 / 0.9);
+  --scv-mu: rgb(10 35 70 / 0.075);
+  --scv-mu2: rgb(10 35 70 / 0.15);
+  --scv-ink: #0a1020;
+  --scv-ink2: #3a4862;
+  --scv-ink3: #66758d;
+  --scv-acc: #006fb8;
+  --scv-accsoft: rgb(0 150 220 / 0.1);
+  --scv-succ: #059669;
+  --scv-succsoft: rgb(5 150 105 / 0.1);
+  --scv-link: #1a0dab;
+  --scv-sh: rgb(10 50 90);
+  --scv-sho: 0.16;
+  --scv-user: rgb(0 150 220 / 0.1);
+}
+[data-theme="light"] .scv-box {
+  background:
+    radial-gradient(120% 90% at 85% 0%, rgb(0 200 240 / 0.16), transparent 60%),
+    linear-gradient(160deg, #e9f5f9, #f7fcfd);
+}
+.scv {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.scv-t {
+  font-family: var(--font-sans);
+}
+.scv-display {
+  font-family: var(--font-display);
+}
+.scv-mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.scv-shc {
+  flood-color: var(--scv-sh);
+  flood-opacity: var(--scv-sho);
+}
+.scv .f-p { fill: var(--scv-p); }
+.scv .f-p2 { fill: var(--scv-p2); }
+.scv .f-mu { fill: var(--scv-mu); }
+.scv .f-mu2 { fill: var(--scv-mu2); }
+.scv .f-ink { fill: var(--scv-ink); }
+.scv .f-ink2 { fill: var(--scv-ink2); }
+.scv .f-ink3 { fill: var(--scv-ink3); }
+.scv .f-acc { fill: var(--scv-acc); }
+.scv .f-accsoft { fill: var(--scv-accsoft); }
+.scv .f-succ { fill: var(--scv-succ); }
+.scv .f-succsoft { fill: var(--scv-succsoft); }
+.scv .f-link { fill: var(--scv-link); }
+.scv .s-st { stroke: var(--scv-st); }
+.scv .s-hi { stroke: var(--scv-hi); }
+.scv .s-succ { stroke: var(--scv-succ); }
+.scv .s-ink3 { stroke: var(--scv-ink3); }
+.scv .a-user { fill: var(--scv-user); }
+.scv .g-adbg { fill: var(--scv-accsoft); opacity: 0.6; }
+
+/* Animation gate */
+.scv .k {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation-duration: var(--scv-dur);
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.2, 1);
+  animation-fill-mode: both;
+}
+.svc-card:not(:hover):not(:focus-visible) .scv-box:not(.scv-live) .k {
+  animation-name: none !important;
+}
+@media (hover: none) {
+  .svc-card:hover .scv-box:not(.scv-live) .k {
+    animation-name: none !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scv .k {
+    animation-name: none !important;
+  }
+}
+
+.scv-loop { animation-name: scv-loop; }
+@keyframes scv-loop {
+  0% { opacity: 0; }
+  3% { opacity: 1; }
+  95% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Meta */
+.m-knob { animation-name: m-knob; }
+@keyframes m-knob { 0%, 10% { transform: translateX(-11px); } 17%, 100% { transform: none; } }
+.m-track { animation-name: m-track; }
+@keyframes m-track { 0%, 10% { fill: var(--scv-mu2); } 17%, 100% { fill: #0866ff; } }
+.m-live { animation-name: m-live; }
+@keyframes m-live { 0%, 14% { opacity: 0; } 20%, 100% { opacity: 1; } }
+.m-line { stroke-dasharray: 1; stroke-dashoffset: 0; animation-name: m-line; }
+@keyframes m-line { 0%, 14% { stroke-dashoffset: 1; } 42%, 100% { stroke-dashoffset: 0; } }
+.m-area { animation-name: m-area; }
+@keyframes m-area { 0%, 26% { opacity: 0; } 44%, 100% { opacity: 1; } }
+.m-ad { animation-name: m-ad; }
+@keyframes m-ad { 0%, 14% { opacity: 0; transform: translateY(8px) scale(0.95); } 26%, 100% { opacity: 1; transform: none; } }
+.m-cta { animation-name: m-cta; }
+@keyframes m-cta { 0%, 31% { transform: none; } 35% { transform: scale(0.92); } 40%, 100% { transform: none; } }
+.m-pkt { opacity: 0; animation-name: m-pkt; }
+@keyframes m-pkt {
+  0%, 36% { opacity: 0; transform: none; }
+  39% { opacity: 1; transform: none; }
+  50% { opacity: 1; transform: translate(34px, -46px); }
+  54%, 100% { opacity: 0; transform: translate(34px, -46px); }
+}
+.m-lead { animation-name: m-lead; }
+@keyframes m-lead { 0%, 48% { opacity: 0; transform: translateX(14px) scale(0.96); } 58%, 100% { opacity: 1; transform: none; } }
+.m-qual { animation-name: m-qual; }
+@keyframes m-qual { 0%, 64% { opacity: 0; transform: scale(0.6); } 72% { opacity: 1; transform: scale(1.08); } 77%, 100% { opacity: 1; transform: none; } }
+
+/* Google */
+.g-type { transform: scaleX(0); animation-name: g-type; }
+.scv .g-type { transform-origin: 100% 50%; }
+@keyframes g-type { 0%, 4% { transform: scaleX(1); } 26%, 100% { transform: scaleX(0); } }
+.g-caret { opacity: 0; animation-name: g-caret; }
+@keyframes g-caret {
+  0%, 4% { opacity: 1; transform: none; }
+  26% { opacity: 1; transform: translateX(64px); }
+  29% { opacity: 0; transform: translateX(64px); }
+  32% { opacity: 1; transform: translateX(64px); }
+  35%, 100% { opacity: 0; transform: translateX(64px); }
+}
+.g-results { animation-name: g-results; }
+@keyframes g-results { 0%, 26% { opacity: 0; transform: translateY(6px); } 34%, 100% { opacity: 1; transform: none; } }
+.g-cursor { opacity: 0; animation-name: g-cursor; }
+@keyframes g-cursor {
+  0%, 34% { opacity: 0; transform: translate(60px, 48px); }
+  38% { opacity: 1; transform: translate(52px, 42px); }
+  47% { opacity: 1; transform: none; }
+  50% { opacity: 1; transform: scale(0.92); }
+  56% { opacity: 1; transform: none; }
+  62%, 100% { opacity: 0; transform: none; }
+}
+.g-ripple { animation-name: g-ripple; }
+@keyframes g-ripple { 0%, 47% { opacity: 0; transform: scale(0.3); } 50% { opacity: 0.6; } 60%, 100% { opacity: 0; transform: scale(2.2); } }
+.g-ul { opacity: 0; animation-name: g-ul; }
+@keyframes g-ul { 0%, 49% { opacity: 0; } 51%, 100% { opacity: 1; } }
+.g-land { animation-name: g-land; }
+@keyframes g-land { 0%, 54% { opacity: 0; transform: translateX(24px); } 64%, 100% { opacity: 1; transform: none; } }
+.g-btn { animation-name: g-btn; }
+@keyframes g-btn { 0%, 72% { transform: none; } 76% { transform: scale(0.94); } 80%, 100% { transform: none; } }
+.g-toast { animation-name: g-toast; }
+@keyframes g-toast { 0%, 79% { opacity: 0; transform: translateY(-8px); } 86%, 100% { opacity: 1; transform: none; } }
+
+/* SEO: rows re-order as the brand climbs (row step = 21) */
+.s-you { animation-name: s-you; }
+@keyframes s-you { 0%, 10% { transform: translateY(84px); } 26%, 40% { transform: translateY(42px); } 58%, 100% { transform: none; } }
+.s-a, .s-b { animation-name: s-ab; }
+@keyframes s-ab { 0%, 40% { transform: translateY(-21px); } 58%, 100% { transform: none; } }
+.s-c, .s-d { animation-name: s-cd; }
+@keyframes s-cd { 0%, 10% { transform: translateY(-21px); } 26%, 100% { transform: none; } }
+.s-arrow { animation-name: s-arrow; }
+@keyframes s-arrow { 0%, 58% { transform: none; } 64% { transform: scale(1.25); } 70%, 100% { transform: none; } }
+
+/* AI search */
+.a-q { animation-name: a-q; }
+@keyframes a-q { 0%, 4% { opacity: 0; transform: translateY(8px); } 12%, 100% { opacity: 1; transform: none; } }
+.a-dots { opacity: 0; animation-name: a-dots; }
+@keyframes a-dots { 0%, 14% { opacity: 0; } 17%, 33% { opacity: 1; } 36%, 100% { opacity: 0; } }
+.scv .a-dot { animation-name: a-dot; animation-duration: 0.9s; animation-timing-function: ease-in-out; }
+.scv .a-dot1 { animation-delay: 0.15s; }
+.scv .a-dot2 { animation-delay: 0.3s; }
+@keyframes a-dot { 0%, 100% { transform: none; } 40% { transform: translateY(-2.5px); } }
+.a-ans { animation-name: a-ans; }
+.scv .a-ans { transform-origin: 0 50%; }
+@keyframes a-ans { 0%, 34% { opacity: 0; transform: scaleX(0.2); } 46%, 100% { opacity: 1; transform: none; } }
+.a-cite { animation-name: a-cite; }
+@keyframes a-cite { 0%, 50% { opacity: 0; transform: translateY(8px) scale(0.97); } 60%, 100% { opacity: 1; transform: none; } }
+.a-glow { opacity: 0.4; animation-name: a-glow; }
+@keyframes a-glow { 0%, 58% { opacity: 0.2; } 68% { opacity: 0.75; } 80%, 100% { opacity: 0.4; } }
+.a-src { animation-name: a-src; }
+@keyframes a-src { 0%, 66% { opacity: 0; transform: translateY(4px); } 76%, 100% { opacity: 1; transform: none; } }
+
+/* Full stack development */
+.d-kpi { animation-name: d-kpi; }
+.scv .d-kpi1 { animation-delay: 0.15s; }
+.scv .d-kpi2 { animation-delay: 0.3s; }
+@keyframes d-kpi { 0%, 5% { opacity: 0; transform: translateY(6px); } 14%, 100% { opacity: 1; transform: none; } }
+.d-bar { animation-name: d-bar; }
+.scv .d-bar { transform-origin: 50% 100%; }
+@keyframes d-bar { 0%, 12% { transform: scaleY(0.05); } 36%, 100% { transform: none; } }
+.d-phone { animation-name: d-phone; }
+@keyframes d-phone { 0%, 22% { opacity: 0; transform: translateY(18px); } 36%, 100% { opacity: 1; transform: none; } }
+.d-row { animation-name: d-row; }
+.scv .d-row1 { animation-delay: 0.2s; }
+.scv .d-row2 { animation-delay: 0.4s; }
+@keyframes d-row { 0%, 36% { opacity: 0; transform: translateX(-6px); } 44%, 100% { opacity: 1; transform: none; } }
+.d-api { animation-name: d-api; }
+@keyframes d-api { 0%, 44% { opacity: 0; transform: translateY(10px); } 54%, 100% { opacity: 1; transform: none; } }
+.d-pkt { opacity: 0; }
+.d-pkt0 { animation-name: d-pkt0; }
+.d-pkt1 { animation-name: d-pkt1; }
+@keyframes d-pkt0 { 0%, 55% { opacity: 0; transform: none; } 57% { opacity: 1; transform: none; } 67% { opacity: 1; transform: translate(14px, -22px); } 70%, 100% { opacity: 0; transform: translate(14px, -22px); } }
+@keyframes d-pkt1 { 0%, 58% { opacity: 0; transform: none; } 60% { opacity: 1; transform: none; } 70% { opacity: 1; transform: translate(-44px, -16px); } 73%, 100% { opacity: 0; transform: translate(-44px, -16px); } }
+.d-ui { animation-name: d-ui; }
+@keyframes d-ui { 0%, 70% { opacity: 0; transform: scale(0.8); } 78% { opacity: 1; transform: scale(1.05); } 83%, 100% { opacity: 1; transform: none; } }
+
+/* Branding */
+.b-id { animation-name: b-id; }
+@keyframes b-id { 0%, 5% { opacity: 0; transform: translateX(60px) scale(0.9); } 24%, 100% { opacity: 1; transform: none; } }
+.b-type { animation-name: b-type; }
+@keyframes b-type { 0%, 10% { opacity: 0; transform: translateY(12px); } 30%, 100% { opacity: 1; transform: none; } }
+.b-bag { animation-name: b-bag; }
+@keyframes b-bag { 0%, 16% { opacity: 0; transform: translateX(-56px) scale(0.9); } 38%, 100% { opacity: 1; transform: none; } }
+.b-sw { animation-name: b-sw; }
+.scv .b-sw1 { animation-delay: 0.18s; }
+.scv .b-sw2 { animation-delay: 0.36s; }
+.scv .b-sw3 { animation-delay: 0.54s; }
+@keyframes b-sw { 0%, 40% { transform: scale(0); } 47% { transform: scale(1.12); } 51%, 100% { transform: none; } }
+.b-mark { animation-name: b-mark; }
+@keyframes b-mark { 0%, 56% { opacity: 0; transform: scale(0.6) rotate(-12deg); } 66%, 100% { opacity: 1; transform: none; } }
+
+/* Short form */
+.v-clip { animation-name: v-clip; }
+.scv .v-clip { transform-origin: 0 50%; }
+@keyframes v-clip { 0%, 4% { transform: scaleX(0); } 16%, 100% { transform: none; } }
+.v-head { transform: translateX(84px); animation-name: v-head; animation-timing-function: linear; }
+@keyframes v-head { 0%, 16% { transform: none; } 82%, 100% { transform: translateX(160px); } }
+.v-prog { transform: scaleX(0.55); animation-name: v-prog; animation-timing-function: linear; }
+.scv .v-prog { transform-origin: 0 50%; }
+@keyframes v-prog { 0%, 16% { transform: scaleX(0); } 82%, 100% { transform: none; } }
+.v-cap0 { animation-name: v-cap0; }
+@keyframes v-cap0 { 0%, 16% { opacity: 0; transform: scale(0.8); } 20%, 46% { opacity: 1; transform: none; } 50%, 100% { opacity: 0; transform: none; } }
+.v-cap1 { opacity: 0; animation-name: v-cap1; }
+@keyframes v-cap1 { 0%, 49% { opacity: 0; transform: scale(0.8); } 53%, 100% { opacity: 1; transform: none; } }
+.v-heart { animation-name: v-heart; }
+@keyframes v-heart { 0%, 84% { transform: none; } 88% { transform: scale(1.45); fill: #ff5a7a; } 93%, 100% { transform: none; } }
+.v-exp { animation-name: v-exp; }
+@keyframes v-exp { 0%, 82% { opacity: 0; transform: translateY(4px); } 88%, 100% { opacity: 1; transform: none; } }
+
+/* Motion graphics */
+.mo-obj { animation-name: mo-obj; }
+@keyframes mo-obj {
+  0%, 4% { transform: translate(-128px, 60px) rotate(-120deg); }
+  16% { transform: translate(-96px, 50px) rotate(-90deg); }
+  28% { transform: translate(-64px, 22px) rotate(-60deg); }
+  40% { transform: translate(-32px, 10px) rotate(-30deg); }
+  50%, 100% { transform: none; }
+}
+.mo-ghost { animation-name: mo-ghost; }
+.scv .mo-ghost1 { animation-delay: 0.75s; }
+.scv .mo-ghost2 { animation-delay: 1.5s; }
+.scv .mo-ghost3 { animation-delay: 2.25s; }
+@keyframes mo-ghost { 0%, 6% { opacity: 0; } 12%, 100% { opacity: 1; } }
+.mo-head { transform: translateX(150px); animation-name: mo-head; animation-timing-function: linear; }
+@keyframes mo-head { 0%, 4% { transform: none; } 84%, 100% { transform: translateX(200px); } }
+.mo-l { animation-name: mo-l; }
+.scv .mo-l1 { animation-delay: 0.3s; }
+.scv .mo-l2 { animation-delay: 0.6s; }
+@keyframes mo-l { 0%, 48% { opacity: 0; transform: translateY(-10px); } 55% { opacity: 1; transform: translateY(2px); } 59%, 100% { opacity: 1; transform: none; } }
+.mo-under { animation-name: mo-under; }
+.scv .mo-under { transform-origin: 0 50%; }
+@keyframes mo-under { 0%, 66% { transform: scaleX(0); } 74%, 100% { transform: none; } }
+.mo-shape { animation-name: mo-shape; }
+@keyframes mo-shape { 0%, 50% { opacity: 0; transform: rotate(-90deg) scale(0.5); } 68%, 100% { opacity: 1; transform: none; } }
+.mo-render { animation-name: mo-render; }
+@keyframes mo-render { 0%, 80% { opacity: 0; transform: translateY(4px); } 88%, 100% { opacity: 1; transform: none; } }
