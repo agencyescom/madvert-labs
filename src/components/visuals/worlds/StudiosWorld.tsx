@@ -4,7 +4,7 @@ import { WorldStage } from "./WorldStage";
 import { useSvgId } from "./useSvgId";
 
 const TICKS = Array.from({ length: 23 }, (_, i) => i);
-const WAVE = Array.from({ length: 52 }, (_, i) => 3 + Math.abs(Math.sin(i * 0.9) * 6 + Math.sin(i * 0.37) * 4));
+const WAVE = Array.from({ length: 52 }, (_, i) => +(3 + Math.abs(Math.sin(i * 0.9) * 6 + Math.sin(i * 0.37) * 4)).toFixed(2));
 
 /**
  * Madvert Studios: an edit suite. A cinematic shot on the monitor, a multi-track timeline with a

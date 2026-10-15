@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: {
     formats: ["image/avif", "image/webp"],
+    qualities: [40, 75, 85],
     remotePatterns: [{ protocol: "https", hostname: "cdn.sanity.io" }],
   },
   // The /custom-patches landing page is a static export in public/custom-patches (source: landing-source/).

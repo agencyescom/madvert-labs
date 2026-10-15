@@ -510,7 +510,7 @@ function ShortVisual() {
         <rect key={c.x} x={c.x} y="95" width={c.w} height="7" rx="2.5" className="f-ink" opacity=".75" />
       ))}
       {Array.from({ length: 40 }).map((_, i) => {
-        const h = 3 + Math.abs(Math.sin(i * 1.7) * 8) + (i % 5 === 0 ? 3 : 0);
+        const h = +(3 + Math.abs(Math.sin(i * 1.7) * 8) + (i % 5 === 0 ? 3 : 0)).toFixed(2);
         return <rect key={i} x={98 + i * 4.1} y={115 - h / 2} width="2.2" height={h} rx="1.1" fill="#00b4ff" opacity=".55" />;
       })}
       <g className="v-head k">
@@ -580,6 +580,7 @@ function MotionVisual() {
         <circle cx="52.1" cy="115" r="2.4" fill="#ff7a59" />
       </g>
       <g className="mo-render k">
+        <rect x="216" y="98" width="44" height="13" rx="6.5" className="f-p" />
         <rect x="216" y="98" width="44" height="13" rx="6.5" className="f-succsoft s-succ" strokeWidth=".8" />
         <path d="M222 104.5 l2 2 3.6 -4" fill="none" className="s-succ" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
         <text x="230" y="107.2" className="scv-t f-succ" fontSize="6.2" fontWeight="700">Render</text>
