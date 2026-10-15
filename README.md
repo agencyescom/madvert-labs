@@ -38,6 +38,7 @@ Without any environment variables the site runs fully on clearly marked placehol
 | `/api/leads` | Growth brief, challenge (with optional upload) and resource requests |
 | `/api/events` | Calendar opened / booked hooks for the CRM |
 | `/api/revalidate` | Sanity publish webhook |
+| `/onboarding/*`, `/ops/*` | Client Onboarding Portal and Madvert Operations (see below) |
 
 Contact links accept `?service=<slug>` and `?intent=growth-systems-audit|tech-opportunity-audit`; both travel with the lead.
 
@@ -134,6 +135,101 @@ On submission (first name + email, plus company or website where useful) the lea
 ## SEO and AI search
 
 Unique titles, descriptions, canonicals, Open Graph and Twitter cards on every page; a generated OG image; sitemap and robots; JSON-LD for Organization and ProfessionalService, WebSite, WebPage, Person, BreadcrumbList, Service, FAQPage, Article and CreativeWork. Each service page ends with a direct answer block (who it is for, problem solved, process, measures) and real FAQs.
+
+## Client Onboarding Portal (Madvert Operations)
+
+After **proposal accepted → contract signed → initial payment received**, the team creates a secure personalised link in Madvert Operations and the client completes a guided, autosaving onboarding at `/onboarding/{secure-client-token}`.
+
+The portal and Operations use their own root layout (`src/app/(portal)`): no marketing header, no analytics or tracking scripts, `noindex`, `no-referrer`, `no-store`. The marketing site moved into `src/app/(site)` (URLs unchanged); `app/global-not-found.tsx` serves 404s for both.
+
+### Routes
+
+| Route | Purpose |
+| --- | --- |
+| `/onboarding/[token]` | Client portal: Welcome → Command center → 01 Business → 02 Access → 03 Assets → 04 Strategy (optional Offer Workshop) → 05 Kickoff → confirmation + missing items |
+| `/onboarding/task/[token]` | Delegated task link: shows **only** the one task that was sent (data for everything else is stripped server side) |
+| `/ops/login` | Team sign in |
+| `/ops/onboarding` | Dashboard: progress, Business / Meta / Google / Website / WhatsApp / Assets / Offer / Kickoff, last activity, owner, risk flags, "Configuration Required" panel |
+| `/ops/onboarding/new` | Create onboarding (company, contact, engagement services, e-commerce / local flags, team), copy or email the link |
+| `/ops/onboarding/[id]` | Client detail: missing access/assets, risk flags, client questions, access verification, secure credentials (reveal is audited), business answers, workspace files, offer summary (fact vs idea), internal notes, team, kickoff, delegated tasks, automation events, audit log, PDF, new link / revoke |
+| `/ops/settings` | Settings → Company → Integrations (Meta Partner Business ID, Google Ads manager ID, access emails, booking calendar URL, support contacts, defaults) |
+| `/ops/guides` | Admin-editable step guides: title, instruction, screenshot upload, external help URL, last reviewed date |
+| `/ops/template` | Template editor: add / hide / reorder questions, required or optional, helper text, conditional logic, section titles |
+| `POST /api/onboarding/portal/[action]` | Client + delegate API (`state`, `answers`, `access`, `social`, `assets`, `asset-update`, `asset-delete`, `upload-token`, `offer`, `kickoff`, `secret`, `delegate`, `delegate-complete`, `delegate-revoke`, `start`). Token in `x-onboarding-token` / `x-delegate-token` header, never in the API URL |
+| `GET /api/onboarding/files/[id]` | Private files: short-lived signed URL, owning client/delegate header, or team session |
+| `GET /api/onboarding/guide-image/[id]` | Admin-uploaded guide screenshots |
+| `POST /api/onboarding/webhooks/booking` | Kickoff booked (GoHighLevel workflow webhook, `x-webhook-secret`) |
+| `GET /api/onboarding/cron/reminders` | Daily reminders + `MISSING_ACCESS` (Vercel Cron, `Authorization: Bearer CRON_SECRET`) |
+| `POST /api/ops/[action]`, `GET /api/ops/pdf/[id]` | Operations API and `Madvert-Onboarding-{ClientName}.pdf` |
+
+### Code map
+
+```
+src/onboarding/
+  types.ts                 every model (Client, Engagement, Onboarding, OnboardingSection, OnboardingAnswer, AccessConnection,
+                           ClientAsset, CloudFolder, SocialProfile, OfferWorkshop, OfferBonus, OfferGuarantee, Competitor, ProofAsset,
+                           OnboardingTask, DelegatedTask, KickoffBooking, InternalNote, OnboardingGuide (GuideStep), OnboardingEvent,
+                           AuditLog, SecretRecord, CompanySettings, TemplateOverride, CustomQuestion)
+  template/                config, not hardcoded UI: services.ts, questions.ts (business + offer), access.ts (platforms + service rules),
+                           assets.ts (sections, categories, workspace folders), resolve.ts (engagement + admin overrides → template)
+  progress.ts              phase progress, statuses, missing items (shared by server and browser)
+  guides/defaults.ts       default step guides per platform
+  server/                  db (Postgres | dev JSON), crypto, auth, repo, views (client / delegate redaction), storage, drive,
+                           events, emails, reminders, insights (risk flags, offer summary), pdf, ops, settings, guides, schema.sql
+  ui/                      portal (PortalApp, steps, Uploader, Guides, store with autosave) and ops/
+```
+
+### Service-based onboarding
+
+The engagement's services decide what is requested (`template/access.ts`, `template/assets.ts`): a **Meta Ads** client gets Meta, website/landing page, CRM, tracking (GA4/GTM) and creative assets but no Search Console; an **SEO** client gets Search Console, GA4, website/CMS and Business Profile when local, no Meta ad account; a **Development** client gets domain, hosting/repository, website, technical docs and brand assets, no ad accounts; **Full stack** gets everything relevant. E-commerce adds Merchant Center, catalogs and commerce; local adds Google Business Profile.
+
+### Data, storage and security model
+
+* **Database**: Postgres via `DATABASE_URL` (one table per model, created on first use; reference DDL in `src/onboarding/server/schema.sql`). Local development without it uses `.data/onboarding-db.json`. On Vercel the portal refuses to run without Postgres and shows "Configuration Required".
+* **Links**: 256-bit random tokens. Only a SHA-256 hash is used for lookup; an AES-GCM encrypted copy (key derived from `ONBOARDING_SECRET`) lets the team copy/resend it and reminders include it. Links expire (default 60 days), can be regenerated (old link stops working) and revoked (also revokes delegated links). Delegated links expire after 14 days and are scoped server side to one task.
+* **Authorization**: every API call resolves the token on the server; delegates are limited by `assertScope` and receive a redacted state. Operations uses an HMAC-signed, httpOnly, SameSite=strict 12-hour session, a `proxy.ts` gate, per-page checks and login rate limiting.
+* **Files**: private Vercel Blob (`access: "private"`, direct browser uploads, no function size limit) or local disk in development. Keys are prefixed `onboarding/{onboardingId}/{folder}/`; downloads go through `/api/onboarding/files/:id` with a 10 minute to 6 hour HMAC-signed URL or an auth header. SVG/HTML are forced to download; responses carry `nosniff` and a sandbox CSP.
+* **Credentials**: only if platform access is impossible, through the "Secure Credential" vault (AES-256-GCM with `ONBOARDING_ENCRYPTION_KEY`). Never returned to the client, never in events, emails, analytics or the PDF; reveal is team-only, time-limited in the UI and written to the audit log.
+* **Audit log**: link created/opened/regenerated/revoked, access status changes, credentials stored/revealed, files viewed/deleted, delegated tasks, settings and template changes, PDF generation, team sign-ins (including failures).
+* Validation: unknown answer keys are dropped, sizes capped, allowed file types and 500 MB limit, same-origin checks, rate limits.
+
+### Automation events
+
+`ONBOARDING_STARTED`, `BUSINESS_INFO_COMPLETED`, `ACCESS_STARTED`, `META_CONNECTED`, `GOOGLE_CONNECTED`, `WEBSITE_CONNECTED` (when the team verifies), `ASSETS_UPLOADED`, `OFFER_COMPLETED`, `OFFER_SKIPPED`, `KICKOFF_BOOKED`, `ONBOARDING_COMPLETE`, `MISSING_ACCESS`, plus `DELEGATED_TASK_SENT`, `DELEGATED_TASK_COMPLETED`, `REMINDER_SENT`. Each is stored (visible in Operations) and POSTed as `onboarding.<NAME>` with ids, company, contact email and status fields to `ONBOARDING_WEBHOOK_URL` and the existing `GOHIGHLEVEL_WEBHOOK_URL` / `ZAPIER_WEBHOOK_URL` / `MAKE_WEBHOOK_URL` / `N8N_WEBHOOK_URL` / `GENERIC_WEBHOOK_URL`.
+
+### Reminders
+
+Daily cron (`vercel.json`): reminders 24 hours, 3 days and 5 days after onboarding started (at most three, never a backlog), skipped if the client was active in the last 12 hours, and stopped once only optional items or items awaiting Madvert remain.
+
+### Guides and screenshots
+
+Default guides cover Meta partner access and portfolio creation, Google Ads, GA4, Tag Manager, Search Console, Business Profile, YouTube, Merchant Center, WordPress, Shopify, Webflow, Wix, Squarespace, custom/Next.js, Cloudflare, GoDaddy, Namecheap, Google Domains (Squarespace), Hostinger, GoHighLevel, HubSpot, other CRMs and WhatsApp Business. Steps follow the official help pages linked on each step; pages that were checked carry a "last reviewed" date, the rest show "Review needed" in `/ops/guides`. The built-in visuals are original simplified diagrams with the relevant control highlighted, not copies of platform screenshots. To use current official screenshots, upload them per step in `/ops/guides` (stored privately, never hotlinked).
+
+### Configuration still required (external credentials)
+
+| Feature | What to set |
+| --- | --- |
+| Production database | `DATABASE_URL` (Postgres) |
+| Signing / link encryption | `ONBOARDING_SECRET` (32+ chars) |
+| Credential vault | `ONBOARDING_ENCRYPTION_KEY` (`openssl rand -hex 32`) |
+| Team sign in | `OPS_ADMIN_PASSWORD`, optional `OPS_ADMIN_EMAILS` |
+| File uploads in production | Vercel Blob store → `BLOB_READ_WRITE_TOKEN` |
+| Emails (link, delegated tasks, reminders) | `RESEND_API_KEY`, `EMAIL_FROM` (verified domain) |
+| Google Drive client folders | Service account (`GOOGLE_SERVICE_ACCOUNT_EMAIL`, `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`), parent folder in a Shared Drive shared with it as Content manager (`GOOGLE_DRIVE_PARENT_FOLDER_ID`), Drive API enabled |
+| Exact kickoff times | GoHighLevel workflow "Appointment booked" → Webhook to `/api/onboarding/webhooks/booking` with header `x-webhook-secret: ONBOARDING_BOOKING_WEBHOOK_SECRET` (otherwise the widget's booking message or the client's own confirmation is used) |
+| Reminders | `CRON_SECRET` (Vercel adds it to cron requests) |
+| Company values | Meta Partner Business ID, Google Ads manager ID and access emails in `/ops/settings` |
+
+Not built as live API integrations (by design, no credentials available): Meta, Google, GoHighLevel and e-sign APIs. Access is granted by the client inside each platform and verified by the team in Operations; nothing pretends to be connected automatically.
+
+### Run locally
+
+```bash
+cp .env.example .env.local
+# minimum: OPS_ADMIN_PASSWORD=<10+ chars>; optional DATABASE_URL, ONBOARDING_ENCRYPTION_KEY
+npm run dev
+# open http://localhost:3000/ops/login → New onboarding → open the generated link
+```
 
 ## Deploying to Vercel
 
