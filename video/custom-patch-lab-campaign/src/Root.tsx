@@ -9,6 +9,8 @@ import {Ad03} from './ad03/Ad03';
 import edl03 from './ad03/edl.json';
 import {Ad04} from './ad04/Ad04';
 import edl04 from './ad04/edl.json';
+import {Reel01} from './reel01/Reel01';
+import edlR1 from './reel01/edl.json';
 
 export const RemotionRoot: React.FC = () => (
   <Folder name="Custom-Patch-Lab-Campaign">
@@ -16,5 +18,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="CustomPatchLabAd02" component={Ad02} durationInFrames={edl02.durationInFrames} fps={edl02.fps} width={1080} height={1920} />
     <Composition id="CustomPatchLabAd03" component={Ad03} durationInFrames={edl03.durationInFrames} fps={edl03.fps} width={1080} height={1920} />
     <Composition id="CustomPatchLabAd04" component={Ad04} durationInFrames={edl04.durationInFrames} fps={edl04.fps} width={1080} height={1920} />
+    <Composition id="CustomPatchLabReel01" component={Reel01} defaultProps={{captions: true}} durationInFrames={edlR1.durationInFrames} fps={edlR1.fps} width={1080} height={1920} />
+    <Composition id="CustomPatchLabReel01NoCaptions" component={Reel01} defaultProps={{captions: false}} durationInFrames={edlR1.durationInFrames} fps={edlR1.fps} width={1080} height={1920} />
   </Folder>
 );

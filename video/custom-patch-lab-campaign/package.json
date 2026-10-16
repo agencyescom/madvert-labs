@@ -16,7 +16,9 @@
     "render:ad03:preview": "remotion render CustomPatchLabAd03 out/CustomPatchLab_Ad03_Preview.mp4 --scale=0.5 --crf=23",
     "render:ad03:final": "remotion render CustomPatchLabAd03 out/CustomPatchLab_Ad03_Final_1080x1920.mp4 --codec=h264 --crf=16 --color-space=bt709 --audio-codec=aac --audio-bitrate=320k",
     "render:ad04:preview": "remotion render CustomPatchLabAd04 out/custom-patch-lab-ad04-preview.mp4 --scale=0.5 --crf=23",
-    "render:ad04:final": "remotion render CustomPatchLabAd04 out/custom-patch-lab-ad04-final.mp4 --codec=h264 --crf=17 --color-space=bt709 --audio-codec=aac --audio-bitrate=256k"
+    "render:ad04:final": "remotion render CustomPatchLabAd04 out/custom-patch-lab-ad04-final.mp4 --codec=h264 --crf=17 --color-space=bt709 --audio-codec=aac --audio-bitrate=256k",
+    "render:reel01:preview": "remotion render CustomPatchLabReel01 out/CustomPatchLab_Reel01_Preview.mp4 --scale=0.5 --crf=23",
+    "render:reel01:final": "remotion render CustomPatchLabReel01 out/CustomPatchLab_Reel01_Final.mp4 --codec=h264 --crf=18 --color-space=bt709 --audio-codec=aac --audio-bitrate=256k && remotion render CustomPatchLabReel01NoCaptions out/CustomPatchLab_Reel01_Final_NoCaptions.mp4 --codec=h264 --crf=18 --color-space=bt709 --audio-codec=aac --audio-bitrate=256k && remotion still CustomPatchLabReel01 out/CustomPatchLab_Reel01_Cover.png --frame=539 --image-format=png"
   },
   "dependencies": {
     "@remotion/cli": "4.0.534",

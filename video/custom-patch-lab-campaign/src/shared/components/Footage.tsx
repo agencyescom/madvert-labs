@@ -11,6 +11,8 @@ type Props = {
   y?: number;
   /** Slow push across the whole shot (multiplies `scale`). */
   drift?: [number, number];
+  /** Point (px in the 1080x1920 frame) that scale/drift zoom into. Defaults to centre. */
+  origin?: {x: number; y: number};
   /** Legibility shading behind type, 0–1. */
   shadeTop?: number;
   shadeBottom?: number;
@@ -29,6 +31,7 @@ export const Footage: React.FC<Props> = ({
   scale = 1,
   y = 0,
   drift = [1, 1.04],
+  origin,
   shadeTop = 0,
   shadeBottom = 0,
   fx,
@@ -43,6 +46,7 @@ export const Footage: React.FC<Props> = ({
         <AbsoluteFill
           style={{
             transform: `translateY(${y}px) scale(${scale * d})`,
+            transformOrigin: origin ? `${origin.x}px ${origin.y}px` : undefined,
             filter: 'contrast(1.07) saturate(1.1) brightness(1.01)',
           }}
         >

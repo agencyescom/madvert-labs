@@ -1,0 +1,20 @@
+{
+  "fps": 30,
+  "durationInFrames": 540,
+  "bpm": 100,
+  "needle": {"x": 565, "y": 770},
+  "hyperframes": [3, 96, 240, 299, 436],
+  "shots": [
+    { "id": "a", "source": "video1-machine-stitching.mp4", "from": 0,   "frames": 60, "srcIn": 0.0,  "srcOut": 2.0,  "interp": false, "note": "HOOK: needle working the sun, real time" },
+    { "id": "b", "source": "video1-machine-stitching.mp4", "from": 60,  "frames": 36, "srcIn": 2.0,  "srcOut": 3.2,  "interp": false, "note": "Punch-in on the needle" },
+    { "id": "c", "source": "video1-machine-stitching.mp4", "from": 96,  "frames": 44, "srcIn": 3.13, "srcOut": 4.6,  "interp": false, "note": "Wide-ish, needle tracking marker" },
+    { "id": "d", "source": "video1-machine-stitching.mp4", "from": 140, "frames": 40, "srcIn": 4.6,  "srcOut": 6.0,  "interp": false, "note": "Macro on the sun stitching" },
+    { "id": "e", "source": "video1-machine-stitching.mp4", "from": 180, "frames": 40, "srcIn": 6.0,  "srcOut": 7.0,  "interp": true,  "note": "Speed ramp down (0.75x), tight on sun" },
+    { "id": "f", "source": "video1-machine-stitching.mp4", "from": 220, "frames": 20, "srcIn": 0.6,  "srcOut": 1.27, "interp": false, "note": "Rhythm cut: tree line / water texture crop" },
+    { "id": "g", "source": "video1-machine-stitching.mp4", "from": 240, "frames": 3,  "srcIn": 1.0,  "srcOut": 1.1,  "interp": false, "note": "HYPERFRAME 3: texture freeze" },
+    { "id": "h", "source": "video1-machine-stitching.mp4", "from": 243, "frames": 69, "srcIn": 7.0,  "srcOut": 8.0,  "interp": true,  "note": "The final stitch, slowed (~0.43x), extreme macro" },
+    { "id": "i", "source": "video2-patch-reveal.mp4",      "from": 300, "frames": 75, "srcIn": 1.0,  "srcOut": 3.6,  "interp": true,  "note": "REVEAL: macro pull-back to the finished patch" },
+    { "id": "j", "source": "video2-patch-reveal.mp4",      "from": 375, "frames": 45, "srcIn": 3.6,  "srcOut": 5.0,  "interp": true,  "note": "Hand enters" },
+    { "id": "k", "source": "video2-patch-reveal.mp4",      "from": 420, "frames": 120,"srcIn": 5.0,  "srcOut": 8.0,  "interp": true,  "note": "Patch lifted, slow push; becomes the end-card plate" }
+  ]
+}
