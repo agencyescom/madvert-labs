@@ -13,6 +13,9 @@ import {Reel01} from './reel01/Reel01';
 import edlR1 from './reel01/edl.json';
 import {Reel02} from './reel02/Reel02';
 import edlR2 from './reel02/edl.json';
+import {Reel03, Reel03Cover} from './reel03/Reel03';
+import edlR3 from './reel03/edl.json';
+import {Still} from 'remotion';
 
 export const RemotionRoot: React.FC = () => (
   <Folder name="Custom-Patch-Lab-Campaign">
@@ -23,5 +26,7 @@ export const RemotionRoot: React.FC = () => (
     <Composition id="CustomPatchLabReel01" component={Reel01} defaultProps={{captions: true}} durationInFrames={edlR1.durationInFrames} fps={edlR1.fps} width={1080} height={1920} />
     <Composition id="CustomPatchLabReel01NoCaptions" component={Reel01} defaultProps={{captions: false}} durationInFrames={edlR1.durationInFrames} fps={edlR1.fps} width={1080} height={1920} />
     <Composition id="CustomPatchLabReel02" component={Reel02} durationInFrames={edlR2.durationInFrames} fps={edlR2.fps} width={1080} height={1920} />
+    <Composition id="CustomPatchLabReel03" component={Reel03} durationInFrames={edlR3.durationInFrames} fps={edlR3.fps} width={1080} height={1920} />
+    <Still id="CustomPatchLabReel03Cover" component={Reel03Cover} width={1080} height={1920} />
   </Folder>
 );

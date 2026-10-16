@@ -4,7 +4,7 @@
 # clips is never used (not cleared for commercial use).
 set -euo pipefail
 cd "$(dirname "$0")/.."
-ads=("$@"); [ ${#ads[@]} -eq 0 ] && ads=(ad01 ad02 ad03 ad04 reel01 reel02)
+ads=("$@"); [ ${#ads[@]} -eq 0 ] && ads=(ad01 ad02 ad03 ad04 reel01 reel02 reel03)
 mkdir -p public/brand
 python3 -I scripts/mask-logo.py assets/source/shared/brand/cpl-logo-circular.jpg public/brand/cpl-logo.png
 python3 -I scripts/make-grain.py public/brand/grain.png
@@ -16,7 +16,7 @@ for ad in "${ads[@]}"; do
     ad01) python3 -I scripts/cutout-patch.py assets/source/ad01/lion-patch-still.webp public/brand/lion-patch.png ;;
   esac
   case $ad in
-    reel01|reel02) ./scripts/build-audio.sh "$ad" -15 -1.5 ;;  # softer reel mix (client note on Reel 01)
+    reel01|reel02|reel03) ./scripts/build-audio.sh "$ad" -15 -1.5 ;;  # softer reel mix (client note on Reel 01)
     *) ./scripts/build-audio.sh "$ad" ;;
   esac
 done

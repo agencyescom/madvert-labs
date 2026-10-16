@@ -1,0 +1,18 @@
+{
+ "fps": 30,
+ "durationInFrames": 720,
+ "bpm": 120,
+ "fighters": [60, 150, 240, 330, 420],
+ "select": 510,
+ "end": 600,
+ "hyperframes": [32, 60, 150, 240, 330, 420, 600],
+ "shots": [
+  {"id": "f1",  "source": "v1-classic-embroidered-bolt.mp4",   "from": 60,  "frames": 90, "srcIn": 3.0,  "srcOut": 6.0,  "interp": false, "note": "Embroidered bolt, camera pulls back to the jacket"},
+  {"id": "f2a", "source": "v2-showstopper-chenille-m.mp4",     "from": 150, "frames": 60, "srcIn": 2.0,  "srcOut": 3.95, "interp": false, "note": "Chenille M close, slow lateral"},
+  {"id": "f2b", "source": "v2-showstopper-chenille-m.mp4",     "from": 210, "frames": 30, "srcIn": 6.05, "srcOut": 7.05, "interp": false, "note": "Chenille M on varsity jacket (hand gone)"},
+  {"id": "f3a", "source": "v3-tough-pvc-explore.mp4",          "from": 240, "frames": 60, "srcIn": 1.6,  "srcOut": 3.6,  "interp": false, "note": "PVC macro pan across EXPLORE"},
+  {"id": "f3b", "source": "v3-tough-pvc-explore.mp4",          "from": 300, "frames": 30, "srcIn": 6.4,  "srcOut": 7.4,  "interp": false, "note": "PVC on backpack, golden hour"},
+  {"id": "f4",  "source": "v4-precision-woven-wolf.mp4",       "from": 330, "frames": 90, "srcIn": 3.3,  "srcOut": 6.3,  "interp": false, "note": "Woven wolf: macro pull-back to the full patch"},
+  {"id": "f5",  "source": "v5-color-printed-astronaut.mp4",    "from": 420, "frames": 90, "srcIn": 5.3,  "srcOut": 8.0,  "interp": true,  "note": "Printed astronaut, sharp section only (slowed 0.9x)"}
+ ]
+}
