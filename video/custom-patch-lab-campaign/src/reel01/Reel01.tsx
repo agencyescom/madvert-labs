@@ -7,6 +7,7 @@ import {LogoBadge} from '../shared/components/LogoBadge';
 import {MotionBlur} from '../shared/components/MotionBlur';
 import {easeIn, easeInOut, easeOut, mix, prog} from '../shared/motion';
 import edl from './edl.json';
+import {BrandPill, CalloutPill, CameraHUD, PatchOrbit, TextRing, patchAt} from './Overlays';
 
 /* ------------------------------------------------------------------ timing
  * 540 frames @ 30 fps. Hyperframes (edl.hyperframes): 3 orange impact ·
@@ -120,13 +121,13 @@ export const Reel01: React.FC<Reel01Props> = ({captions}) => {
       </Sequence>
 
       <Sequence from={60} durationInFrames={120} name="02 graphics">
-        <DetailMarker at={6} exitAt={34} x={NEEDLE.x + 70} y={NEEDLE.y + 210} label="SATIN FILL · SUN" dir={1} />
+        <CalloutPill at={6} exitAt={34} x={NEEDLE.x + 60} y={NEEDLE.y + 230} label="SATIN FILL" dx={-200} dy={330} />
         <Sequence from={36} durationInFrames={44}>
           <NeedleReticle at={4} exitAt={40} label="STITCH" counter />
           <EmbroideryGuide at={6} cx={540} cy={1070} r={470} exitAt={40} />
         </Sequence>
         {captions && <TrackedLine text="PRECISION IN EVERY THREAD" at={40} top={250} exitAt={112} />}
-        <DetailMarker at={84} exitAt={114} x={430} y={930} label="0.4 MM PITCH" dir={-1} />
+        <CalloutPill at={84} exitAt={114} x={470} y={960} label="STITCH DETAIL ×2" dx={60} dy={330} />
       </Sequence>
 
       <Sequence from={180} durationInFrames={REVEAL - 180} name="03 graphics">
@@ -140,6 +141,14 @@ export const Reel01: React.FC<Reel01Props> = ({captions}) => {
         <ThreadTrail at={4} dur={34} d="M -60 1460 C 240 1380, 520 1530, 780 1410 S 1080 1330, 1160 1360" />
         <ThreadTrail at={64} dur={40} d="M 1140 520 C 880 600, 760 480, 600 640 S 520 860, 565 770" color={GOLD} />
         <EmbroideryGuide at={70} cx={NEEDLE.x} cy={NEEDLE.y} r={170} exitAt={112} ticks />
+      </Sequence>
+
+      <CameraHUD />
+      <Sequence from={0} name="04 tracked">
+        <PatchOrbit at={346} exitAt={430} />
+        <TrackedCallout at={372} exitAt={396} label="SATIN-STITCH SUNSET" ax={0.25} ay={-0.62} />
+        <TrackedCallout at={398} exitAt={426} label="MERROWED BORDER" ax={-0.45} ay={-0.9} />
+        {captions && <TextRing at={444} text="PATCH CULTURE • CUSTOM PATCH LAB • PATCH CULTURE • CUSTOM PATCH LAB •" pad={34} />}
       </Sequence>
 
       <Sequence from={PAYOFF} name="05 payoff">
@@ -315,6 +324,16 @@ const SplitWord: React.FC<{text: string; at: number; top: number; align: 'left' 
   );
 };
 
+/** Callout whose anchor rides the tracked patch (ax, ay in patch radii); the pill sits above the patch. */
+const TrackedCallout: React.FC<{at: number; exitAt: number; label: string; ax: number; ay: number}> = ({at, exitAt, label, ax, ay}) => {
+  const f = useCurrentFrame();
+  const {x, y, r} = patchAt(f);
+  const px = x + ax * r;
+  const py = y + ay * r;
+  const top = Math.max(250, y - r - 120);
+  return <CalloutPill at={at} exitAt={exitAt} x={px} y={py} label={label} dx={540 - px} dy={top - py} />;
+};
+
 /* ============================================================ illustrations */
 
 /** Short stitched orange dash under a headline, sewing itself left → right. */
@@ -334,12 +353,12 @@ const NeedleReticle: React.FC<{at: number; exitAt: number; label: string; counte
   const f = useCurrentFrame();
   const p = prog(f, at, 10, easeOut);
   const q = prog(f, exitAt, 6, easeIn);
-  const r = mix(90, 46, p);
+  const r = mix(120, 62, p);
   const {x, y} = NEEDLE;
   const n = counter ? String(1184 + Math.max(0, f - at) * 14).padStart(5, '0') : '';
   return (
     <svg width={1080} height={1920} style={{position: 'absolute', inset: 0, opacity: p * (1 - q)}}>
-      <g stroke={IVORY} strokeWidth={2.5} fill="none" style={{filter: 'drop-shadow(0 0 6px rgba(0,0,0,0.7))'}}>
+      <g stroke={IVORY} strokeWidth={4.5} fill="none" style={{filter: 'drop-shadow(0 0 6px rgba(0,0,0,0.7))'}}>
         <circle cx={x} cy={y} r={r} strokeDasharray="10 8" transform={`rotate(${f * 4} ${x} ${y})`} />
         {[0, 90, 180, 270].map((a) => (
           <line
@@ -350,46 +369,17 @@ const NeedleReticle: React.FC<{at: number; exitAt: number; label: string; counte
             y2={y + Math.sin((a * Math.PI) / 180) * (r + 26)}
           />
         ))}
-        <line x1={x + r + 26} y1={y} x2={x + r + 140} y2={y - 60} />
+        <line x1={x + r + 26} y1={y} x2={x + r + 140} y2={y - 76} />
       </g>
-      <circle cx={x} cy={y} r={5} fill={ORANGE} />
-      <text x={x + r + 150} y={y - 66} fill={IVORY} style={{fontFamily: FONT_BODY, fontWeight: 800, fontSize: 26, letterSpacing: '0.22em', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.9))'}}>
+      <circle cx={x} cy={y} r={8} fill={ORANGE} />
+      <text x={x + r + 150} y={y - 66} fill={IVORY} style={{fontFamily: FONT_BODY, fontWeight: 800, fontSize: 34, letterSpacing: '0.22em', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.9))'}}>
         {label}
       </text>
       {counter && (
-        <text x={x + r + 150} y={y - 30} fill={GOLD} style={{fontFamily: FONT_BODY, fontWeight: 700, fontSize: 26, letterSpacing: '0.12em', fontVariantNumeric: 'tabular-nums', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.9))'}}>
+        <text x={x + r + 150} y={y - 22} fill={GOLD} style={{fontFamily: FONT_BODY, fontWeight: 800, fontSize: 34, letterSpacing: '0.12em', fontVariantNumeric: 'tabular-nums', filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.9))'}}>
           #{n}
         </text>
       )}
-    </svg>
-  );
-};
-
-/** Leader-line detail label pointing at a stitch region. */
-const DetailMarker: React.FC<{at: number; exitAt: number; x: number; y: number; label: string; dir: 1 | -1}> = ({at, exitAt, x, y, label, dir}) => {
-  const f = useCurrentFrame();
-  const a = prog(f, at, 8, easeOut);
-  const b = prog(f, at + 4, 10, easeOut);
-  const q = prog(f, exitAt, 6, easeIn);
-  const ex = x + dir * 180 * b;
-  const ey = y + 90 * b;
-  return (
-    <svg width={1080} height={1920} style={{position: 'absolute', inset: 0, opacity: 1 - q}}>
-      <g style={{filter: 'drop-shadow(0 2px 6px rgba(0,0,0,0.85))'}}>
-        <circle cx={x} cy={y} r={14 * a} fill="none" stroke={IVORY} strokeWidth={2.5} />
-        <circle cx={x} cy={y} r={4 * a} fill={ORANGE} />
-        <polyline points={`${x + dir * 14},${y + 8} ${ex},${ey} ${ex + dir * 70 * b},${ey}`} fill="none" stroke={IVORY} strokeWidth={2.5} />
-        <text
-          x={ex + dir * 82}
-          y={ey + 9}
-          textAnchor={dir > 0 ? 'start' : 'end'}
-          fill={IVORY}
-          opacity={b}
-          style={{fontFamily: FONT_BODY, fontWeight: 800, fontSize: 26, letterSpacing: '0.2em'}}
-        >
-          {label}
-        </text>
-      </g>
     </svg>
   );
 };
@@ -405,7 +395,7 @@ const EmbroideryGuide: React.FC<{at: number; cx: number; cy: number; r: number; 
       <mask id={`eg-${at}-${r}`}>
         <circle cx={cx} cy={cy} r={r} fill="none" stroke="#fff" strokeWidth={14} strokeDasharray={circ} strokeDashoffset={circ * (1 - p)} transform={`rotate(-90 ${cx} ${cy})`} />
       </mask>
-      <circle cx={cx} cy={cy} r={r} fill="none" stroke={IVORY} strokeWidth={2.5} strokeDasharray="14 10" mask={`url(#eg-${at}-${r})`} style={{filter: 'drop-shadow(0 0 4px rgba(0,0,0,0.7))'}} />
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke={IVORY} strokeWidth={4.5} strokeDasharray="18 12" mask={`url(#eg-${at}-${r})`} style={{filter: 'drop-shadow(0 0 4px rgba(0,0,0,0.7))'}} />
       {ticks &&
         Array.from({length: 24}, (_, i) => {
           const ang = (i / 24) * Math.PI * 2 - Math.PI / 2;
@@ -604,43 +594,40 @@ const Payoff: React.FC<{captions: boolean}> = ({captions}) => {
           </svg>
         </>
       )}
-      {/* brand row: original logo (mask reveal + soft glow), tagline, URL */}
-      <div style={{position: 'absolute', top: 1418, left: 96, width: 180, height: 180, clipPath: `circle(${logoMask * 75}% at 50% 50%)`}}>
-        <div style={{position: 'absolute', inset: -30, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(245,185,65,0.35), rgba(245,185,65,0))', opacity: logoMask}} />
-        {/* LogoBadge centres itself on x=540; shift it back into this 180 px box */}
-        <div style={{position: 'absolute', top: 0, left: -450, width: 1080, height: 180, transform: `scale(${mix(0.86, 1, logoMask)})`, transformOrigin: '540px 90px'}}>
-          <LogoBadge at={at(468)} size={180} top={0} />
-        </div>
-      </div>
-      <div style={{position: 'absolute', top: 1442, left: 306, right: 60}}>
-        <div style={{overflow: 'hidden'}}>
-          <div
-            style={{
-              fontFamily: FONT_CONDENSED,
-              fontWeight: 700,
-              fontSize: 62,
-              lineHeight: 1.05,
-              color: IVORY,
-              transform: `translateY(${(1 - tag) * 105}%)`,
-            }}
-          >
-            Your Design. <span style={{color: ORANGE}}>Our Craft.</span>
+      {/* brand row in a gold-rimmed glass pill: original logo (mask reveal + soft glow), tagline, URL chip */}
+      <BrandPill at={at(464)}>
+        <div style={{position: 'absolute', top: 22, left: 26, width: 150, height: 150, clipPath: `circle(${logoMask * 75}% at 50% 50%)`}}>
+          <div style={{position: 'absolute', inset: -24, borderRadius: '50%', background: 'radial-gradient(closest-side, rgba(245,185,65,0.4), rgba(245,185,65,0))', opacity: logoMask}} />
+          {/* LogoBadge centres itself on x=540; shift it back into this 150 px box */}
+          <div style={{position: 'absolute', top: 0, left: -465, width: 1080, height: 150, transform: `scale(${mix(0.86, 1, logoMask)})`, transformOrigin: '540px 75px'}}>
+            <LogoBadge at={at(468)} size={150} top={0} />
           </div>
         </div>
-        <div
-          style={{
-            marginTop: 14,
-            fontFamily: FONT_BODY,
-            fontWeight: 700,
-            fontSize: 34,
-            letterSpacing: `${mix(0.2, 0.04, url)}em`,
-            color: GOLD,
-            clipPath: `inset(0 ${(1 - url) * 100}% 0 0)`,
-          }}
-        >
-          quote.custompatchlab.com
+        <div style={{position: 'absolute', top: 30, left: 204, right: 24}}>
+          <div style={{overflow: 'hidden'}}>
+            <div style={{fontFamily: FONT_CONDENSED, fontWeight: 700, fontSize: 64, lineHeight: 1.05, color: IVORY, transform: `translateY(${(1 - tag) * 105}%)`}}>
+              Your Design. <span style={{color: ORANGE}}>Our Craft.</span>
+            </div>
+          </div>
+          <div
+            style={{
+              display: 'inline-block',
+              marginTop: 14,
+              padding: '10px 22px',
+              borderRadius: 999,
+              background: ORANGE,
+              fontFamily: FONT_BODY,
+              fontWeight: 800,
+              fontSize: 32,
+              letterSpacing: `${mix(0.16, 0.03, url)}em`,
+              color: NAVY,
+              clipPath: `inset(0 ${(1 - url) * 100}% 0 0 round 999px)`,
+            }}
+          >
+            quote.custompatchlab.com →
+          </div>
         </div>
-      </div>
+      </BrandPill>
     </AbsoluteFill>
   );
 };

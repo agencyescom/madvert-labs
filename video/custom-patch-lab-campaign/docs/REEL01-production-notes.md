@@ -50,4 +50,22 @@ Both clips match the master artwork: same mountain/sun/trees/water patch in ever
 - Not verifiable by me: listening. Audio was checked by measurement (loudness, peak, spectrogram/timing), not by ear.
 
 ## Notes
-- "0.4 MM PITCH" and the stitch counter are decorative technical graphics, not product specs; remove the callout if you prefer no numeric claims (`DetailMarker` in Reel01.tsx).
+- The stitch counter and REC timecode are decorative camera graphics, not product specs.
+
+## v2 — client revision (smoother sound, more visible motion graphics)
+Feedback: opening sound too loud/irritating; patch-lift sound didn't sound like a patch; motion graphics not visible at the start, middle or end; music lower.
+
+Sound (`scripts/sound-design-reel01.py`, built with `build-audio.sh reel01 -15 -1.5`)
+- Machine softened: low-passed (5 kHz) muted clicks + warm needle-bar thump, no metallic ping, fades in over 0.5 s; −2.5 dB in the mix.
+- All crack-style impacts replaced by rounded low thumps; whooshes low-passed; thread snip softened.
+- Patch lift: grainy crackle replaced by smooth cloth/felt brushes and soft fingertip taps timed to the hand (f388, 408, 412, 428, 455, 470).
+- Music: pad + sparse sub only, ~−9 dB lower, low-passed at 3.5 kHz; no kick.
+- Master −15 LUFS / −1.5 dBTP; short-term loudness now flat (−14 to −15 LUFS) from the first second — no loud opening.
+
+Graphics (`src/reel01/Overlays.tsx`)
+- Continuous camera HUD 0–14 s: viewfinder brackets, REC + running timecode, scene index (01 THE NEEDLE → 04 THE REVEAL) with progress bar, reel progress rule; on a navy plate so it reads over the cream table.
+- Bigger needle reticle (4.5 px, 34 px labels); callouts are now navy/gold pills (SATIN FILL, STITCH DETAIL ×2).
+- Reveal/end: the patch is tracked frame-by-frame (`src/reel01/patch-track.json`, measured from the footage incl. its perspective ellipse): rotating stitched orbit ring with gold ticks, tracked pills SATIN-STITCH SUNSET and MERROWED BORDER, then a rotating "PATCH CULTURE • CUSTOM PATCH LAB" text ring during the payoff.
+- End card: logo, tagline and URL in a gold-rimmed glass pill with a light sweep; URL as an orange button chip.
+
+QA v2: 540 frames, 1080×1920, 30 fps, yuv420p; both versions decode cleanly; no black frames; −15.1 LUFS, −1.5 dBFS peak.

@@ -1,5 +1,11 @@
 """Custom Patch Lab — Reel 01 "Every Stitch Hits Different": cinematic embroidery ASMR.
 
+v2 (client notes: "too loud / irritating at the start, patch sound weird,
+music lower"): the machine is now soft and warm (low-passed clicks, no
+metallic ping, fades in), every crack-style impact is replaced by soft low
+thumps, the patch handling is realistic cloth/felt brushes timed to the hand,
+and the music sits well underneath.
+
 The embroidery machine is the lead instrument: needle-bar clicks at the stitch
 rate, take-up rattle, motor hum. The stitch rate follows the picture's speed
 (real time 13 Hz → 0.75x ramp → 0.43x "final stitch" → stop on the cut).
@@ -29,120 +35,133 @@ H1, H2, H3, H4, H5 = [fr(h) for h in EDL['hyperframes']]
 REVEAL, PAYOFF = fr(300), fr(420)
 
 
-# ---------------------------------------------------------------- machine (lead)
-def stitch_click(weight=1.0, bright=1.0):
-    t = t_axis(0.06)
-    tick = filt(noise(0.06), 'bandpass', [2200 * bright, 7500]) * np.exp(-t / 0.0035)
-    ping = np.sin(2 * np.pi * rng.uniform(1900, 2250) * t) * np.exp(-t / 0.008) * 0.3
-    thunk = np.sin(2 * np.pi * 170 * t) * np.exp(-t / 0.012) * 0.55 * weight  # needle bar bottoming out
-    pull = filt(noise(0.06), 'bandpass', [500, 1600]) * np.exp(-np.maximum(t - 0.018, 0) / 0.01) * (t > 0.018) * 0.25  # thread pull-through
-    return (tick * 0.8 + ping + thunk + pull) * rng.uniform(0.8, 1.0)
+# ---------------------------------------------------------------- machine (lead, soft)
+def stitch_click(weight=1.0):
+    """Soft needle stroke: muted tick + warm needle-bar thump + thread pull. No metallic ping."""
+    t = t_axis(0.07)
+    tick = filt(noise(0.07), 'bandpass', [900, 3800]) * np.exp(-t / 0.004) * 0.45
+    thunk = np.sin(2 * np.pi * 150 * t) * np.exp(-t / 0.016) * 0.7 * weight
+    pull = filt(noise(0.07), 'bandpass', [400, 1300]) * np.exp(-np.maximum(t - 0.02, 0) / 0.012) * (t > 0.02) * 0.2
+    return (tick + thunk + pull) * rng.uniform(0.85, 1.0)
 
 
 def machine(segments):
-    """segments: list of (start s, end s, stitch rate Hz, weight). Clicks + hum whose pitch follows the rate."""
+    """segments: (start s, end s, stitch rate Hz, weight). Soft clicks + warm hum following the rate."""
     out = bus()
     for t0, t1, rate, wgt in segments:
         t = t0
         while t < t1:
-            place(out, stitch_click(wgt, 1.0 if rate > 8 else 0.8), t + rng.uniform(-0.002, 0.002), 0.55, pan=rng.uniform(-0.08, 0.08))
+            place(out, stitch_click(wgt), t + rng.uniform(-0.002, 0.002), 0.5, pan=rng.uniform(-0.06, 0.06))
             t += 1 / rate
         n = int((t1 - t0) * SR)
         tt = np.arange(n) / SR
-        base = 48 * rate / 13
-        hum = (np.sin(2 * np.pi * base * tt) * 0.5 + np.sin(2 * np.pi * 2 * base * tt) * 0.3 + np.sin(2 * np.pi * 3 * base * tt) * 0.1)
-        hum *= 1 + 0.2 * np.sin(2 * np.pi * rate * tt)
-        whirr = filt(noise(t1 - t0), 'bandpass', [500, 1700]) * (0.4 + 0.6 * np.sin(np.pi * rate * tt) ** 2) * 0.12
-        fade = np.minimum(1, np.minimum(tt / 0.03, (t1 - t0 - tt) / 0.03))
-        place(out, (hum * 0.07 + whirr) * fade, t0, 1.0)
-    return out
+        base = 46 * rate / 13
+        hum = np.sin(2 * np.pi * base * tt) * 0.55 + np.sin(2 * np.pi * 2 * base * tt) * 0.2
+        hum *= 1 + 0.12 * np.sin(2 * np.pi * rate * tt)
+        whirr = filt(noise(t1 - t0), 'bandpass', [350, 1100]) * (0.5 + 0.5 * np.sin(np.pi * rate * tt) ** 2) * 0.07
+        fade = np.minimum(1, np.minimum(tt / 0.05, (t1 - t0 - tt) / 0.05))
+        place(out, (hum * 0.08 + whirr) * fade, t0, 1.0)
+    return filt(out, 'lowpass', 5000)
 
 
 mach = machine([
-    (0.0, fr(180), 13.0, 1.0),          # real time
-    (fr(180), fr(220), 9.75, 1.0),       # 0.75x ramp
-    (fr(220), fr(240), 13.0, 0.9),       # rhythm cut, real time
-    (fr(243), fr(296), 5.6, 1.25),       # the final stitch, slowed: heavier, slower thunks
+    (0.0, fr(180), 13.0, 1.0),
+    (fr(180), fr(220), 9.75, 1.0),
+    (fr(220), fr(240), 13.0, 0.9),
+    (fr(243), fr(296), 5.6, 1.2),
 ])
 
 
-# ---------------------------------------------------------------- effects
-def snip():
-    """Thread cut: two blade clicks + a tight high snap."""
-    t = t_axis(0.25)
-    a = filt(noise(0.25), 'bandpass', [3000, 11000]) * np.exp(-t / 0.003)
-    blade = np.sin(2 * np.pi * 3400 * t) * np.exp(-t / 0.02) * 0.35 + np.sin(2 * np.pi * 5100 * t) * np.exp(-t / 0.012) * 0.2
-    out = a + blade
-    out[int(0.04 * SR):] += (a[: len(out) - int(0.04 * SR)] * 0.8)
-    return out * 0.8
-
-
-def low_hit(size=1.0, dur=1.6):
+# ---------------------------------------------------------------- effects (soft)
+def soft_hit(size=1.0, dur=1.2):
+    """Rounded low thump, no transient crack."""
     t = t_axis(dur)
-    f = 38 + 50 * np.exp(-t / 0.08)
-    return np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / (0.5 * size)) * 0.8
+    f = 44 + 36 * np.exp(-t / 0.06)
+    body = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t / (0.35 * size))
+    return body * np.minimum(1, t / 0.006) * 0.7
 
 
-def tight_impact():
-    t = t_axis(0.35)
-    return (np.tanh(np.sin(2 * np.pi * np.cumsum(60 + 90 * np.exp(-t / 0.02)) / SR) * 2) * np.exp(-t / 0.08)
-            + filt(noise(0.35), 'bandpass', [1200, 6000]) * np.exp(-t / 0.01) * 0.3) * 0.75
+def air(dur=0.5, f0=400, f1=3000):
+    """Gentle air swish, low-passed so it never hisses."""
+    return filt(whoosh(dur, f0, f1, peak=0.6, q=0.9), 'lowpass', 5000) * 0.6
+
+
+def snip():
+    """Thread cut: two soft blade closes, low-passed."""
+    t = t_axis(0.2)
+    a = filt(noise(0.2), 'bandpass', [2000, 6500]) * np.exp(-t / 0.004)
+    out = a + np.sin(2 * np.pi * 2600 * t) * np.exp(-t / 0.015) * 0.15
+    out[int(0.035 * SR):] += a[: len(out) - int(0.035 * SR)] * 0.7
+    return filt(out, 'lowpass', 7000) * 0.55
+
+
+def cloth(dur=0.6, lo=250, hi=1800, level=0.3):
+    """Fabric / felt brush: smooth band-limited pink noise with a bell envelope (no grainy crackle)."""
+    t = t_axis(dur)
+    x = norm(filt(pink(dur), 'bandpass', [lo, hi]))
+    env = np.sin(np.pi * t / dur) ** 2
+    return x * env * level
+
+
+def felt_tap():
+    """Fingertips settling on the patch: soft low tap."""
+    t = t_axis(0.12)
+    return (np.sin(2 * np.pi * 120 * t) * np.exp(-t / 0.02) * 0.6 + filt(noise(0.12), 'bandpass', [300, 1200]) * np.exp(-t / 0.012) * 0.2)
 
 
 fx = bus()
-place(fx, tight_impact(), H1, 0.9)                                    # H1 orange impact on first needle hit
-place(fx, low_hit(1.0, 1.4), H1, 0.6)
-place(fx, whoosh(0.25, 600, 6000, peak=0.7), fr(60) - 0.18, 0.45)     # punch-in
-place(fx, tight_impact(), H2, 0.6)                                    # H2 navy thread frame
-place(fx, whoosh(0.22, 4000, 900, peak=0.5), H2 + 0.07, 0.3, pan=0.4)
-place(fx, whoosh(0.35, 300, 7000), fr(176) - 0.1, 0.55, pan=-0.6)     # lateral whip
-place(fx, tight_impact(), fr(220), 0.45)                              # rhythm cut
-place(fx, tight_impact(), H3, 0.7)                                    # H3 freeze
-place(fx, low_hit(0.8, 1.2), H3, 0.45)
-place(fx, fabric(1.2, density=30, bright=(1500, 7000), level=0.12), fr(243), 1.0)  # thread movement
-place(fx, riser(1.4, 200, 6000), H4 - 1.4, 0.35)                      # quiet build to the cut
-place(fx, snip(), H4 - 0.02, 1.0)                                     # THREAD CUT on the ivory flash
-place(fx, low_hit(1.3, 2.4), H4 + 0.03, 0.7)
-place(fx, reverse_swell(0.5), REVEAL - 0.5, 0.25)
-place(fx, sparkle(1.6), REVEAL + 0.05, 0.5)                           # delicate reveal shimmer
+place(fx, soft_hit(1.0, 1.4), H1, 0.55)                               # H1: soft low accent, no crack
+place(fx, air(0.4, 300, 2500), fr(60) - 0.28, 0.3)                     # punch-in
+place(fx, soft_hit(0.7, 1.0), H2, 0.4)                                # H2
+place(fx, air(0.45, 300, 3000), fr(176) - 0.2, 0.35, pan=-0.5)        # lateral whip
+place(fx, soft_hit(0.6, 0.9), fr(220), 0.3)
+place(fx, soft_hit(0.8, 1.1), H3, 0.4)                                # H3
+place(fx, riser(1.2, 200, 3500), H4 - 1.2, 0.18)                      # quiet build
+place(fx, snip(), H4 - 0.02, 0.8)                                     # thread cut
+place(fx, soft_hit(1.2, 2.0), H4 + 0.03, 0.5)
+place(fx, filt(sparkle(1.4), 'lowpass', 7000), REVEAL + 0.05, 0.35)   # reveal shimmer
 for i, n in enumerate((62, 66, 69, 74)):
-    place(fx, bell(note(n), 2.6, 0.5), REVEAL + 0.1 + i * 0.06, 0.35, pan=-0.3 + i * 0.2)
-place(fx, fabric(4.0, density=50, bright=(400, 2600), level=0.22), fr(375), 1.0, pan=0.25)  # hand lifts the patch
-place(fx, whoosh(0.3, 500, 6000, peak=0.75), H5 - 0.2, 0.45)          # HITS DIFFERENT.
-place(fx, tight_impact(), H5, 0.75)
-place(fx, low_hit(0.9, 1.4), H5, 0.5)
-place(fx, sparkle(1.2), fr(468), 0.45)                                # logo
-place(fx, bell(note(74), 2.0, 0.4), fr(470), 0.35)
-place(fx, low_hit(0.6, 1.4), fr(480), 0.3)
+    place(fx, bell(note(n), 2.6, 0.4), REVEAL + 0.1 + i * 0.06, 0.25, pan=-0.3 + i * 0.2)
+# patch handling, timed to the hand in video 2 (frames measured from the footage)
+place(fx, cloth(0.7, 200, 1500, 0.25), fr(388), 1.0, pan=0.3)         # hand slides in on the table
+place(fx, felt_tap(), fr(408), 0.5, pan=0.3)                          # fingertips touch the patch edge
+place(fx, cloth(0.5, 300, 2000, 0.22), fr(412), 1.0, pan=0.25)        # grip
+place(fx, cloth(0.9, 250, 1600, 0.22), fr(428), 1.0, pan=0.2)         # patch lifts off the surface
+place(fx, felt_tap(), fr(455), 0.35, pan=0.2)                         # thumb settles
+place(fx, cloth(1.2, 200, 1200, 0.14), fr(470), 1.0, pan=0.15)        # held, slight movement
+place(fx, air(0.35, 400, 2800), H5 - 0.22, 0.3)                       # HITS DIFFERENT.
+place(fx, soft_hit(0.9, 1.3), H5, 0.45)
+place(fx, filt(sparkle(1.0), 'lowpass', 7000), fr(468), 0.3)          # logo
+place(fx, bell(note(74), 2.0, 0.35), fr(470), 0.25)
 
-# ---------------------------------------------------------------- minimal music (TEMP, original)
+# ---------------------------------------------------------------- music (low, TEMP, original)
 music = bus()
 BEAT = 60 / EDL['bpm']
-place(music, pad([note(n) for n in (50, 57, 62, 65)], REVEAL + 0.3), 0.0, 0.55)
-place(music, pad([note(n) for n in (46, 53, 58, 62, 65)], DUR - REVEAL + 0.2), REVEAL - 0.1, 0.7)
+place(music, pad([note(n) for n in (50, 57, 62, 65)], REVEAL + 0.3), 0.0, 0.5)
+place(music, pad([note(n) for n in (46, 53, 58, 62, 65)], DUR - REVEAL + 0.2), REVEAL - 0.1, 0.6)
 t = 0.0
-while t < H4 - 0.2:                      # sub pulse on the beat under the machine
-    place(music, sub808(note(26), 0.3), t, 0.35)
-    t += BEAT
-t = PAYOFF
-while t < DUR - 0.9:
-    place(music, kick(0.7), t, 0.45)
-    place(music, sub808(note(22), 0.45), t, 0.4)
+while t < H4 - 0.2:
+    place(music, sub808(note(26), 0.3), t, 0.18)
     t += BEAT * 2
+music = filt(music, 'lowpass', 3500)
 
 # ---------------------------------------------------------------- mix + automation
-ir_room = reverb_ir(1.0, 5.0, 6000)
-ir_hall = reverb_ir(2.6, 2.2, 7000)
+ir_room = reverb_ir(1.0, 5.0, 5000)
+ir_hall = reverb_ir(2.6, 2.2, 6000)
 tt = np.arange(N) / SR
-mach_gain = np.where(tt < H4, 1.0, 0.0)
-mach_gain = np.convolve(mach_gain, np.ones(int(0.02 * SR)) / int(0.02 * SR), mode='same')[:, None]  # hard stop on the cut, de-clicked
-music_gain = (0.55 + 0.45 * np.clip((tt - REVEAL) / 0.6, 0, 1))[:, None]  # music opens up on the reveal
-mix = (mach * 1.0 * mach_gain + reverb(mach, ir_room) * 0.08 * mach_gain
-       + fx * 0.85 + reverb(fx, ir_hall) * 0.16
-       + music * music_gain + reverb(music, ir_hall) * 0.2)
-mix = filt(mix, 'highpass', 26)
-mix = np.tanh(mix * 1.05) / 1.05
-fade = int(0.7 * SR)
+mach_gain = np.where(tt < H4, 1.0, 0.0) * np.clip(tt / 0.5, 0, 1)  # fades in over 0.5 s, stops on the cut
+w = int(0.02 * SR)
+mach_gain = np.convolve(mach_gain, np.ones(w) / w, mode='same')[:, None]
+music_gain = (0.35 + 0.15 * np.clip((tt - REVEAL) / 0.8, 0, 1))[:, None]
+mix = (mach * 0.75 * mach_gain + reverb(mach, ir_room) * 0.07 * mach_gain
+       + fx * 0.8 + reverb(fx, ir_hall) * 0.14
+       + music * music_gain + reverb(music, ir_hall) * 0.12 * music_gain)
+mix = filt(mix, 'highpass', 30)
+mix = filt(mix, 'lowpass', 12000)
+mix = np.tanh(mix * 1.0)
+fade_in = int(0.25 * SR)
+mix[:fade_in] *= np.linspace(0, 1, fade_in)[:, None]
+fade = int(0.8 * SR)
 mix[-fade:] *= np.linspace(1, 0, fade)[:, None] ** 1.5
 mix /= np.max(np.abs(mix)) / 0.89
 out = sys.argv[1]
