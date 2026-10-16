@@ -32,14 +32,12 @@ Tiger artwork is the same design in all three videos and both stills. Clip audio
 
 Tracking: `scripts/tiger-track.py` measures the tiger in every frame (orange-thread box → silhouette box, calibrated on the patch photo); the hook trace is the actual edge contour of the digital tiger per frame. Eye positions for the match cut were measured from both clips (`edl.json → eye`).
 
-## Sound (all synthesized in this repo — no samples, no third-party music)
-Built in the soft Reel 01 v2 style: rounded low hits (no crack transients), low-passed whooshes.
-- Stylus glass taps (f34, 48, 61) · soft UI confirm click on H1 · rising tone through the digital push.
-- Crisp stitch on the eye match cut + low embroidery-machine rhythm under the macro.
-- Thread snip into the product hero · cloth/felt foley when the hand holds the patch and when the jacket moves.
-- Soft hits on CAPS / JACKETS (H4) / BAGS; editorial-wipe air.
-- Brand: soft low hit (H5), sparkle on the logo, bell chord on OUR CRAFT., click on the URL.
-- Music: TEMP original low groove (pad from frame 0; soft kick + sub from the transformation; clap/hats from CAPS), kept under the effects; 0.9 s fade-out.
+## Sound — NO MUSIC (client requirement, v2)
+No melodic or harmonic instruments, synth pads, bass notes, bells, chimes or tonal risers. Rhythm comes only from a **daf** (frame drum, without jingles); everything else is natural sound. All synthesized in this repo (no samples).
+- **Daf:** enters on the eye match cut, sparse (dum on beats 1 and 3) under the macro, full maqsum-style pattern (DUM-tak-·-tak-DUM-·-tak-·, 112 BPM) from the product hero; finger-roll fills into CAPS / JACKETS / BAGS and the brand hit; a dum on the logo click (H1), the brand hit (H5), OUR CRAFT. and a last stroke under the final read. Silent for the 0.5 s before the brand hit.
+- **Natural foley:** unpitched stylus taps on glass (f34, 48, 61), soft fingertip tap-click, breath-like air swells (replacing tonal risers) into the eye push and the end card, crisp stitch on the match cut + embroidery-machine rhythm under the macro, thread snip, cloth/felt as the hand holds the patch, jacket and bag movement, quiet workshop room tone.
+- Verified: no sustained tonal peaks remain (spectral check per section; the strongest remaining resonance is the daf's own ~410 Hz drum ring).
+- Mix: −14.9 LUFS, −1.5 dBFS peak, 0.9 s fade-out.
 
 ## QA (performed on the rendered file)
 - 660 frames exactly, 1080×1920, 9:16, 30 fps, yuv420p; full decode OK; no black frames; −15.0 LUFS, −1.4 dBFS peak (no clipping).
